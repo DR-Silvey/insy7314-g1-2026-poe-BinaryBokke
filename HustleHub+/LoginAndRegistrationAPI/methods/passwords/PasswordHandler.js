@@ -53,7 +53,8 @@ class PasswordHandler {
 
             }
 
-        }catch(error) {
+        }
+        catch(error) {
             //If we could not import the CommonPasswords class
                 //Log the error
                 //Fallback to a basic list of 10 common passwords (see below) that still meet the outlined requirements
