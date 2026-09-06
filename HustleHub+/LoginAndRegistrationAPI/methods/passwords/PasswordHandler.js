@@ -7,3 +7,8 @@
 //Checked for in CommonInputValidator before this class is called
     //Password can't contain any SQL injection attempts (e.g. ' or 1=1 --)
     //Password can't contain spaces
+
+class PasswordHandler {
+    Val
+
+}

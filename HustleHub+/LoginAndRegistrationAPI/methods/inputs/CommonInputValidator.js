@@ -2,16 +2,17 @@
 //checks for
     //Input can't be undefined, null, empty, have to be string (except for age which has to be number)
     //Input can't contain space chars or any indication of SQL injection (e.g. ' or 1=1 --)
+    //Check the length of a username (min 3 chars)
 
 class CommonInputValidator {
     CommonInputValidation(input) {
         //Input can't be undefined, null, empty 
-        if((input === undefined || typeof input !== 'string' || input === null || input === '' || input.length < 3 || input.length > 20)) {
+        if((input === undefined || input === null || input === '')) {
             return false;
         }
 
         //Input can't contain space chars or any indication of SQL injection (e.g. ' or 1=1 --)
-        if(input.includes(' ') || input.includes("'") || input.includes("--")){
+        if((input.includes(' ') || input.includes("'") || input.includes("--"))){
             return false;
 
         }
@@ -20,15 +21,16 @@ class CommonInputValidator {
 
     }
 
+    //Check for common input validation, min length of 3 chars, string only
     IsValidUsername(username) {
         //Username has to meet the common input validation criteria
-        if(!this.CommonInputValidation(username)) {
+        if((!this.CommonInputValidation(username))) {
             return false;
 
         }
 
-        //Username has to be string
-        if((typeof username !== 'string')) {
+        //Username has to be stringm and > 3 chars
+        if((typeof username !== 'string' || username.length < 3)) {
             return false;
 
         }
@@ -37,6 +39,7 @@ class CommonInputValidator {
 
     }
 
+    //Check for common input validation, password handler validation, string only
     IsValidPassword(password) {
         //Password has to meet the common input validation criteria
         if(!this.CommonInputValidation(password)) {
@@ -45,7 +48,7 @@ class CommonInputValidator {
         }
 
         //Password has to be string
-        if((typeof password !== 'string')) {
+        if(typeof password !== 'string') {
             return false;
 
         }
@@ -54,6 +57,7 @@ class CommonInputValidator {
         
     }
 
+    //Multi method checking for validity of username and password
     IsValidUsernameandPassword(username, password) {
         if(!this.IsValidUsername(username) || !this.IsValidPassword(password)) {      
             return false;
@@ -65,15 +69,16 @@ class CommonInputValidator {
 
     }
 
+    //Check for common input validation, string only
     IsValidEmail(email) {
         //Email has to meet the common input validation criteria
-        if(!this.CommonInputValidation(email)) {
+        if((!this.CommonInputValidation(email))) {
             return false;
 
         }
 
-        //Email can't be undefined, null, empty, have to be string
-        if((email === undefined || typeof email !== 'string' || email === null || email === '')) {
+        //Email has to be string
+        if(typeof email !== 'string') {
             return false;
         
         }
@@ -82,15 +87,16 @@ class CommonInputValidator {
     
     }
 
+    //Check for common input validation, string only
     IsValidFullname(fullname) {
         //Fullname has to meet the common input validation criteria
-        if(!this.CommonInputValidation(fullname)) {
+        if((!this.CommonInputValidation(fullname))) {
             return false;
         
         }
 
-        //Fullname can't be undefined, null, empty, have to be string
-        if((fullname === undefined || typeof fullname !== 'string' || fullname === null || fullname === '')) {
+        //Fullname has to be string
+        if(typeof fullname !== 'string') {
             return false;
 
         }
@@ -99,11 +105,18 @@ class CommonInputValidator {
 
     }
 
+    //Check for common input validation, over 120, less than 16, number only
     IsValidAge(age) {
-        //Age can't be undefined, null, empty, over 120, less than 16, have to be number
-        if((age === undefined || typeof age !== 'number' || age === null || age === '' || age > 120 || age < 16)) {
+        //Age has to meet the common input validation criteria
+        if((CommonInputValidator.CommonInputValidation(age))) {
             return false;
 
+        } 
+
+        //Age has to be a number, under 120, more than 16, have to be number
+        if((typeof age !== 'number'  || age >= 120 || age <= 16)) {
+            return false;
+        
         }
 
         return true;
