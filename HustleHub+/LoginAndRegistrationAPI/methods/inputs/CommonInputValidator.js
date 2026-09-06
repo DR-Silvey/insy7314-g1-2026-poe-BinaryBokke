@@ -5,8 +5,9 @@
     //Check the length of a username (min 3 chars)
 
 class CommonInputValidator {
+    //Checks for undefined, null, empty, space chars, and SQL injection attempts (does not check for data types, except for undefined and null)
     CommonInputValidation(input) {
-        //Input can't be undefined, null, empty 
+        //Input can't be undefined, null, empty
         if((input === undefined || input === null || input === '')) {
             return false;
         }
@@ -42,7 +43,7 @@ class CommonInputValidator {
     //Check for common input validation, password handler validation, string only
     IsValidPassword(password) {
         //Password has to meet the common input validation criteria
-        if(!this.CommonInputValidation(password)) {
+        if((!this.CommonInputValidation(password))) {
             return false;
         
         }
@@ -59,7 +60,7 @@ class CommonInputValidator {
 
     //Multi method checking for validity of username and password
     IsValidUsernameandPassword(username, password) {
-        if(!this.IsValidUsername(username) || !this.IsValidPassword(password)) {      
+        if((!this.IsValidUsername(username) || !this.IsValidPassword(password))) {      
             return false;
 
         }else{
