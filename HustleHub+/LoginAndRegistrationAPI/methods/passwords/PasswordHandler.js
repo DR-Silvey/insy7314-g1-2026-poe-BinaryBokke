@@ -10,6 +10,27 @@
     //Password can't contain spaces
 
 class PasswordHandler {
+    //Multi method method to check if the password meets all the requirements
+    ValidPassword(password) {
+        if(!this.ValidLength(password)) {
+            return false;
+        
+        }   
+
+        if(!this.ValidComplexity(password)) {
+            return false;
+
+        }
+
+        if(!this.PasswordNotCommon(password)) {
+            return false;
+            
+        }
+
+        return true;
+
+    }
+    
     //Check for password length
     ValidLength(password) {
         //Password has to be at least 12 characters long
@@ -77,27 +98,6 @@ class PasswordHandler {
 
             }
 
-        }
-
-        return true;
-
-    }
-
-    //Multi method method to check if the password meets all the requirements
-    ValidPassword(password) {
-        if(!this.ValidLength(password)) {
-            return false;
-        
-        }   
-
-        if(!this.ValidComplexity(password)) {
-            return false;
-
-        }
-
-        if(!this.PasswordNotCommon(password)) {
-            return false;
-            
         }
 
         return true;

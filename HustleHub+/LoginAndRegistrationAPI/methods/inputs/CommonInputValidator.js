@@ -22,6 +22,18 @@ class CommonInputValidator {
 
     }
 
+    //Multi method checking for validity of username and password
+    IsValidUsernameandPassword(username, password) {
+        if((!this.IsValidUsername(username) || !this.IsValidPassword(password))) {      
+            return false;
+
+        }else{
+            return true;
+            
+        }
+
+    }
+
     //Check for common input validation, min length of 3 chars, string only
     IsValidUsername(username) {
         //Username has to meet the common input validation criteria
@@ -56,18 +68,6 @@ class CommonInputValidator {
 
         return true;
         
-    }
-
-    //Multi method checking for validity of username and password
-    IsValidUsernameandPassword(username, password) {
-        if((!this.IsValidUsername(username) || !this.IsValidPassword(password))) {      
-            return false;
-
-        }else{
-            return true;
-            
-        }
-
     }
 
     //Check for common input validation, string only
