@@ -1,4 +1,4 @@
-//This class is responsible for encrypting and decrypting passwords
+//This class is responsible for encrypting passwords
 class EncryptionHandler {
 
     //Encryption
@@ -110,82 +110,39 @@ class EncryptionHandler {
 
     }
 
-    //Decryption
-    //Steps
-        //Reverse of what was done in encryption
-    DecryptPassword(encryptedPassword) {
-
-    }
-
     UnsaltHashedPassword(hashedPassword){
-        let cleanedHashedPassword = '';
-
         //Removing the first and last chars
-        cleanedHashedPassword = hashedPassword.slice(1, -1);
+        let cleanedSaltedHashedPassword = hashedPassword.slice(1, -1);
 
-        //Using the values of the length of the has divided by 3 and 4 to know which chars to remove
-        const divThreeLength = Math.floor(cleanedHashedPassword.length / 3);
-        const divFourLength = Math.floor(cleanedHashedPassword.length / 4);
+        let unsaltedHashedPassword = '';
 
-        let numOfCharsRemoved = 0;
+        let i = 0;
+        let originalCharCount = 0;
 
-        //Arrays holding the postions of chars to remove
-        let thirdCharsToRemove = [];
-        let fourthCharsToRemove = [];
+        //Uses a variable to build a unslated version of the string from the salted hashed password
+        while(i < cleanedHashedPassword.length){
+            //Extracting an unsalted char from the salted hashed password
+            unsaltedHashedPassword += cleanedSaltedHashedPassword[i];
 
-        //Error check to ensure nothing went wrong
-        if (divThreeLength > divFourLength) {
-            //Populating an array with all the positions of the third and fourth chars from the cleanedHashedPassword that should be removed 
-            for (let i = 3; i < divThreeLength; (i += 3)) {
-                thirdCharsToRemove.push(i)
+            i++;
+            originalCharCount++;
 
-                //Ensuring we do not try to remove an elemnt outside of the arrays length
-                if ((i + 1) < cleanedHashedPassword.length) {
-                    fourthCharsToRemove.push(i + 1);
-
-                }
-            
-            }
-
-            for (let x = 0; x < divThreeLength; x++) {
-                if (thirdCharsToRemove.length >= 1) { 
-                    //Removing the third chars
-                    cleanedHashedPassword = cleanedHashedPassword.slice(0 , thirdCharsToRemove[x]) + cleanedHashedPassword.slice(thirdCharsToRemove[x] + 1)
-                
-                    if(fourthCharsToRemove.length >= 1){
-                        //Ensuring we do not try to remove an elemnt outside of the arrays length
-                        if ((x + 1) < cleanedHashedPassword.length) {
-                            cleanedHashedPassword = cleanedHashedPassword.slice(0 , fourthCharsToRemove[x]) + cleanedHashedPassword.slice(fourthCharsToRemove[x] + 1)
-
-                        }
-
-                    }
-                    
-                    //Removing the char positons that were removed from the hashed password
-                    thirdCharsToRemove.shift();
-                    fourthCharsToRemove.shift();
-
-                    //decreasing the remaining elemtns of the arrays by 2
-                    thirdCharsToRemove = thirdCharsToRemove.map(num => num - 2);
-                    fourthCharsToRemove = fourthCharsToRemove.map(num => num - 2);
-
-                }
-                else{
-                    break;
-
-                }
+            //Skipping a char if it is a salted one (3rd char)
+            if(originalCharCount % 3 === 0){
+                i++;
 
             }
 
-            return cleanedHashedPassword;
+            //Skipping a char if it is a salted one (4th char)
+            if(originalCharCount % 4 === 0){
+                i+=2;
+
+            }
 
         }
-        else{
 
-            return null;
+        return cleanedHashedPassword;
 
-        }
-        
     }
 
 }
