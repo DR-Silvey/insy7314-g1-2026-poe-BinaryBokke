@@ -130,16 +130,55 @@ class EncryptionHandler {
         let numOfCharsRemoved = 0;
 
         //Arrays holding the postions of chars to remove
-        const thirdCharsToRemove = [];
-        const fourthCharsToRemove = [];
+        let thirdCharsToRemove = [];
+        let fourthCharsToRemove = [];
 
         //Error check to ensure nothing went wrong
         if (divThreeLength > divFourLength) {
             //Populating an array with all the positions of the third and fourth chars from the cleanedHashedPassword that should be removed 
-        for (let index = 3; index < modThreeLength; index++) {
-            const element = array[index];
+            for (let i = 3; i < divThreeLength; (i += 3)) {
+                thirdCharsToRemove.push(i)
+
+                //Ensuring we do not try to remove an elemnt outside of the arrays length
+                if ((i + 1) < cleanedHashedPassword.length) {
+                    fourthCharsToRemove.push(i + 1);
+
+                }
             
-        }
+            }
+
+            for (let x = 0; x < divThreeLength; x++) {
+                if (thirdCharsToRemove.length >= 1) { 
+                    //Removing the third chars
+                    cleanedHashedPassword = cleanedHashedPassword.slice(0 , thirdCharsToRemove[x]) + cleanedHashedPassword.slice(thirdCharsToRemove[x] + 1)
+                
+                    if(fourthCharsToRemove.length >= 1){
+                        //Ensuring we do not try to remove an elemnt outside of the arrays length
+                        if ((x + 1) < cleanedHashedPassword.length) {
+                            cleanedHashedPassword = cleanedHashedPassword.slice(0 , fourthCharsToRemove[x]) + cleanedHashedPassword.slice(fourthCharsToRemove[x] + 1)
+
+                        }
+
+                    }
+                    
+                    //Removing the char positons that were removed from the hashed password
+                    thirdCharsToRemove.shift();
+                    fourthCharsToRemove.shift();
+
+                    //decreasing the remaining elemtns of the arrays by 2
+                    thirdCharsToRemove = thirdCharsToRemove.map(num => num - 2);
+                    fourthCharsToRemove = fourthCharsToRemove.map(num => num - 2);
+
+                }
+                else{
+                    break;
+
+                }
+
+            }
+
+            return cleanedHashedPassword;
+
         }
         else{
 
