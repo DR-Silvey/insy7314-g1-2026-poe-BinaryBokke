@@ -42,7 +42,7 @@ class CommonInputValidator {
 
         }
 
-        //Username has to be stringm and > 3 chars
+        //Username has to be string and > 3 chars
         if((typeof username !== 'string' || username.length < 3)) {
             return false;
 
@@ -52,7 +52,7 @@ class CommonInputValidator {
 
     }
 
-    //Check for common input validation, password handler validation, string only
+    //Check for common input validation, string only
     IsValidPassword(password) {
         //Password has to meet the common input validation criteria
         if((!this.CommonInputValidation(password))) {
@@ -78,8 +78,8 @@ class CommonInputValidator {
 
         }
 
-        //Email has to be string
-        if(typeof email !== 'string') {
+        //Email has to be string and contain an @
+        if((typeof email !== 'string' && !email.includes("@"))) {
             return false;
         
         }
@@ -106,7 +106,7 @@ class CommonInputValidator {
 
     }
 
-    //Check for common input validation, over 120, less than 16, number only
+    //Check for common input validation, less than 120, over 16, number only
     IsValidAge(age) {
         //Age has to meet the common input validation criteria
         if((CommonInputValidator.CommonInputValidation(age))) {
