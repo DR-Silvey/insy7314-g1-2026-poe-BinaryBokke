@@ -1,8 +1,8 @@
 //Loading envrionmnet variables from .env file
 require('dotenv').config();
 
-//Loading required classes
-const CommonInputValidator = require('./methods/inputs/CommonInputValidator');
+//Loading required utils
+const CommonInputValidator = require('./utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
 const express = require('express');

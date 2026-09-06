@@ -125,3 +125,5 @@ class CommonInputValidator {
     }
 
 }
+
+module.exports = CommonInputValidator;

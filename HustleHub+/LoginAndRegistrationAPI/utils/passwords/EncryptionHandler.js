@@ -1,11 +1,26 @@
 //This class is responsible for encrypting passwords
 class EncryptionHandler {
+    //Used to compare passwords for user Log-in (the input when hashed should be the same as the saved hashed one)
+    async ComparePassword(password, hashedPassword){
+        //Ecrypting the newly entered password from the user
+        const hashedUserEnterredPassword = this.EncryptPassword(password);
+
+        //Comparison should match otherwise incorrect password
+        if (hashedUserEnterredPassword === hashedPassword) {
+            
+            return true;
+
+        }
+
+        return false;
+
+    }
 
     //Encryption
     //Steps
         //Hashing using bcrypt
         //Basic extra salts added (extra obfuscation)(see at implmentation)
-    EncryptPassword(plaintextPassword) {
+    async EncryptPassword(plaintextPassword) {
         //Hashed password from algorithm
         const hashedPassword = this.HashPassword(plaintextPassword);
 
@@ -26,7 +41,7 @@ class EncryptionHandler {
     }
 
     //Responsible for hashing the password using bcrypt
-    HashPassword(plaintextPassword) {
+    async HashPassword(plaintextPassword) {
         try{
             const bcrypt = require('bcrypt');
                 //bcrypt:
@@ -146,3 +161,5 @@ class EncryptionHandler {
     }
 
 }
+
+module.exports = EncryptionHandler;

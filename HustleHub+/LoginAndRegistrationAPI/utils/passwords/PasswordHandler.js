@@ -124,3 +124,5 @@ class PasswordHandler {
     }
 
 }
+
+module.exports = PasswordHandler;
