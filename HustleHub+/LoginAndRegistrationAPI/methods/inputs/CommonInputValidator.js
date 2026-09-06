@@ -1,3 +1,8 @@
+//This class is responsible for validating common input fields (username, password, email, fullname, age) before they are processed further in the application. 
+//checks for
+    //Input can't be undefined, null, empty, have to be string (except for age which has to be number)
+    //Input can't contain space chars or any indication of SQL injection (e.g. ' or 1=1 --)
+
 class CommonInputValidator {
     CommonInputValidation(input) {
         //Input can't be undefined, null, empty 
