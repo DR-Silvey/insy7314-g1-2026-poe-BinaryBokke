@@ -36,7 +36,7 @@ const RegisterUser = async (req, res) => {
 
     });
 
-    return res.status(201).json({message: 'User Registartion occurred SUCCESSFULLY.'});
+    return res.status(201).json({message: 'User Registartion occurred SUCCESSFULLY'});
 
 };
 
