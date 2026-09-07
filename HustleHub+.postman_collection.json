@@ -92,7 +92,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\n\t\"username\": \"krrrkonfyt\",\n    \"password\": \"123@#456789Kk#\",\n    \"fullname\": \"KoosKonfyt\",\n    \"email\": \"kkonfyt@gmail.com\",\n    \"age\": 21\n}",
+          "raw": "{\n\t\"username\": \"kzrskonfyt\",\n    \"password\": \"123@#456789Kk#\",\n    \"fullname\": \"KoosKonfyt\",\n    \"email\": \"kkonfyt@gmail.com\",\n    \"age\": 21\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -143,7 +143,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n\t\"username\": \"krrrskonfyt\",\r\n    \"password\": \"123@#456789Kk#\"\r\n\r\n}",
+          "raw": "{\r\n\t\"username\": \"kzrskonfyt\",\r\n    \"password\": \"123@#456789Kk#\"\r\n\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -164,90 +164,6 @@
             {
               "key": "username",
               "value": "krrkonfyt"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Registration Success (Role-Admin)",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n\t\"username\": \"krrAdmin\",\r\n    \"password\": \"123@#456789Kk#\",\r\n    \"fullname\": \"KoosKonfyt\",\r\n    \"email\": \"kkonfyt@gmail.com\",\r\n    \"age\": 21,\r\n\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "https://localhost:4000/register?username=kkonfyt&password=123456789Kk%23&fullname=KoosKonfyt&age=12&email=kkonfyt@gmail.com",
-          "protocol": "https",
-          "host": [
-            "localhost"
-          ],
-          "port": "4000",
-          "path": [
-            "register"
-          ],
-          "query": [
-            {
-              "key": "username",
-              "value": "kkonfyt"
-            },
-            {
-              "key": "password",
-              "value": "123456789Kk%23"
-            },
-            {
-              "key": "fullname",
-              "value": "KoosKonfyt"
-            },
-            {
-              "key": "age",
-              "value": "12"
-            },
-            {
-              "key": "email",
-              "value": "kkonfyt@gmail.com"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "LogIn Success (Role-Admin)",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n\t\"username\": \"krrAdmin\",\r\n    \"password\": \"123@#456789Kk#\"\r\n\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "https://localhost:4000/login?username=krrAdmin",
-          "protocol": "https",
-          "host": [
-            "localhost"
-          ],
-          "port": "4000",
-          "path": [
-            "login"
-          ],
-          "query": [
-            {
-              "key": "username",
-              "value": "krrAdmin"
             }
           ]
         }

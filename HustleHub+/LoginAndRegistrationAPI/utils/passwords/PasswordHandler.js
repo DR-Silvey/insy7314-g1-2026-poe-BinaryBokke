@@ -2,7 +2,7 @@
 //Checks for
     //Password length (min 12 chars)
     //Password complexity (must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character)
-    //Can't be in the common passwords list (see CommonPasswords.js)
+    //Can't be in the common passwords list
     //Shows a basi password strength (weak, medium, strong) based on length
 
 //Checked for in CommonInputValidator before this class is called
@@ -74,7 +74,7 @@ class PasswordHandler {
     //(w3 Schools, s.a.)
     PasswordNotCommon(password) {
         try{
-            //Import the CommonPasswords class
+            //Import the CommonPasswords class (not yet implmented since i couldnt find a list of coomon passswords that meet our complexity standard)
             const CommonPasswords = require('./CommonPasswords.js');
             const commonPasswords = new CommonPasswords();
 
@@ -92,7 +92,7 @@ class PasswordHandler {
                 //Fallback to a basic list of 10 common passwords (see below) that still meet the outlined requirements
             
             //Logging the error
-            console.error('Error importing CommonPasswords class:', error);
+            console.error('Error importing CommonPasswords class');
 
             //Fallback to a basic list of common passwords (see below) that still meet the outlined requirements (assumed list of common passwords as I could not find a list of common passwords that would meet our outlined requirements)
             //(w3 Schools, s.a.)
