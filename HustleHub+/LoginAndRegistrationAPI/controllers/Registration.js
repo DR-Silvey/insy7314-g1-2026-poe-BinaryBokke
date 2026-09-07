@@ -3,7 +3,7 @@ const EncryptionHandler = require('../utils/passwords/EncryptionHandler');
 const encryptHandler = new EncryptionHandler();
 
 //Temp to store and retreive data relating to user
-const users = require('../models/users');
+const user = require('../models/Users');
 
 //Registration route
 //Steps
@@ -12,31 +12,42 @@ const users = require('../models/users');
   //check if password meets security requirements
   //encrypt password
 const RegisterUser = async (req, res) => {
-    const { username, password, fullname, email } = req.body;
+    try{
+        const { username, password, fullname, email, age, role } = req.body;
   
-    //Checking if the username already exists
-    const existingUser = users.find(user => user.username === username);
+        //Checking if the username already exists
+        const existingUser = users.findOne({ username });
 
-    if (existingUser) {
-        return res.status(409).json({error: 'User already exists (if this is your account please LogIn)'});
+        if (existingUser) {
+            return res.status(409).json({error: 'User already exists (if this is your account please LogIn)'});
 
-    }
+        }
 
-    //Encrypting the user's chosen password
-    const encryptedPassword = await encryptHandler.EncryptPassword(password);
+        //Encrypting the user's chosen password
+        const encryptedPassword = await encryptHandler.EncryptPassword(password);
 
-    users.push(
-    {
-        username: username,
-        password: password,
-        fullname: fullname,
-        email: email,
-        age: age
+        //Creating a populated instance of the user schema
+        const newUser = new user({
+            username: username,
+            password: password,
+            fullname: fullname,
+            email: email,
+            age: age,
+            //Users are all genric at start and can request access for higher privelages
 
-    });
+        });
+
+    //Saving the new user to in memory schema
+    await newUser.save();
 
     return res.status(201).json({message: 'User Registartion occurred SUCCESSFULLY'});
 
+    }
+    catch(error){
+        return res.status(500).json({error: 'Internal Server Error'});
+
+    }
+    
 };
 
 module.exports = RegisterUser;

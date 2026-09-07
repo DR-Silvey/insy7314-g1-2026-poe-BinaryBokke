@@ -5,9 +5,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 //Creatin a token to store the user's username, role
-const CreateToken = ( req, res ) =>  {
-    const { username, role } = req.body;
-
+const CreateToken = ( username, role) =>  {
     return jwt.sign({
         username: username,
         role: role
