@@ -1,91 +1,124 @@
 //Loading envrionmnet variables from .env file
 require('dotenv').config();
 
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
+
+//Importing routes for LogIn, Registration, ErrorHandling
+const RegistrationRoutes = require('../LoginAndRegistrationAPI/routes/RegistrationRoutes');
+const LogInRoutes = require('../LoginAndRegistrationAPI/routes/LogInRoutes');
+const ErrorHandling = require('../LoginAndRegistrationAPI/middleware/ErrorHandler');
+
+const app = express();
+
+const PORT = process.env.PORT || 4000;
+const USE_HTTPS = process.env.USE_HTTPS === 'true';
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
+
+app.disable('x-powered-by');
+
 //Loading required utils
 const CommonInputValidator = require('./utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
-const express = require('express');
-const app = express();
-const port = process.env.PORT;
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: ["'self'"],
+                styleSrc: ["'self'"],
+                imgSrc: ["'self'", 'data:'],
+                connectSrc: ["'self'", CLIENT_ORIGIN],
+                objectSrc: ["'none'"],
+                baseUri: ["'self'"],
+                frameAncestors: ["'none'"]
 
+            }
 
-app.use(express.json());
+        },
+        crossOriginResourcePolicy: { policy: 'same-site' }
 
-//ROOT route
-app.get('/', (req, res) => {
-    res.send(process.env.APP_NAME);
+    })
 
-});
+);
 
-//Health route
-app.get('/health', (req, res) => {
-    res.json({ status: 'OK' });
+app.use(
+    cors({
+        origin: CLIENT_ORIGIN,
+        methods: ['POST'],
+        allowedHeaders: ['Content-Type', 'Authorization']
 
-});
+    })
 
-//POST route
-app.post('/message', (req, res) => {
-    const { message } = req.body;
-    res.json({ received: message });
+);
 
-});
+app.use(express.json({limit: '10kb'}));
 
-//Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+//General Routes
+    //ROOT route
+    app.get('/', (req, res) => {
+        res.send(process.env.APP_NAME);
 
-});
+    });
 
-//LogIn route
-//Steps
-  //Check inputs (flag abnormalities)
-  //Check if user exists
-  //Check if password is correct
-  //Return response (ensure to keep failure generic)
-app.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    res.json({ received: message });
+    //Health route
+    app.get('/health', (req, res) => {
+        res.json({ status: 'OK' });
 
-    //default response -failure
-    const response = 400;
+    });
 
-    //Checking inputs
-    if(inputValidator.IsValidUsernameandPassword(username, password)) {
-        response = 200;
+    //POST route
+    app.post('/message', (req, res) => {
+        const { message } = req.body;
+        res.json({ received: message });
 
-    }else{
-        response = 400;
+    });
 
-    } 
+    //Start the server
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`);
+
+    });
+
+//Registration route access
+app.use('/',RegistrationRoutes);
+
+//LogIn route access
+app.use('/',LogInRoutes);
+
+app.use((req, res) => {
+    res.status(404).json({error: 'Route not found'});
+
+})
+
+app.use(ErrorHandler);
     
-    //Check if user exists
+if(USE_HTTPS){
+    const keyPath = process.env.SSL_KEY_PATH || path.join(__dirname, 'certs', 'localhost-key.pem');
+    const certPath = process.env.SSL_CERT_PATH || path.join(__dirname, 'certs', 'localhost-cert.pem');
 
-    //Check if password is correct
+    const httpsOptions = {
+        key: fs.readFileSync(keyPath),
+        cert: fs.readFileSync(certPath)
 
-    //Response
-    res.send(response);
+    };
+
+    https.createServer(httpsOptions, app).listen(PORT, () => {
+        console.log(`HTTPS sever running on port ${PORT}`);
+
+    });
+
+}
+else{
+    app.listen(PORT, () => {
+        console.log(`HTTP sever running on port ${PORT}`)
+
+    });
     
-});
+}
 
-//Registration route
-//Steps
-  //Check inputs (flag abnormalities)
-  //check if username or email already exists (if username or email already exists, tell the user account laready exists)
-  //check if password meets security requirements
-  //encrypt password
-
-app.post('/register', (req, res) => {
-    const { username, password, fullname, email } = req.body;
-
-    //Checking inputs
-    if(inputValidator.IsValidUsernameandPassword(username, password) && inputValidator.IsValidFullname(fullname) && inputValidator.IsValidEmail(email) && inputValidator.IsValidAge(age)) {
-        response = 200;
-
-    }else{
-        response = 400;
-        
-    }
-
-
-});
