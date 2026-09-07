@@ -1,0 +1,45 @@
+:root { color: #15233b; background: #f4f5f9; font-family: Arial, sans-serif; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+a { color: #3157bb; text-underline-offset: 3px; }
+.auth-shell { min-height: 100vh; }
+.eyebrow { margin: 0 0 12px; color: #5474ca; font-size: .71rem; font-weight: 700; letter-spacing: .14em; }
+.form-panel { display: grid; min-height: 100vh; place-items: center; padding: 56px 28px; background: #f4f6fb; }
+.auth-card { width: min(100%, 455px); }
+.simple-brand { display: flex; align-items: center; justify-content: center; gap: 9px; margin-bottom: 36px; color: #14213d; font-size: 1.3rem; font-weight: 700; letter-spacing: -.04em; text-decoration: none; }
+.simple-brand span { display: grid; place-items: center; width: 33px; height: 33px; border-radius: 9px; color: #fff; background: #203b7d; font-size: .95rem; letter-spacing: 0; }
+.simple-brand strong { color: #3157bb; }
+.mode-switch { display: grid; grid-template-columns: 1fr 1fr; width: 100%; margin-bottom: 40px; border-bottom: 1px solid #dfe4ee; }
+.mode-switch button { position: relative; padding: 0 0 14px; border: 0; color: #79849a; background: transparent; font-weight: 600; }
+.mode-switch button.active { color: #203b7d; }
+.mode-switch button.active::after { position: absolute; right: 0; bottom: -1px; left: 0; height: 2px; content: ''; background: #3157bb; }
+.auth-card header { margin-bottom: 27px; }
+.auth-card header h2 { margin: 0 0 9px; color: #15233b; font: 700 2rem/1.15 Georgia, serif; letter-spacing: -.04em; }
+.auth-card header p:last-child { margin: 0; color: #68758b; line-height: 1.55; }
+form { display: grid; gap: 7px; }
+label, legend { color: #35435a; font-size: .88rem; font-weight: 700; }
+input:not([type='radio']):not([type='checkbox']) { width: 100%; min-height: 48px; padding: 0 14px; border: 1px solid #ccd4e0; border-radius: 8px; outline: none; color: #15233b; background: #fff; transition: border-color .15s, box-shadow .15s; }
+input::placeholder { color: #a1aabd; }
+input:focus { border-color: #3157bb; box-shadow: 0 0 0 3px rgba(49,87,187,.12); }
+input[aria-invalid='true'] { border-color: #bd3c4d; }
+.field-error { min-height: 15px; margin: -2px 0 2px; color: #b42639; font-size: .76rem; line-height: 1.25; }
+.password-control { position: relative; }
+.password-control input { padding-right: 70px; }
+.password-control button { position: absolute; top: 0; right: 0; height: 48px; padding: 0 14px; border: 0; color: #3157bb; background: transparent; font-size: .78rem; font-weight: 700; }
+.checkbox-row { display: flex; gap: 8px; align-items: flex-start; margin: 5px 0 0; color: #637087; font-size: .79rem; font-weight: 500; line-height: 1.45; }
+.checkbox-row input { accent-color: #3157bb; margin: 3px 0 0; }
+.forgot-row { display: flex; align-items: center; justify-content: space-between; margin: 3px 0 7px; font-size: .8rem; }
+.forgot-row .checkbox-row { margin: 0; }
+.forgot-row a { font-weight: 700; text-decoration: none; }
+.primary-button { min-height: 50px; margin-top: 14px; border: 0; border-radius: 8px; color: #fff; background: #203b7d; box-shadow: 0 8px 15px rgba(32,59,125,.16); font-weight: 700; transition: transform .15s, background .15s; }
+.primary-button:hover:not(:disabled) { background: #172e65; transform: translateY(-1px); }
+.primary-button:disabled { cursor: wait; opacity: .7; }
+.notice { margin: 0 0 20px; padding: 11px 13px; border-radius: 7px; font-size: .84rem; line-height: 1.45; }
+.notice.success { border: 1px solid #a8dccc; color: #17674f; background: #ecf9f4; }
+.notice.error { border: 1px solid #efc1c9; color: #a12336; background: #fff3f4; }
+.switch-copy { margin: 26px 0 0; color: #68758b; text-align: center; font-size: .86rem; }
+.switch-copy button { padding: 0; border: 0; color: #3157bb; background: transparent; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 820px) { .form-panel { padding: 42px 22px; } }
+@media (max-width: 430px) { .form-panel { padding: 30px 18px; } .mode-switch { margin-bottom: 31px; } .auth-card header h2 { font-size: 1.78rem; } .forgot-row { align-items: flex-start; gap: 14px; } }
