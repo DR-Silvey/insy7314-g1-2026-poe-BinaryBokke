@@ -5,8 +5,13 @@ const RegistrationValidityChecks = require('../middleware/RegistrationValidation
 const RegisterUser = require('../controllers/Registration');
 const UpdateUserInfo = require('../controllers/userInfo/UpdateUserInfo');
 const UpdateUserRole = require('../controllers/userInfo/UpdateUserRole');
-const AdminRoleCheck = require('../middleware/roleChecks/AdminRoleCheck');
 const AuthMiddleware = require('../middleware/tokens/AuthMiddleware');
+
+console.log('protect:', typeof AuthMiddleware.protect);
+console.log('authorizeRoles:', typeof AuthMiddleware.authorizeRoles);
+console.log('RegistrationValidityChecks:', typeof RegistrationValidityChecks);
+console.log('UpdateUserInfo:', typeof UpdateUserInfo);
+console.log('UpdateUserRole:', typeof UpdateUserRole);
 
 //base verb
 router.post('/register', RegistrationValidityChecks, RegisterUser);

@@ -17,7 +17,10 @@ const logUserIn =  async (req, res) => {
 
     //User doesn't exist
     if(!foundUser){
-        return res.status(401).json({message: 'Invalid Username or Password'});
+        return res.status(401).json({
+            error: 'Invalid Username or Password'
+        
+        });
 
     }
 
@@ -26,18 +29,27 @@ const logUserIn =  async (req, res) => {
 
     //Passwords don't match
     if(!passwordMatches){
-        return res.status(401).json({message: 'Invalid Username or Password'});
+        return res.status(401).json({
+            error: 'Invalid Username or Password'
+        
+        });
 
     }
 
     //creating a jason web toke if the user's login credential were found and matched
     const token = TokenCreation.CreateToken(username, "GENERIC"); //All users generic at this stage
 
-    return res.status(200).json({message: 'LogIn attempt was SUCCESSFULL', token});
+    return res.status(200).json({
+        message: 'LogIn attempt was SUCCESSFULL', token
+    
+    });
 
     }
     catch(error){
-        return res.status(500).json({error: 'Internal Server Error'});
+        return res.status(500).json({
+            error: 'Something went wrong'
+        
+        });
 
     }
 

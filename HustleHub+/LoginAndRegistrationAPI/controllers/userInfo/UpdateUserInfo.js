@@ -10,20 +10,20 @@ const UpdateUserInfo =  async ( req, res ) => {
         
         if(!foundUser){
             return res.status(404).json({
-                message: 'User not found'
+                error: 'User not found'
 
             });
 
         }
 
         //Check is the user requested to change their username
-        if((req.body.username && req.body.username !== user.username)){
+        if((req.body.username && req.body.username !== foundUser.username)){
             //Check if the user's requested username already exists
             const usernameExists = await user.findOne({ username: req.body.username });
 
-            if (condition) {
+            if (usernameExists) {
                 return res.status(409).json({
-                    message: 'Username Already Exists'
+                    error: 'Username Already Exists'
 
                 });
 
@@ -33,34 +33,34 @@ const UpdateUserInfo =  async ( req, res ) => {
 
         //Updating user info
             if(req.body.username){
-                user.username = req.body.username;
+                foundUser.username = req.body.username;
 
             }
 
             if(req.body.password){
-                user.password = req.body.password;
+                foundUser.password = req.body.password;
 
             }
 
             if(req.body.fullname){
-                user.fullname = req.body.fullname;
+                foundUser.fullname = req.body.fullname;
 
             }
 
             if(req.body.email){
-                user.email = req.body.email;
+                foundUser.email = req.body.email;
 
             }
 
             if(req.body.age){
-                user.age = req.body.age;
+                foundUser.age = req.body.age;
 
             }
 
         //Saving the updated info to the in memory storage
-        await user.save();
+        await foundUser.save();
 
-        return re.status(200).json({
+        return res.status(200).json({
             message: 'User Information was SUCCESSFULLY UPDATED'
 
         })
@@ -68,7 +68,7 @@ const UpdateUserInfo =  async ( req, res ) => {
     }
     catch(error){
         return res.status(500).json({
-                message: 'Internal Server Error'
+                error: 'Something Went wrong'
 
         })
 

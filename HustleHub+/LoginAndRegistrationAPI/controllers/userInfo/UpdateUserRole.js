@@ -11,7 +11,7 @@ const UpdateUserRole =  async ( req, res ) => {
         
         if(!foundUser){
             return res.status(404).json({
-                message: 'User not found'
+                error: 'User not found'
 
             });
 
@@ -31,10 +31,12 @@ const UpdateUserRole =  async ( req, res ) => {
     }
     catch(error){
         return res.status(500).json({
-                message: 'Internal Server Error'
+                error: 'Something went wrong'
 
         })
 
     }
 
 }
+
+module.exports = UpdateUserRole;

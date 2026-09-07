@@ -51,7 +51,7 @@ app.use(
 app.use(
     cors({
         origin: CLIENT_ORIGIN,
-        methods: ['POST'],
+        methods: ['POST', 'PATCH'],
         allowedHeaders: ['Content-Type', 'Authorization']
 
     })
@@ -87,7 +87,10 @@ app.use('/',RegistrationRoutes);
 app.use('/',LogInRoutes);
 
 app.use((req, res) => {
-    res.status(404).json({error: 'Route not found'});
+    res.status(404).json({
+        error: 'Route not found'
+    
+    });
 
 })
 

@@ -19,7 +19,10 @@ const RegisterUser = async (req, res) => {
         const existingUser = users.findOne({ username });
 
         if (existingUser) {
-            return res.status(409).json({error: 'User already exists (if this is your account please LogIn)'});
+            return res.status(409).json({
+                error: 'User already exists (if this is your account please LogIn)'
+            
+            });
 
         }
 
@@ -40,11 +43,17 @@ const RegisterUser = async (req, res) => {
     //Saving the new user to in memory schema
     await newUser.save();
 
-    return res.status(201).json({message: 'User Registartion occurred SUCCESSFULLY'});
+    return res.status(201).json({
+        message: 'User Registartion occurred SUCCESSFULLY'
+    
+    });
 
     }
     catch(error){
-        return res.status(500).json({error: 'Internal Server Error'});
+        return res.status(500).json({
+            error: 'Something went wrong'
+        
+        });
 
     }
     
