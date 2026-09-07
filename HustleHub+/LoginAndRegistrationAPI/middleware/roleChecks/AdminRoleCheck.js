@@ -3,7 +3,7 @@ const AdminRoleCheck = ( req, res, next ) => {
         return res.status(403).json({
             message: 'Admin privileges required to use this method'
 
-        })        
+        });        
 
         next();
 
