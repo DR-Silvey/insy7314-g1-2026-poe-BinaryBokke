@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 
 //Schema that defines how user data will be stored
+//(The IIE, 2026)
 const UserSchema = new mongoose.Schema(
     {
         username: { //used as a PK
@@ -16,8 +17,9 @@ const UserSchema = new mongoose.Schema(
         password: {
             type: String,
             required: [true, 'Password is required'],
-            trim: true,
-            minlength: [12, 'Password must be atleast 12 characters']
+            trim: true
+
+            //Min length already enforced pre hashing
             
         },
 
@@ -63,3 +65,10 @@ const UserSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model('User', UserSchema);
+
+/*
+The Independent Institute of Education, 2026. INOFRMATION SYSTEM 3D [INSY7314/w]. nt. [online 
+via internal VLE] The Independent Institute of Education. Available at: <https://advtechonline.sharepoint.com/:w:/r/sites/TertiaryStudents/_layouts/15/Doc.aspx?sourcedoc=%7B58B815C8-D592-4D47-BDA0-4F6761924E1B%7D&file=INSY7314MM.docx&action=default&mobileredirect=true> 
+[Accessed 4 Septemeber 2026]. 
+
+*/
