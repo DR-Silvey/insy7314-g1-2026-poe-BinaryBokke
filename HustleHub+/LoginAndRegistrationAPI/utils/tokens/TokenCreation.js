@@ -1,6 +1,3 @@
-//Loading envrionmnet variables from .env file
-require('dotenv').config();
-
 //Jwst used to create session tokens
 const jwt = require('jsonwebtoken');
 

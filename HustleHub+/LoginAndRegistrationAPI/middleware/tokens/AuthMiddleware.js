@@ -1,6 +1,3 @@
-//Loading envrionmnet variables from .env file
-require('dotenv').config();
-
 const jwt = require('jsonwebtoken');
 
 const protect = ( req, res, next ) => {

@@ -1,5 +1,3 @@
-//No conection to an instance of mongodb is made at this point only in memeory storage exists
-
 //importing mongoose
 const mongoose = require('mongoose');
 

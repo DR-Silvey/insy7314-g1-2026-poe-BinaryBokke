@@ -8,6 +8,10 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
+//Attempting connection to db
+const connectDb = require('../LoginAndRegistrationAPI/config/db');
+connectDb();
+
 //Importing routes for LogIn, Registration, ErrorHandling
 const RegistrationRoutes = require('../LoginAndRegistrationAPI/routes/RegistrationRoutes');
 const LogInRoutes = require('../LoginAndRegistrationAPI/routes/LogInRoutes');
