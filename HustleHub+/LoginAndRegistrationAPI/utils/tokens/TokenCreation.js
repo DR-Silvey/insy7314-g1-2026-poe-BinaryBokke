@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
 //Creatin a token to store the user's username, role
 const CreateToken = ( username, role ) =>  {
+    console.log('Token creation attempt');
     return jwt.sign({
         username: username,
         role: role

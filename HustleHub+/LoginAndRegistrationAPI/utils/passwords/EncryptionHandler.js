@@ -30,12 +30,13 @@ class EncryptionHandler {
 
             //Saltihn failure should return null
             if (saltAndHashPassword !== null) {
-
+                console.log('Password encryption wa a success');
                 return saltAndHashPassword;
 
             }
         }
 
+        console.error('Password encrytpion failed');
         return null;
 
     }
@@ -51,6 +52,7 @@ class EncryptionHandler {
             //Hashing with a computational cost of 12
             const hashedPassword = bcrypt.hashSync(plaintextPassword, 12);
 
+            console.log('Password successfully hashed');
             return hashedPassword;
 
         }
@@ -60,7 +62,6 @@ class EncryptionHandler {
                 //return null
 
             console.error('Error importing encryption module:', error);
-
             return null;
 
         }
@@ -113,12 +114,12 @@ class EncryptionHandler {
         //Ensuring the hashedPassword was salted by comparing it's new length with it's previous one
         if ((saltedHashedPassword.length <= originalHashedPassLength)) {
             //Password wasn't salted
-
+            console.error('Password salting failure');
             return null;
 
         }
         else{
-            
+            console.log('Password salting success');
             return saltedHashedPassword;
 
         }
@@ -156,6 +157,7 @@ class EncryptionHandler {
 
         }
 
+        console.log('Password unsalting success');
         return cleanedHashedPassword;
 
     }

@@ -15,7 +15,7 @@ class PasswordHandler {
         if(!this.ValidLength(password)) {
             return false;
         
-        }   
+        } 
 
         if(!this.ValidComplexity(password)) {
             return false;
@@ -27,6 +27,7 @@ class PasswordHandler {
             
         }
 
+        console.log('Password met minum complexity criteria (length, complexity, commonality)')
         return true;
 
     }
@@ -35,9 +36,13 @@ class PasswordHandler {
     ValidLength(password) {
         //Password has to be at least 12 characters long
         if(password.length <= 12) {
+            console.error("Password was less than 12 chars");
             return false;
 
         }
+
+        console.log('Password met length requirement');
+        return true;
 
     }
 
@@ -53,10 +58,12 @@ class PasswordHandler {
         const complexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
         if((!complexityRegex.test(password))) {
+            console.error('Password failed to meet complexity standard');
             return false;
         
         }
         
+        console.log('Password met complexity standard');
         return true;
 
     }
@@ -70,6 +77,7 @@ class PasswordHandler {
 
             //Check if the password is in the common passwords list
             if(commonPasswords.IsCommonPassword(password)) {
+                console.error('Password was too common');
                 return false;   
 
             }
@@ -94,12 +102,14 @@ class PasswordHandler {
             ];
 
             if(fallbackCommonPasswords.includes(password)) {
+                console.error('Password was too common');
                 return false;
 
             }
 
         }
 
+        console.log('Password met commonality requirement');
         return true;
 
     }
@@ -109,14 +119,17 @@ class PasswordHandler {
         const length = password.length;
 
         if(length < 12) {
+            console.log('Password is weak');
             return 'weak';
 
         } else if(length < 16) {
+            console.log('Password is medium');
             return 'medium';
 
         } 
         else 
         {
+            console.log('Password is strong');
             return 'strong';
 
         }

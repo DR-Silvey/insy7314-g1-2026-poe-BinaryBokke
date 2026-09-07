@@ -9,6 +9,7 @@ const UpdateUserInfo =  async ( req, res ) => {
         const foundUser = await user.findOne({ username: usernameToFind });
         
         if(!foundUser){
+            console.error(`Username (${usernameToFind}) not found within db`);
             return res.status(404).json({
                 error: 'User not found'
 
@@ -22,6 +23,7 @@ const UpdateUserInfo =  async ( req, res ) => {
             const usernameExists = await user.findOne({ username: req.body.username });
 
             if (usernameExists) {
+                console.error(`Instance of username ${foundUser} already exists within db as (pk)`);
                 return res.status(409).json({
                     error: 'Username Already Exists'
 
@@ -60,6 +62,7 @@ const UpdateUserInfo =  async ( req, res ) => {
         //Saving the updated info to the in memory storage
         await foundUser.save();
 
+        console.log('User information was successfully updated');
         return res.status(200).json({
             message: 'User Information was SUCCESSFULLY UPDATED'
 
@@ -67,6 +70,7 @@ const UpdateUserInfo =  async ( req, res ) => {
 
     }
     catch(error){
+        console.error('Internal Server Error');
         return res.status(500).json({
                 error: 'Something Went wrong'
 

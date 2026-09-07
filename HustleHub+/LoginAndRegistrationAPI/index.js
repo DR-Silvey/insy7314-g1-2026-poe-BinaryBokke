@@ -63,12 +63,14 @@ app.use(express.json({limit: '10kb'}));
 //General Routes
     //ROOT route
     app.get('/', (req, res) => {
+        console.log('ROOT request occured');
         res.send(process.env.APP_NAME);
 
     });
 
     //Health route
     app.get('/health', (req, res) => {
+        console.log('HEALTH request occured');
         res.json({ status: 'OK' });
 
     });
@@ -76,7 +78,12 @@ app.use(express.json({limit: '10kb'}));
     //POST route
     app.post('/message', (req, res) => {
         const { message } = req.body;
-        res.json({ received: message });
+
+        console.log('MESSAGE request occured');
+        res.json({ 
+            received: message 
+        
+        });
 
     });
 
@@ -87,6 +94,7 @@ app.use('/',RegistrationRoutes);
 app.use('/',LogInRoutes);
 
 app.use((req, res) => {
+    console.error("API route not found");
     res.status(404).json({
         error: 'Route not found'
     

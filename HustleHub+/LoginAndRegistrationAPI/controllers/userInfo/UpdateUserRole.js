@@ -10,6 +10,7 @@ const UpdateUserRole =  async ( req, res ) => {
         const foundUser = await user.findOne({ username: usernameToFind });
         
         if(!foundUser){
+            console.error(`Username (${usernameToFind}) not found within db`);
             return res.status(404).json({
                 error: 'User not found'
 
@@ -23,13 +24,15 @@ const UpdateUserRole =  async ( req, res ) => {
         //Saving the updated info to the in memory storage
         await user.save();
 
-        return re.status(200).json({
+        console.log(`User's role was successfully changed to ${role}`);
+        return res.status(200).json({
             message: 'User ROLE was SUCCESSFULLY UPDATED'
 
         })
 
     }
     catch(error){
+        console.error('Internal Server Error');
         return res.status(500).json({
                 error: 'Something went wrong'
 
