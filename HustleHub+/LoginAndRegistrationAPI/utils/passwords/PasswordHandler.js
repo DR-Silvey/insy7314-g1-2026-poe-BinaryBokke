@@ -55,7 +55,7 @@ class PasswordHandler {
             //1 special character (discluding space chars)
 
         //Regex pattern to check for password complexity (contains the above metnioned requirements)
-        const complexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+        const complexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]+$/;
 
         if((!complexityRegex.test(password))) {
             console.error('Password failed to meet complexity standard');

@@ -13,11 +13,14 @@ class CommonInputValidator {
             return false;
         }
 
-        //Input can't contain space chars or any indication of SQL injection (e.g. ' or 1=1 --)
-        if((input.includes(' ') || input.includes("'") || input.includes("--"))){
-            console.error('An invalid input was entered (possible sql injection attempt)');
-            return false;
+        //String inputs can't contain space chars or any indication of SQL injection (e.g. ' or 1=1 --)
+        if(typeof input === 'string'){
+            if((input.includes(' ') || input.includes("'") || input.includes("--"))){
+                console.error('An invalid input was entered (possible sql injection attempt)');
+                return false;
 
+            }
+            
         }
 
         return true;
@@ -120,7 +123,7 @@ class CommonInputValidator {
     //Check for common input validation, less than 120, over 16, number only
     IsValidAge(age) {
         //Age has to meet the common input validation criteria
-        if((CommonInputValidator.CommonInputValidation(age))) {
+        if((!this.CommonInputValidation(age))) {
             console.error('Age did not meet common input validation criteria');
             return false;
 

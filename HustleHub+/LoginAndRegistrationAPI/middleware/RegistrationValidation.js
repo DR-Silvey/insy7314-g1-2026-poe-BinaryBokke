@@ -6,7 +6,9 @@ const PasswordHandler = require('../utils/passwords/PasswordHandler');
 const passwordHandler = new PasswordHandler();
 
 const RegistrationValidityChecks = (req, res, next) => {
-    const { username, password, fullname, email } = req.body;
+    const { username, password, fullname, email, age } = req.body;
+
+    console.log(req.body);
 
     //Ensuring that all the user input is valid in terms of data type and is non malicious
         if(!(inputValidator.IsValidUsername(username))){

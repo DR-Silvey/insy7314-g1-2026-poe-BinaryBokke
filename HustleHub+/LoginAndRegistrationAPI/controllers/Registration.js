@@ -16,10 +16,10 @@ const RegisterUser = async (req, res) => {
         const { username, password, fullname, email, age, role } = req.body;
   
         //Checking if the username already exists
-        const existingUser = users.findOne({ username });
+        const existingUser = await user.findOne({ username });
 
         if (existingUser) {
-            console.error(`Instance of username ${foundUser} already exists within db as (pk)`);
+            console.error(`Instance of username ${username} already exists within db as (pk)`);
             return res.status(409).json({
                 error: 'User already exists (if this is your account please LogIn)'
             
@@ -33,7 +33,7 @@ const RegisterUser = async (req, res) => {
         //Creating a populated instance of the user schema
         const newUser = new user({
             username: username,
-            password: password,
+            password: encryptedPassword,
             fullname: fullname,
             email: email,
             age: age,
@@ -52,7 +52,7 @@ const RegisterUser = async (req, res) => {
 
     }
     catch(error){
-        console.error('Internal Server Error');
+        console.error('Internal Server Error', error);
         return res.status(500).json({
             error: 'Something went wrong'
         
