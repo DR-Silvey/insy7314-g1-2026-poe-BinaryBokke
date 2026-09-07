@@ -64,4 +64,4 @@ const UserSchema = new mongoose.Schema(
 
 );
 
-module.exports = userSchema;
+module.exports = UserSchema;

@@ -3,7 +3,6 @@ const EncryptionHandler = require('../utils/passwords/EncryptionHandler');
 const encryptionHandler = new EncryptionHandler();
 
 const TokenCreation = require('../utils/tokens/TokenCreation');
-const tokenCreation = new TokenCreation();
 
 //Temp to store and retreive data relating to user
 const user = require('../models/Users');
@@ -32,14 +31,14 @@ const logUserIn =  async (req, res) => {
     }
 
     //creating a jason web toke if the user's login credential were found and matched
-    const token = tokenCreation.CreateToken(username, "GENERIC"); //All users generic at this stage
+    const token = TokenCreation.CreateToken(username, "GENERIC"); //All users generic at this stage
 
     return res.status(200).json({message: 'LogIn attempt was SUCCESSFULL', token});
 
     }
     catch(error){
         return res.status(500).json({error: 'Internal Server Error'});
-        
+
     }
 
 }

@@ -11,6 +11,7 @@ const path = require('path');
 //Importing routes for LogIn, Registration, ErrorHandling
 const RegistrationRoutes = require('../LoginAndRegistrationAPI/routes/RegistrationRoutes');
 const LogInRoutes = require('../LoginAndRegistrationAPI/routes/LogInRoutes');
+
 const ErrorHandler = require('../LoginAndRegistrationAPI/middleware/ErrorHandler');
 
 const app = express();
