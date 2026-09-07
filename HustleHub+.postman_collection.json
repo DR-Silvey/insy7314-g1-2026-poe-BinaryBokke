@@ -1,0 +1,634 @@
+{
+  "info": {
+    "_postman_id": "64dd99a3-13b5-4956-89bc-a954d358555d",
+    "name": "HustleHub+",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49054922",
+    "_collection_link": "https://go.postman.co/collection/49054922-64dd99a3-13b5-4956-89bc-a954d358555d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Generic Call",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:4000/",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Generic Call (HEALTH)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:4000/health",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Generic Call (MESSAGE)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"message\": \"test\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/message",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "message"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Registration Success (Role-Generic)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"username\": \"kzrskonfyt\",\n    \"password\": \"123@#456789Kk#\",\n    \"fullname\": \"KoosKonfyt\",\n    \"email\": \"kkonfyt@gmail.com\",\n    \"age\": 21\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/register?username=kkonfyt&password=123456789Kk%23&fullname=KoosKonfyt&age=12&email=kkonfyt@gmail.com",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "register"
+          ],
+          "query": [
+            {
+              "key": "username",
+              "value": "kkonfyt"
+            },
+            {
+              "key": "password",
+              "value": "123456789Kk#"
+            },
+            {
+              "key": "fullname",
+              "value": "KoosKonfyt"
+            },
+            {
+              "key": "age",
+              "value": "12"
+            },
+            {
+              "key": "email",
+              "value": "kkonfyt@gmail.com"
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "LogIn Success (Role-Generic)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\t\"username\": \"kzrskonfyt\",\r\n    \"password\": \"123@#456789Kk#\"\r\n\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/login?username=krrkonfyt",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "login"
+          ],
+          "query": [
+            {
+              "key": "username",
+              "value": "krrkonfyt"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Registration Failure (Duplicate Username)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"username\": \"krrrkonfyt\",\n    \"password\": \"123@#456789Kk#\",\n    \"fullname\": \"KoosKonfyt\",\n    \"email\": \"kkonfyt@gmail.com\",\n    \"age\": 21\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/register?",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "register"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Registration Failure (Short Username)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"username\": \"kr\",\n    \"password\": \"123@#456789Kk#\",\n    \"fullname\": \"KoosKonfyt\",\n    \"email\": \"kkonfyt@gmail.com\",\n    \"age\": 21\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/register?",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "register"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Registration Failure (Short Password)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"username\": \"krrrrr\",\n    \"password\": \"12345Kk@\",\n    \"fullname\": \"KoosKonfyt\",\n    \"email\": \"kkonfyt@gmail.com\",\n    \"age\": 21\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/register?",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "register"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Registration Failure (Low Complexity Password)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"username\": \"krrrrr\",\n    \"password\": \"1234567891230\",\n    \"fullname\": \"KoosKonfyt\",\n    \"email\": \"kkonfyt@gmail.com\",\n    \"age\": 21\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/register?",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "register"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Registration Failure (Invalid Age to low)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"username\": \"krrrrr\",\n    \"password\": \"1234567891230Kk@\",\n    \"fullname\": \"KoosKonfyt\",\n    \"email\": \"kkonfyt@gmail.com\",\n    \"age\": 15\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/register?",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "register"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Registration Failure (Invalid Age to high)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"username\": \"krrrrr\",\n    \"password\": \"1234567891230Kk@\",\n    \"fullname\": \"KoosKonfyt\",\n    \"email\": \"kkonfyt@gmail.com\",\n    \"age\": 121\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/register?",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "register"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Registration Failure (Generic Input Mismatch)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"username\": \"\",\n    \"password\": \"\",\n    \"fullname\": \"\",\n    \"email\": \"\",\n    \"age\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/register?",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "register"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Login Failure (Username Doesn't Exist)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"username\": \"randomdude\",\n    \"password\": \"123@#456789Kk#\"\n\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/login?",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "login"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Login Failure (Username and Password don't correlate))",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"username\": \"krrrkonfyt\",\n    \"password\": \"123@#456789KKKKKKKKKKKk#\"\n\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/login?",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "login"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "LogIn Failure (Generic Input Mismatch)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {\n    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"username\": \"\",\n    \"password\": \"\"\n\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:4000/login?",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "4000",
+          "path": [
+            "login"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": ""
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    }
+  ]
+}
