@@ -3,7 +3,7 @@ const CommonInputValidator = require('../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
 const PasswordHandler = require('../utils/passwords/PasswordHandler');
-const passwordHandler = new EncryptionHandler();
+const passwordHandler = new PasswordHandler();
 
 const RegistrationValidityChecks = (req, res, next) => {
     const { username, password, fullname, email } = req.body;

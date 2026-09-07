@@ -3,8 +3,7 @@ const EncryptionHandler = require('../utils/passwords/EncryptionHandler');
 const encryptHandler = new EncryptionHandler();
 
 //Temp to store and retreive data relating to user
-const Users = require('../tempdatastorage/users');
-const users = new Users();
+const users = require('../tempdatastorage/users');
 
 //Registration route
 //Steps

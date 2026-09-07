@@ -11,7 +11,7 @@ const path = require('path');
 //Importing routes for LogIn, Registration, ErrorHandling
 const RegistrationRoutes = require('../LoginAndRegistrationAPI/routes/RegistrationRoutes');
 const LogInRoutes = require('../LoginAndRegistrationAPI/routes/LogInRoutes');
-const ErrorHandling = require('../LoginAndRegistrationAPI/middleware/ErrorHandler');
+const ErrorHandler = require('../LoginAndRegistrationAPI/middleware/ErrorHandler');
 
 const app = express();
 
@@ -79,12 +79,6 @@ app.use(express.json({limit: '10kb'}));
 
     });
 
-    //Start the server
-    app.listen(port, () => {
-        console.log(`Server is running on http://localhost:${port}`);
-
-    });
-
 //Registration route access
 app.use('/',RegistrationRoutes);
 
@@ -119,6 +113,6 @@ else{
         console.log(`HTTP sever running on port ${PORT}`)
 
     });
-    
+
 }
 
