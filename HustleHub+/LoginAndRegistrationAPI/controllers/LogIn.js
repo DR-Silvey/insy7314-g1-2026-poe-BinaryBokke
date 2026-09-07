@@ -3,9 +3,9 @@ const EncryptionHandler = require('../utils/passwords/EncryptionHandler');
 const encryptionHandler = new EncryptionHandler();
 
 //Temp to store and retreive data relating to user
-const users = require('../tempdatastorage/users');
+const users = require('../models/users');
 
-//
+//Method logs user in if their username and corelating password matches a saved one
 const logUserIn =  async (req, res) => {
     const { username, password } = req.body;
     
