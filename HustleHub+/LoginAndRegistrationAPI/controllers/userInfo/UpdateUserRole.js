@@ -1,4 +1,4 @@
-const user = require('../models/Users');
+const user = require('../../models/Users');
 
 //We'll use the full required schema and then basically just rerun it rough the registartion's valididty check just to ensure the data's integrity
 const UpdateUserRole =  async ( req, res ) => {
