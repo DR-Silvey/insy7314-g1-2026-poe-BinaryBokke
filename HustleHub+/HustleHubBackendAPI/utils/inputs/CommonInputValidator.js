@@ -1,0 +1,47 @@
+//This class is responsible for validating common input fields (username, password, email, fullname, age) before they are processed further in the application. 
+//checks for
+    //Input can't be undefined, null, empty, have to be string (except for age which has to be number)
+    //Input can't contain space chars or any indication of SQL injection (e.g. ' or 1=1 --)
+    //Check the length of a username (min 3 chars)
+
+class CommonInputValidator {
+    //Checks for undefined, null, empty, space chars, and SQL injection attempts (does not check for data types, except for undefined and null)
+    //(w3 Schools, s.a.)
+    CommonInputValidation(input) {
+        //Input can't be undefined, null, empty
+        //(w3 Schools, s.a.)
+        if((input === undefined || input === null || input === '')) {
+            console.error('An invalid input was entered (undefined, null or empty)');
+            return false;
+        }
+
+        //String inputs can't contain space chars or any indication of SQL injection (e.g. ' or 1=1 --)
+        //(w3 Schools, s.a.)
+        if(typeof input === 'string'){
+            if((input.includes(' ') || input.includes("'") || input.includes("--"))){
+                console.error('An invalid input was entered (possible sql injection attempt)');
+                return false;
+
+            }
+            
+        }
+
+        return true;
+
+    }
+
+}
+
+module.exports = CommonInputValidator;
+
+/*
+W3 Schools, s.a. JavaScript Tutorial.
+[online] Available at:
+<https://www.w3schools.com/js/DEFAULT.asp>
+[Accessed 4 Septemeber 2026]
+
+The Independent Institute of Education, 2026. INOFRMATION SYSTEM 3D [INSY7314/w]. nt. [online 
+via internal VLE] The Independent Institute of Education. Available at: <https://advtechonline.sharepoint.com/:w:/r/sites/TertiaryStudents/_layouts/15/Doc.aspx?sourcedoc=%7B58B815C8-D592-4D47-BDA0-4F6761924E1B%7D&file=INSY7314MM.docx&action=default&mobileredirect=true> 
+[Accessed 4 Septemeber 2026]. 
+
+*/
