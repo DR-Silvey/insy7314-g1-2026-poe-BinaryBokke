@@ -27,6 +27,25 @@ const BookingSchema = new mongoose.Schema(
 
         },
 
+        EventName: {
+            type: String,
+            required: [true, 'Event name is required'],
+            trim: true
+
+        },
+
+        Capacity: {
+            type: Number,
+            required: [true, 'Capacity is required'],
+            min: [1, 'Capacity must be at least 1'],
+            validate: {
+                validator: Number.isInteger,
+                message: 'Capacity must be a whole number'
+                
+            }
+
+        },
+
         NumOfHours: {
             type: Number,
             required: [true, 'Number of hours is required'],
