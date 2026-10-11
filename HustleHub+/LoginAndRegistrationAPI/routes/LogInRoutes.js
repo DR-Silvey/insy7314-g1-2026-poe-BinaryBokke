@@ -3,10 +3,23 @@ const router = express.Router();
 
 const LogInValidityChecks = require('../middleware/LogInValidation');
 const LogIn = require('../controllers/LogIn');
+const GetProfile = require('../controllers/userInfo/GetProfile')
+
+//Rate Limiting
+const { LogInLimiter, ProfileInfoLimiter } = require('../middleware/rateLimiting/AuthRateLimiter');
+
+//RBAC enforcement
+const { protect } = require('../middleware/tokens/AuthMiddleware');
 
 //Declared /login as the endpoint to access login fucntionalities
 //(The IIE, 2026)
-router.post('/login', LogInValidityChecks, LogIn);
+
+//Used to log a user in based on entered username and password, creates JWT
+router.post('/login', LogInLimiter, LogInValidityChecks, LogIn);
+
+//Used to retrieve the details of a profile
+router.get('/me', ProfileInfoLimiter, protect, GetProfile)
+
 
 module.exports = router;
 

@@ -4,6 +4,9 @@ const router = express.Router();
 //RBAC enforcement
 const { protect, authorizeRoles } = require('../middleware/auth/AuthMiddleware');
 
+//Rate Limiting
+const { CreateGigLimiter, ViewGigLimiter, UpdateGigLimiter, RemoveGigLimiter } = require('../middleware/rateLimiting/GigRateLimiter')
+
 const GigValidityChecks = require('../middleware/GigValidation');
 const Gig = require('../controllers/GigController');
 
@@ -11,16 +14,16 @@ const Gig = require('../controllers/GigController');
 //(The IIE, 2026)
 
 //Route used to create agig within the db
-router.post('/gig', GigValidityChecks.CreateGigValidityChecks, Gig.CreateGig);
+router.post('/gig', CreateGigLimiter, GigValidityChecks.CreateGigValidityChecks, Gig.CreateGig);
 
 //Route used to find a gig(s) wihtin the db, only freelancers and admin can access this role
-router.get('/gig', protect, authorizeRoles('admin', 'freelancer'), GigValidityChecks.FindGigValidityChecks, Gig.FindGig);
+router.get('/gig', ViewGigLimiter, protect, authorizeRoles('admin', 'freelancer'), GigValidityChecks.FindGigValidityChecks, Gig.FindGig);
 
 //Route used to update a gig's info within the db, only freelancers and admin can access this role
-router.put('/gig', protect, authorizeRoles('admin', 'freelancer'), GigValidityChecks.UpdateGigValidityChecks, Gig.UpdateGig);
+router.put('/gig', UpdateGigLimiter, protect, authorizeRoles('admin', 'freelancer'), GigValidityChecks.UpdateGigValidityChecks, Gig.UpdateGig);
 
 //Route used to delete a gig's info from the db, only freelancers and admin can access this role
-router.delete('/gig', protect, authorizeRoles('admin', 'freelancer'), GigValidityChecks.RemoveGigValidityChecks, Gig.RemoveGig);
+router.delete('/gig', RemoveGigLimiter, protect, authorizeRoles('admin', 'freelancer'), GigValidityChecks.RemoveGigValidityChecks, Gig.RemoveGig);
 
 module.exports = router;
 
