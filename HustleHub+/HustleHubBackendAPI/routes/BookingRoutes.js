@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+//RBAC enforcement
+const { protect, authorizeRoles } = require('../middleware/auth/AuthMiddleware');
+
 const BookingValidityChecks = require('../middleware/BookingValidation');
 const Booking = require('../controllers/BookingController');
 
@@ -10,14 +13,14 @@ const Booking = require('../controllers/BookingController');
 //Route used to create a booking within the db
 router.post('/booking', BookingValidityChecks.CreateBookingValidityChecks, Booking.CreateBooking);
 
-//Route used to find a booking(s) wihtin the db
-router.get('/booking', BookingValidityChecks.FindBookingValidityChecks, Booking.FindBooking);
+//Route used to find a booking(s) wihtin the db, only clients and admin can access this route
+router.get('/booking', protect, authorizeRoles('admin', 'client'), BookingValidityChecks.FindBookingValidityChecks, Booking.FindBooking);
 
-//Route used to update a booking's info within the db
-router.put('/booking', BookingValidityChecks.UpdateBookingValidityChecks, Booking.UpdateBooking);
+//Route used to update a booking's info within the db, only clients and admin can access this route
+router.put('/booking', protect, authorizeRoles('admin', 'client'), BookingValidityChecks.UpdateBookingValidityChecks, Booking.UpdateBooking);
 
-//Route used to delete a booking's info from the db
-router.delete('/booking', BookingValidityChecks.RemoveBookingValidityChecks, Booking.RemoveBooking);
+//Route used to delete a booking's info from the db, only clients and admin can access this route
+router.delete('/booking', protect, authorizeRoles('admin', 'client'), BookingValidityChecks.RemoveBookingValidityChecks, Booking.RemoveBooking);
 
 module.exports = router;
 
