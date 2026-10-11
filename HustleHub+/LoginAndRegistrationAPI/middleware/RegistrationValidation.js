@@ -9,9 +9,7 @@ const passwordHandler = new PasswordHandler();
 //(The IIE, 2026)
 const RegistrationValidityChecks = (req, res, next) => {
     const { username, password, fullname, email, age } = req.body;
-
-    console.log(req.body);
-
+    
     //Ensuring that all the user input is valid in terms of data type and is non malicious
         if(!(inputValidator.IsValidUsername(username))){
             //(w3 Schools, s.a.)

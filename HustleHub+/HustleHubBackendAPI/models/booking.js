@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 //(The IIE, 2026)
 const BookingSchema = new mongoose.Schema(
     {
-        BookingID: { //used as a PK (GUID)
+        bookingID: { //used as a PK (GUID)
             type: String,
             required: [true, 'BookingID is required'],
             unique: true,
@@ -13,28 +13,28 @@ const BookingSchema = new mongoose.Schema(
             
         },
 
-        UsernameClient: { //FK referencing User
+        usernameClient: { //FK referencing User
             type: String,
             ref: 'User',
             required: [true, 'Client is required']
 
         },
 
-        UsernamePerformer: { //FK referencing User
+        usernamePerformer: { //FK referencing User
             type: String,
             ref: 'User',
             required: [true, 'Performer is required']
 
         },
 
-        EventName: {
+        eventName: {
             type: String,
             required: [true, 'Event name is required'],
             trim: true
 
         },
 
-        Capacity: {
+        capacity: {
             type: Number,
             required: [true, 'Capacity is required'],
             min: [1, 'Capacity must be at least 1'],
@@ -46,27 +46,27 @@ const BookingSchema = new mongoose.Schema(
 
         },
 
-        NumOfHours: {
+        numOfHours: {
             type: Number,
             required: [true, 'Number of hours is required'],
             min: [0.1, 'Number of hours must be greater than zero']
 
         },
 
-        DateToPerform: {
+        dateToPerform: {
             type: Date,
             required: [true, 'Performance date is required']
 
         },
 
-        Venue: {
+        venue: {
             type: String,
             required: [true, 'Venue is required'],
             trim: true
 
         },
 
-        PaymentReceived: { //amount received, not a Boolean
+        paymentReceived: { //amount received, not a Boolean
             type: Number,
             required: [true, 'Payment received amount is required'],
             min: [0, 'Payment received cannot be negative'],

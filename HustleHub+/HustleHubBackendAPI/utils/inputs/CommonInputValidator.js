@@ -44,6 +44,13 @@ class CommonInputValidator {
 
     };
 
+    //Ensures an input is a bool where neccesary
+    //(w3 Schools, s.a.)
+    isValidBool = (value) => {
+        return typeof value === 'boolean';
+        
+    };  
+
 }
 
 module.exports = CommonInputValidator;

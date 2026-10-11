@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 //(The IIE, 2026)
 const GigSchema = new mongoose.Schema(
     {
-        GigID: { //used as a PK (GUID)
+        gigID: { //used as a PK (GUID)
             type: String,
             required: [true, 'GigID is required'],
             unique: true,
@@ -13,42 +13,42 @@ const GigSchema = new mongoose.Schema(
 
         },
 
-        UsernamePerformer: { //FK referencing User
+        usernamePerformer: { //FK referencing User
             type: String,
             ref: 'User',
             required: [true, 'Performer is required']
 
         },
 
-        GigType: {
+        gigType: {
             type: String,
             required: [true, 'Gig type is required'],
             trim: true
 
         },
 
-        Description: {
+        description: {
             type: String,
             required: [true, 'Description is required'],
             trim: true
 
         },
 
-        StageName: {
+        stageName: {
             type: String,
             required: [true, 'Stage name is required'],
             trim: true
 
         },
 
-        CostPerHour: {
+        costPerHour: {
             type: Number,
             required: [true, 'Cost per hour is required'],
             min: [0, 'Cost per hour cannot be negative']
 
         },
 
-        IsAvailable: {
+        isAvailable: {
             type: Boolean,
             required: [true, 'Availability status is required'],
             default: true

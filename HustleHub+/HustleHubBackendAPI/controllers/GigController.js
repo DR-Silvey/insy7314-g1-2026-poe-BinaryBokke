@@ -29,41 +29,34 @@ const CreateGig = async (req, res) => {
 
         }
 
-        //Modeling our Gig data
-        const {
-            GigType,
-            Description,
-            StageName,
-            CostPerHour,
-            IsAvailable
+        //Getting gig data from request body
+        const { gigType, description, stageName, costPerHour, isAvailable } = req.body;
 
-        } = req.body;
-
-        //Creates and associates the gig with the logged-in freelancer.
+        //Creates the new gig model and associates the gig with the logged-in freelancer.
         const newGig = await Gig.create({
             //GigId: Auto genned Guid
-            UsernamePerformer: userId,
-            GigType,
-            Description,
-            StageName,
-            CostPerHour,
-            ...(IsAvailable !== undefined && { IsAvailable })
+            usernamePerformer: userName,
+            gigType,
+            description,
+            stageName,
+            costPerHour,
+            ...(isAvailable !== undefined && { isAvailable })
 
         });
 
         //Checking if a gig wiht this id already exists
-        let gigExists = await Gig.exists({GigID: newGig.GigID});
+        let gigExists = await Gig.exists({gigID: newGig.gigID});
 
         //if a Gig with the current Gig Id exists we create a new Gig Id till it is unique
         while(gigExists){
             //Creating a new Guid
-            newGig.GigID = crypto.randomUUID();
+            newGig.gigID = crypto.randomUUID();
 
-            gigExists = await Gig.exists({GigID: newGig.GigID});
+            gigExists = await Gig.exists({gigID: newGig.GigID});
 
         }
 
-        console.log(`Gig ${newGig.GigID} created successfully`);
+        console.log(`Gig ${newGig.gigID} created successfully`);
 
         return res.status(201).json({
             message: 'Gig created successfully',
@@ -114,13 +107,13 @@ const FindGig = async (req, res) => {
 
         //Filter by GigID
         if (GigID) {
-            filter.GigID = GigID;
+            filter.gigID = GigID;
 
         }
 
         //Filter by the performer's username
         if (UsernamePerformer) {
-            filter.UsernamePerformer = UsernamePerformer;
+            filter.usernamePerformer = UsernamePerformer;
 
         }
 
@@ -185,7 +178,7 @@ const UpdateGig = async (req, res) => {
         }
 
         //Retrieving hte Gig
-        const existingGig = await Gig.findOne({ GigID });
+        const existingGig = await Gig.findOne({ gigID });
 
         if (!existingGig) {
             return res.status(404).json({
@@ -196,7 +189,7 @@ const UpdateGig = async (req, res) => {
         }
 
         //Ensuring that the Gig belongs to the person trying to update it's info
-        if (((existingGig.UsernamePerformer.toString() !== userName.toString()) && (userRole != 'admin'))) {
+        if (((existingGig.usernamePerformer.toString() !== userName.toString()) && (userRole != 'admin'))) {
             return res.status(403).json({
                 error: 'You are not authorised to update this gig (belongs to another performer)'
 
@@ -205,15 +198,7 @@ const UpdateGig = async (req, res) => {
         }
 
         //Updating Gig's model (The Gig's ID or performer cannot be updated)
-        const allowedFields = [
-            'GigType',
-            'Description',
-            'StageName',
-            'CostPerHour',
-            'IsAvailable'
-
-        ];
-
+        const allowedFields = [ 'gigType', 'description', 'stageName', 'costPerHour', 'isAvailable' ];
         const updates = {};
 
         //Ensruing the valididty of the new info in terms of data type
@@ -235,7 +220,7 @@ const UpdateGig = async (req, res) => {
 
         //Updating the actual values stored regarding a gig
         const updatedGig = await Gig.findOneAndUpdate(
-            { GigID },
+            { gigID },
             { $set: updates },
             {
                 new: true,
@@ -245,7 +230,7 @@ const UpdateGig = async (req, res) => {
 
         );
 
-        console.log(`Gig ${GigID} updated successfully`);
+        console.log(`Gig ${gigID} updated successfully`);
 
         //Retruning the new version of the gig to the front-end
         return res.status(200).json({
@@ -286,7 +271,7 @@ const RemoveGig = async (req, res) => {
         const userName = getUserName(req);
         const userRole = getUserRole(req);
 
-        const { GigID } = req.body;
+        const { gigID } = req.body;
 
         if (!userName) {
             return res.status(401).json({
@@ -296,7 +281,7 @@ const RemoveGig = async (req, res) => {
 
         }
 
-        if (!GigID) {
+        if (!gigID) {
             return res.status(400).json({
                 error: 'GigID is required to remove a gig'
 
@@ -305,7 +290,7 @@ const RemoveGig = async (req, res) => {
         }
 
         //Retrieving th current gig
-        const existingGig = await Gig.findOne({ GigID });
+        const existingGig = await Gig.findOne({ gigID });
 
         if (!existingGig) {
             return res.status(404).json({
@@ -316,7 +301,7 @@ const RemoveGig = async (req, res) => {
         }
 
         //Ensruing that the owner of the gig is the one removing it
-        if (((existingGig.UsernamePerformer.toString() !== userId.toString()) && (userRole != 'admin'))) {
+        if (((existingGig.usernamePerformer.toString() !== userId.toString()) && (userRole != 'admin'))) {
             return res.status(403).json({
                 error: 'You are not authorised to remove this gig'
 
@@ -327,7 +312,7 @@ const RemoveGig = async (req, res) => {
         //Removing gig from cluster
         await Gig.deleteOne({ _id: existingGig._id });
 
-        console.log(`Gig ${GigID} removed successfully`);
+        console.log(`Gig ${gigID} removed successfully`);
 
         return res.status(200).json({
             message: 'Gig removed successfully',
