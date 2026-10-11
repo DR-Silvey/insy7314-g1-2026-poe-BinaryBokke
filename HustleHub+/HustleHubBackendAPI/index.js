@@ -13,6 +13,9 @@ const path = require('path');
 const connectDb = require('../HustleHubBackendAPI/config/db');
 connectDb();
 
+//Importing routes for Gig, Booking, ErrorHandling
+const GigRoutes = require('../HustleHubBackendAPI/routes/GigRoutes');
+const BookingRoutes = require('../HustleHubBackendAPI/routes/BookingRoutes');
 
 const ErrorHandler = require('../HustleHubBackendAPI/middleware/ErrorHandler');
 
@@ -97,7 +100,13 @@ app.use(express.json({limit: '10kb'}));
 
     });
 
-//Registration route access
+//Gig route access
+//(The IIE, 2026)
+app.use('/', GigRoutes);
+
+//Booking route access
+//(The IIE, 2026)
+app.use('/', BookingRoutes);
 
 app.use((req, res) => {
     console.error("API route not found");
