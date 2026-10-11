@@ -43,7 +43,7 @@ const logUserIn =  async (req, res) => {
     }
 
     //creating a jason web toke if the user's login credential were found and matched
-    const token = TokenCreation(username, "GENERIC"); //All users generic at this stage
+    const token = TokenCreation(username, foundUser.role);
 
     console.log(`Login Attempt for ${username} was a success`);
     return res.status(200).json({

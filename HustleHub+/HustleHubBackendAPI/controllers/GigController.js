@@ -1,105 +1,353 @@
-//Temp to store and retreive data relating to gig
-const gig = require('../models/Gig');
+const mongoose = require('mongoose');
 
-//Method creates a new gig
+//Model used perform CRUD to Gig model
+const Gig = require('../models/Gig');
+
+//Using the Username attached to the JWT to retrieve the current user's username
+const getUserName = (req) => {
+    return req.user?.username;
+
+};
+
+//Using the Username attached to the JWT to retrieve the current user's role
+const getUserRole = (req) => {
+    return req.user?.role;
+
+};
+
+//Method to create a new Gig
 //(The IIE, 2026)
-const CreateGig =  async (req, res) => {
-    try{
-        const { } = req.body;
-
-
-        console.log(`Attempt for ${username} was a success`);
-        return res.status(200).json({
-            message: '', token
-    
-        });
-
-    }
-    catch(error){
-        console.error(`Internal Server Error`, error);
-        return res.status(500).json({
-            error: 'Something went wrong'
+const CreateGig = async (req, res) => {
+    try {
+        const userName = getUserName(req);
         
+        if (!userName) {
+            return res.status(401).json({
+                error: 'Invalid or missing authenticated user'
+
+            });
+
+        }
+
+        //Modeling our Gig data
+        const {
+            GigType,
+            Description,
+            StageName,
+            CostPerHour,
+            IsAvailable
+
+        } = req.body;
+
+        //Creates and associates the gig with the logged-in freelancer.
+        const newGig = await Gig.create({
+            //GigId: Auto genned Guid
+            UsernamePerformer: userId,
+            GigType,
+            Description,
+            StageName,
+            CostPerHour,
+            ...(IsAvailable !== undefined && { IsAvailable })
+
+        });
+
+        //Checking if a gig wiht this id already exists
+        let gigExists = await Gig.exists({GigID: newGig.GigID});
+
+        //if a Gig with the current Gig Id exists we create a new Gig Id till it is unique
+        while(gigExists){
+            //Creating a new Guid
+            newGig.GigID = crypto.randomUUID();
+
+            gigExists = await Gig.exists({GigID: newGig.GigID});
+
+        }
+
+        console.log(`Gig ${newGig.GigID} created successfully`);
+
+        return res.status(201).json({
+            message: 'Gig created successfully',
+            gig: newGig
+
+        });
+
+    } 
+    catch (error) {
+        console.error('Error creating Gig:', error);
+
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                error: 'Gig validation failed',
+                details: Object.values(error.errors).map(
+                    validationError => validationError.message
+
+                )
+
+            });
+            
+        }
+
+        //If the Gig Id was not unique throw error
+        if (error.code === 11000) {
+            return res.status(409).json({
+                error: 'A gig with this unique identifier already exists'
+
+            });
+
+        }
+
+        return res.status(500).json({
+            error: 'Something went wrong (Gig Creation)'
+
         });
 
     }
 
-}
+};
 
-    //Method finds a gig by its ID, or the related username, and returns the gig data
+//Method used to return all gigs or only those linked to a performer username or GigID
 //(The IIE, 2026)
-const FindGig =  async (req, res) => {
-    try{
-        const { } = req.body;
+const FindGig = async (req, res) => {
+    try {
+        const { GigID, UsernamePerformer } = req.query;
+        const filter = {};
 
+        //Filter by GigID
+        if (GigID) {
+            filter.GigID = GigID;
 
-        console.log(`Attempt for ${username} was a success`);
+        }
+
+        //Filter by the performer's username
+        if (UsernamePerformer) {
+            filter.UsernamePerformer = UsernamePerformer;
+
+        }
+
+        //Retrieve matching gigs
+        const gigs = await Gig.find(filter);
+
+        //No gigs found
+        if (gigs.length === 0) {
+            return res.status(404).json({
+                message: 'No gigs found'
+
+            });
+
+        }
+
+        console.log(`${gigs.length} gig(s) retrieved successfully`);
+
+        //Returning all Gig(s) that match the user's chosen criteria
         return res.status(200).json({
-            message: '', token
-    
+            message: 'Gigs retrieved successfully',
+            count: gigs.length,
+            gigs
+
         });
 
-    }
-    catch(error){
-        console.error(`Internal Server Error`, error);
+    } 
+    catch (error) {
+        console.error('Error retrieving gigs:', error);
+
         return res.status(500).json({
-            error: 'Something went wrong'
-        
+            error: 'Something went wrong while retrieving gigs'
+
         });
 
     }
 
-}
+};
 
-//Method updates a gig if the user has the appropriate permissions
+//Method used to update a gig (if said gig is owned by the current user)
 //(The IIE, 2026)
-const UpdateGig =  async (req, res) => {
-    try{
-        const { } = req.body;
+const UpdateGig = async (req, res) => {
+    try {
+        const userName= getUserName(req);
+        const userRole = getUserRole(req);
 
+        const { GigID } = req.body;
 
-        console.log(`Attempt for ${username} was a success`);
+        if (!userName) {
+            return res.status(401).json({
+                error: 'Invalid or missing authenticated user'
+
+            });
+
+        }
+
+        if (!GigID) {
+            return res.status(400).json({
+                error: 'GigID is required to update a gig'
+
+            });
+
+        }
+
+        //Retrieving hte Gig
+        const existingGig = await Gig.findOne({ GigID });
+
+        if (!existingGig) {
+            return res.status(404).json({
+                error: 'Matching Gig not found'
+
+            });
+
+        }
+
+        //Ensuring that the Gig belongs to the person trying to update it's info
+        if (((existingGig.UsernamePerformer.toString() !== userName.toString()) && (userRole != 'admin'))) {
+            return res.status(403).json({
+                error: 'You are not authorised to update this gig (belongs to another performer)'
+
+            });
+
+        }
+
+        //Updating Gig's model (The Gig's ID or performer cannot be updated)
+        const allowedFields = [
+            'GigType',
+            'Description',
+            'StageName',
+            'CostPerHour',
+            'IsAvailable'
+
+        ];
+
+        const updates = {};
+
+        //Ensruing the valididty of the new info in terms of data type
+        for (const field of allowedFields) {
+            if (req.body[field] !== undefined) {
+                updates[field] = req.body[field];
+
+            }
+
+        }
+
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({
+                error: 'No valid fields supplied for updating'
+
+            });
+
+        }
+
+        //Updating the actual values stored regarding a gig
+        const updatedGig = await Gig.findOneAndUpdate(
+            { GigID },
+            { $set: updates },
+            {
+                new: true,
+                runValidators: true
+
+            }
+
+        );
+
+        console.log(`Gig ${GigID} updated successfully`);
+
+        //Retruning the new version of the gig to the front-end
         return res.status(200).json({
-            message: '', token
-    
+            message: 'Gig updated successfully',
+            gig: updatedGig
+
         });
 
-    }
-    catch(error){
-        console.error(`Internal Server Error`, error);
+    } 
+    catch (error) {
+        console.error('Error updating gig:', error);
+
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                error: 'Gig validation failed',
+                details: Object.values(error.errors).map(
+                    validationError => validationError.message
+
+                )
+
+            });
+
+        }
+
         return res.status(500).json({
-            error: 'Something went wrong'
-        
+            error: 'Something went wrong (Gig Info Update)'
+
         });
 
     }
 
-}
+};
 
-//Method removes a gig if the user has the appropriate permissions
+//Method used to remove a gig (only if the authenticated user owns it)
 //(The IIE, 2026)
-const RemoveGig =  async (req, res) => {
-    try{
-        const { } = req.body;
+const RemoveGig = async (req, res) => {
+    try {
+        const userName = getUserName(req);
+        const userRole = getUserRole(req);
 
+        const { GigID } = req.body;
 
-        console.log(`Attempt for ${username} was a success`);
+        if (!userName) {
+            return res.status(401).json({
+                error: 'Invalid or missing authenticated user'
+
+            });
+
+        }
+
+        if (!GigID) {
+            return res.status(400).json({
+                error: 'GigID is required to remove a gig'
+
+            });
+
+        }
+
+        //Retrieving th current gig
+        const existingGig = await Gig.findOne({ GigID });
+
+        if (!existingGig) {
+            return res.status(404).json({
+                error: 'Matching Gig not found'
+
+            });
+
+        }
+
+        //Ensruing that the owner of the gig is the one removing it
+        if (((existingGig.UsernamePerformer.toString() !== userId.toString()) && (userRole != 'admin'))) {
+            return res.status(403).json({
+                error: 'You are not authorised to remove this gig'
+
+            });
+
+        }
+
+        //Removing gig from cluster
+        await Gig.deleteOne({ _id: existingGig._id });
+
+        console.log(`Gig ${GigID} removed successfully`);
+
         return res.status(200).json({
-            message: '', token
-    
+            message: 'Gig removed successfully',
+            GigID
+
         });
 
-    }
-    catch(error){
-        console.error(`Internal Server Error`, error);
+    } 
+    catch (error) {
+        console.error('Error removing gig:', error);
+
         return res.status(500).json({
-            error: 'Something went wrong'
-        
+            error: 'Something went wrong (Gig Removal)'
+
         });
 
     }
 
-}
+};
+
 
 module.exports = { CreateGig, FindGig, UpdateGig, RemoveGig };
 
@@ -107,10 +355,10 @@ module.exports = { CreateGig, FindGig, UpdateGig, RemoveGig };
 W3 Schools, s.a. JavaScript Tutorial.
 [online] Available at:
 <https://www.w3schools.com/js/DEFAULT.asp>
-[Accessed 4 Septemeber 2026]
+[Accessed 11 october 2026]
 
 The Independent Institute of Education, 2026. INOFRMATION SYSTEM 3D [INSY7314/w]. nt. [online 
 via internal VLE] The Independent Institute of Education. Available at: <https://advtechonline.sharepoint.com/:w:/r/sites/TertiaryStudents/_layouts/15/Doc.aspx?sourcedoc=%7B58B815C8-D592-4D47-BDA0-4F6761924E1B%7D&file=INSY7314MM.docx&action=default&mobileredirect=true> 
-[Accessed 4 Septemeber 2026]. 
+[Accessed 11 October 2026]. 
 
 */

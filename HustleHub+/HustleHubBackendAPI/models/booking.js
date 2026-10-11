@@ -14,14 +14,14 @@ const BookingSchema = new mongoose.Schema(
         },
 
         UsernameClient: { //FK referencing User
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: 'User',
             required: [true, 'Client is required']
 
         },
 
         UsernamePerformer: { //FK referencing User
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: 'User',
             required: [true, 'Performer is required']
 

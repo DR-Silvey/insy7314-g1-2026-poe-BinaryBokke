@@ -14,7 +14,7 @@ const GigSchema = new mongoose.Schema(
         },
 
         UsernamePerformer: { //FK referencing User
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: 'User',
             required: [true, 'Performer is required']
 
