@@ -3,7 +3,7 @@ const inputValidator = new CommonInputValidator();
 
 //Ensures that all inputs relating to a Gig attempt are valid
 //(The IIE, 2026)
-const GigValidityChecks = (req, res, next) => {
+const CreateGigValidityChecks = (req, res, next) => {
     const { } = req.body;
 
     //Ensuring that all the user input is valid in terms of data type and is non malicious
@@ -15,7 +15,46 @@ const GigValidityChecks = (req, res, next) => {
 
 };
 
-module.exports = GigValidityChecks;
+//(The IIE, 2026)
+const FindGigValidityChecks = (req, res, next) => {
+    const { } = req.body;
+
+    //Ensuring that all the user input is valid in terms of data type and is non malicious
+    //(w3 Schools, s.a.)
+ 
+
+    console.log('Gig attempt met the input requirements');
+    next();
+
+};
+
+//(The IIE, 2026)
+const UpdateGigValidityChecks = (req, res, next) => {
+    const { } = req.body;
+
+    //Ensuring that all the user input is valid in terms of data type and is non malicious
+    //(w3 Schools, s.a.)
+ 
+
+    console.log('Gig attempt met the input requirements');
+    next();
+
+};
+
+//(The IIE, 2026)
+const RemoveGigValidityChecks = (req, res, next) => {
+    const { } = req.body;
+
+    //Ensuring that all the user input is valid in terms of data type and is non malicious
+    //(w3 Schools, s.a.)
+ 
+
+    console.log('Gig attempt met the input requirements');
+    next();
+
+};
+
+module.exports = { CreateGigValidityChecks, FindGigValidityChecks, UpdateGigValidityChecks, RemoveGigValidityChecks };
 
 /*
 W3 Schools, s.a. JavaScript Tutorial.

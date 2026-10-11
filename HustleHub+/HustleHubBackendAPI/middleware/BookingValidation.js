@@ -3,7 +3,7 @@ const inputValidator = new CommonInputValidator();
 
 //Ensures that all inputs relating to a Booking attempt are valid
 //(The IIE, 2026)
-const BookingValidityChecks = (req, res, next) => {
+const CreateBookingValidityChecks = (req, res, next) => {
     const { } = req.body;
 
     //Ensuring that all the user input is valid in terms of data type and is non malicious
@@ -15,7 +15,43 @@ const BookingValidityChecks = (req, res, next) => {
 
 };
 
-module.exports = BookingValidityChecks;
+const FindBookingValidityChecks = (req, res, next) => {
+    const { } = req.body;
+
+    //Ensuring that all the user input is valid in terms of data type and is non malicious
+    //(w3 Schools, s.a.)
+        
+
+    console.log('Booking attempt met the input requirements');
+    next();
+
+};
+
+const UpdateBookingValidityChecks = (req, res, next) => {
+    const { } = req.body;
+
+    //Ensuring that all the user input is valid in terms of data type and is non malicious
+    //(w3 Schools, s.a.)
+        
+
+    console.log('Booking attempt met the input requirements');
+    next();
+
+};
+
+const RemoveBookingValidityChecks = (req, res, next) => {
+    const { } = req.body;
+
+    //Ensuring that all the user input is valid in terms of data type and is non malicious
+    //(w3 Schools, s.a.)
+        
+
+    console.log('Booking attempt met the input requirements');
+    next();
+
+};
+
+module.exports = { CreateBookingValidityChecks, FindBookingValidityChecks, UpdateBookingValidityChecks, RemoveBookingValidityChecks };
 
 /*
 W3 Schools, s.a. JavaScript Tutorial.
