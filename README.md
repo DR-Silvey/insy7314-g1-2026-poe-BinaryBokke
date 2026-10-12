@@ -8,7 +8,7 @@ Admin Login Credentials:
  - Username:
     - admin
 
- - Password
+ - Password:
     - TestPassword123!
 
 **System Overview:**
