@@ -14,7 +14,7 @@ const Transaction = require('../controllers/TransactionController');
 //(The IIE, 2026)
 
 //Route used to find a tranmsaction(s) wihtin the db, only clients and admin can access this route
-router.get('/transaction', ViewTransactionLimiter, TransactionValidityChecks.FindTransactionValidityChecks, Transaction.FindTransaction);
+router.get('/transaction', ViewTransactionLimiter, protect, authorizeRoles('admin', 'client'), TransactionValidityChecks.FindTransactionValidityChecks, Transaction.FindTransaction);
 
 //Route used to create a transaction within the db
 router.post('/transaction', CreateTransactionLimiter, protect, authorizeRoles('admin', 'client'), TransactionValidityChecks.CreateTransactionValidityChecks, Transaction.CreateTransaction);
