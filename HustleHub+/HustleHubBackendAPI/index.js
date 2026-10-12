@@ -29,10 +29,6 @@ const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:5273';
 //(The IIE, 2026)
 app.disable('x-powered-by');
 
-//Loading required utils
-const CommonInputValidator = require('./utils/inputs/CommonInputValidator');
-const inputValidator = new CommonInputValidator();
-
 //(The IIE, 2026)
 app.use(
     helmet({

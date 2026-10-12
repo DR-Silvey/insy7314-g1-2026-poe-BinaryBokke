@@ -187,7 +187,7 @@ const UpdateBooking =  async (req, res) => {
         }
         
         //Ensuring that the Booking belongs to the person trying to update it's info
-        if (((existingBooking.usernameClient.toString() !== userName.toString()) && (userRole != 'admin'))) {
+        if (((existingBooking.usernameClient.toString() !== userName.toString()) && (userRole !== 'admin'))) {
             console.error(`Outside Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to update this booking (belongs to another client)'
@@ -305,7 +305,7 @@ const RemoveBooking =  async (req, res) => {
         }
         
         //Ensruing that the owner of the booking is the one removing it
-        if (((existingBooking.usernameClient.toString() !== userName.toString()) && (userRole != 'admin'))) {
+        if (((existingBooking.usernameClient.toString() !== userName.toString()) && (userRole !== 'admin'))) {
             console.error(`Outside Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to remove this booking'

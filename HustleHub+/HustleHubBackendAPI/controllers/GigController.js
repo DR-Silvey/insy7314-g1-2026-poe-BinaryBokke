@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 //Model used perform CRUD to Gig model
 const Gig = require('../models/Gig');
 
@@ -183,7 +181,7 @@ const UpdateGig = async (req, res) => {
         }
 
         //Ensuring that the Gig belongs to the person trying to update it's info
-        if (((existingGig.usernamePerformer.toString() !== userName.toString()) && (userRole != 'admin'))) {
+        if (((existingGig.usernamePerformer.toString() !== userName.toString()) && (userRole !== 'admin'))) {
             console.error(`Outside Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to update this gig (belongs to another performer)'
@@ -300,7 +298,7 @@ const RemoveGig = async (req, res) => {
         }
 
         //Ensruing that the owner of the gig is the one removing it
-        if (((existingGig.usernamePerformer.toString() !== userName.toString()) && (userRole != 'admin'))) {
+        if (((existingGig.usernamePerformer.toString() !== userName.toString()) && (userRole !== 'admin'))) {
             console.error(`Outside Of Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to remove this gig'

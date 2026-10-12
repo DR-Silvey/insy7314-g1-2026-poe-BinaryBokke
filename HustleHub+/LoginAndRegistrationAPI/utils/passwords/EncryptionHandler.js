@@ -71,8 +71,6 @@ class EncryptionHandler {
     async BasicSalt(hashedPassword){
         //Datastructures conataining the random chars we'll use to construct salts
         const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-        const numbers = '0123456789';
-        const specialChars = '@$!%*?&'
 
         //Creating a constant tied to the length of the orginal hased password used to compare to the new one to ensure salting occured
         const originalHashedPassLength = hashedPassword.length;

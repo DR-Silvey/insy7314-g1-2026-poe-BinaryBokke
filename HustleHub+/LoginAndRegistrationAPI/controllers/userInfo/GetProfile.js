@@ -1,22 +1,15 @@
-//Loading required utils
-//(The IIE, 2026)
-const EncryptionHandler = require('../../utils/passwords/EncryptionHandler');
-const encryptionHandler = new EncryptionHandler();
-
-const TokenCreation = require('../../utils/tokens/TokenCreation');
-
 //Temp to store and retreive data relating to user
 const User = require('../../models/Users');
 
 //Method used to retrive an account's details by username
 //(The IIE, 2026)
-const GetProfile =  async (req, res, next) => {
+const GetProfile =  async (req, res) => {
     try{
     const { username,  } = req.body;
             
         //Seeing if the entered username is in the database
         //(The IIE, 2026)
-        const foundUser = await user.findOne({ username });
+        const foundUser = await User.findOne({ username });
         
         //User doesn't exist
         if(!foundUser){
