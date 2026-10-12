@@ -3,6 +3,7 @@ import BookingCard from './BookingCard';
 import { deleteBooking, getBookings, updateBooking } from '../services/bookingApi';
 import { getGigs } from '../services/gigApi';
 import { bookingTotal, formatCurrency } from '../services/pricing';
+import { createTransaction } from '../services/transactionApi';
 
 const BOOKING_ROLES = ['client', 'freelancer', 'admin'];
 
@@ -60,9 +61,18 @@ export default function BookingsPage({ session, onSessionExpired }) {
     setNotice({ type: 'error', text: error.message });
   }
 
+  async function recordTransaction(booking, amount) {
+    try {
+      await createTransaction(session.token, { bookingID: booking.bookingID, gigID: booking.gigID, usernamePerformer: booking.usernamePerformer, amount });
+    } catch (error) {
+      if (error.status !== 409) throw error;
+    }
+  }
+
   async function handlePay(booking, amount) {
     setNotice(null);
     try {
+      await recordTransaction(booking, amount);
       const updated = await updateBooking(session.token, { ...booking, paymentReceived: amount });
       setBookings((current) => current.map((item) => (item.bookingID === booking.bookingID ? updated : item)));
       setNotice({ type: 'success', text: `Payment of ${formatCurrency(amount)} received. Your booking for ${booking.eventName} is confirmed.` });

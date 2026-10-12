@@ -1,10 +1,6 @@
 import { useState } from 'react';
+import { formatDateTime } from '../services/dates';
 import { formatCurrency } from '../services/pricing';
-
-function formatDateTime(value) {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? 'Date not set' : date.toLocaleString('en-ZA', { dateStyle: 'medium', timeStyle: 'short' });
-}
 
 export default function BookingCard({ booking, gig, viewerRole, amountDue, canManage, onPay, onCancel }) {
   const [step, setStep] = useState('idle');

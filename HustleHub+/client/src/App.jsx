@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
+import AccountPage from './components/AccountPage';
 import AuthPage from './components/AuthPage';
 import BookingsPage from './components/BookingsPage';
 import GigsPage from './components/GigsPage';
 import NavBar from './components/NavBar';
-import SignedInPage from './components/SignedInPage';
 import { clearSession, getSession, saveSession } from './services/session';
 
 const EXPIRED_NOTICE = { type: 'error', text: 'Your session has expired. Please sign in again.' };
@@ -44,7 +44,7 @@ export default function App() {
         <NavBar page={page} onPageChange={setPage} session={session} onSignOut={() => signOut({ type: 'success', text: 'You have been signed out.' })} />
         {page === 'gigs' && <GigsPage session={session} onSessionExpired={() => signOut(EXPIRED_NOTICE)} onViewBookings={() => setPage('bookings')} />}
         {page === 'bookings' && <BookingsPage session={session} onSessionExpired={() => signOut(EXPIRED_NOTICE)} />}
-        {page === 'account' && <SignedInPage session={session} />}
+        {page === 'account' && <AccountPage session={session} />}
       </div>
     );
   }
