@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import FieldError from './FieldError';
+import { validateText } from '../services/validation';
 
 const emptyGig = {
   gigType: '',
@@ -8,20 +9,6 @@ const emptyGig = {
   costPerHour: '',
   isAvailable: true,
 };
-
-const MAX_TEXT_LENGTH = 1000;
-
-function hasBlockedCharacters(value) {
-  return value.includes("'") || value.includes('--');
-}
-
-function validateText(value, label) {
-  const trimmed = value.trim();
-  if (!trimmed) return `Enter a ${label}.`;
-  if (trimmed.length > MAX_TEXT_LENGTH) return `Keep the ${label} under ${MAX_TEXT_LENGTH} characters.`;
-  if (hasBlockedCharacters(trimmed)) return `The ${label} cannot contain apostrophes (') or double dashes (--).`;
-  return '';
-}
 
 function toFormValues(gig) {
   if (!gig) return emptyGig;

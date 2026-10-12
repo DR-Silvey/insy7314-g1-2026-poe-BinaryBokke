@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import AuthPage from './components/AuthPage';
+import BookingsPage from './components/BookingsPage';
 import GigsPage from './components/GigsPage';
 import NavBar from './components/NavBar';
 import SignedInPage from './components/SignedInPage';
@@ -41,7 +42,9 @@ export default function App() {
     return (
       <div className="app-shell">
         <NavBar page={page} onPageChange={setPage} session={session} onSignOut={() => signOut({ type: 'success', text: 'You have been signed out.' })} />
-        {page === 'gigs' ? <GigsPage session={session} onSessionExpired={() => signOut(EXPIRED_NOTICE)} /> : <SignedInPage session={session} />}
+        {page === 'gigs' && <GigsPage session={session} onSessionExpired={() => signOut(EXPIRED_NOTICE)} onViewBookings={() => setPage('bookings')} />}
+        {page === 'bookings' && <BookingsPage session={session} onSessionExpired={() => signOut(EXPIRED_NOTICE)} />}
+        {page === 'account' && <SignedInPage session={session} />}
       </div>
     );
   }

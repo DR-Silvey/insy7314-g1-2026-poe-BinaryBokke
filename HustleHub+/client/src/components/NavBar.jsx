@@ -2,6 +2,7 @@ import { roleLabel } from '../services/roles';
 
 const PAGES = [
   { id: 'gigs', label: 'Gigs' },
+  { id: 'bookings', label: 'Bookings' },
   { id: 'account', label: 'My account' },
 ];
 
