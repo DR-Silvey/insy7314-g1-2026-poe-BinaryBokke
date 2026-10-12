@@ -32,7 +32,7 @@ const CreateBooking =  async (req, res) => {
         //Inputs we expect to receive from JSON
         const { usernamePerformer, eventName, capacity, numOfHours, dateTimeToPerform, venue, paymentReceived  } = req.body;
 
-        //Creates the new gig model and associates the gig with the logged-in freelancer.
+        //Creates the new bboking model and associates the booking with the logged-in client.
         const newBooking = await Booking.create({
             //bookingId: Auto genned Guid
             usernameClient: userName,
@@ -49,7 +49,7 @@ const CreateBooking =  async (req, res) => {
         console.log(`Booking ${newBooking.bookingID} created successfully`);
             return res.status(201).json({
                 message: 'Booking created successfully',
-                gig: newGig
+                booking: newBooking
 
         });
 
@@ -130,8 +130,8 @@ const FindBooking =  async (req, res) => {
         console.log(`${bookings.length} booking(s) retrieved successfully`);
             return res.status(200).json({
                 message: 'Bookings retrieved successfully',
-                count: gigs.length,
-                gigs
+                count: bookings.length,
+                bookings
         
         });
 
@@ -220,7 +220,7 @@ const UpdateBooking =  async (req, res) => {
         
         //Updating the actual values stored regarding a booking
         const updatedBooking = await Booking.findOneAndUpdate(
-            { gigID },
+            { bookingID },
             { $set: updates },
             {
                 new: true,
@@ -304,8 +304,8 @@ const RemoveBooking =  async (req, res) => {
         
         }
         
-        //Ensruing that the owner of the gig is the one removing it
-        if (((existingBooking.usernameClient.toString() !== userId.toString()) && (userRole != 'admin'))) {
+        //Ensruing that the owner of the booking is the one removing it
+        if (((existingBooking.usernameClient.toString() !== userName.toString()) && (userRole != 'admin'))) {
             console.error(`Outside Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to remove this booking'
