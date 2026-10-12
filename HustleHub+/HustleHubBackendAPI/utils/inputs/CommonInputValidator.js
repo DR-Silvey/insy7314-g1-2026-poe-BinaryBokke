@@ -51,6 +51,20 @@ class CommonInputValidator {
         
     };  
 
+    //Ensures an input is a date-time where neccesary
+    //(w3 Schools, s.a.)
+    isValidDateTime = (value) => {
+        if (typeof value !== 'string' || value.trim() === '') {
+            return false;
+            
+        }
+
+        const dateTime = new Date(value);
+
+        return !Number.isNaN(dateTime.getTime());
+
+    }; 
+
 }
 
 module.exports = CommonInputValidator;

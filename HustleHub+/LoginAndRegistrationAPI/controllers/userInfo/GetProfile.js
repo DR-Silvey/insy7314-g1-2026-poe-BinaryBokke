@@ -1,12 +1,12 @@
 //Loading required utils
 //(The IIE, 2026)
-const EncryptionHandler = require('../utils/passwords/EncryptionHandler');
+const EncryptionHandler = require('../../utils/passwords/EncryptionHandler');
 const encryptionHandler = new EncryptionHandler();
 
-const TokenCreation = require('../utils/tokens/TokenCreation');
+const TokenCreation = require('../../utils/tokens/TokenCreation');
 
 //Temp to store and retreive data relating to user
-const User = require('../models/Users');
+const User = require('../../models/Users');
 
 //Method used to retrive an account's details by username
 //(The IIE, 2026)

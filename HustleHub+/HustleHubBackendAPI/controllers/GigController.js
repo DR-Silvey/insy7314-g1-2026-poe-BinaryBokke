@@ -16,12 +16,13 @@ const getUserRole = (req) => {
 };
 
 //Method to create a new Gig
-//(The IIE, 2026)
+//(The IIE, 2026) (W3 Schools, s.a.)
 const CreateGig = async (req, res) => {
     try {
         const userName = getUserName(req);
         
         if (!userName) {
+            console.error(`No Auth`, error);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -66,7 +67,7 @@ const CreateGig = async (req, res) => {
 
     } 
     catch (error) {
-        console.error('Error creating Gig:', error);
+        console.error(`Internal Server Error`, error)
 
         if (error.name === 'ValidationError') {
             return res.status(400).json({
@@ -99,20 +100,20 @@ const CreateGig = async (req, res) => {
 };
 
 //Method used to return all gigs or only those linked to a performer username or GigID
-//(The IIE, 2026)
+//(The IIE, 2026) (W3 Schools, s.a.)
 const FindGig = async (req, res) => {
     try {
-        const { GigID, UsernamePerformer } = req.query;
+        const { gigID, usernamePerformer } = req.query;
         const filter = {};
 
         //Filter by GigID
-        if (GigID) {
+        if (gigID) {
             filter.gigID = GigID;
 
         }
 
         //Filter by the performer's username
-        if (UsernamePerformer) {
+        if (usernamePerformer) {
             filter.usernamePerformer = UsernamePerformer;
 
         }
@@ -122,6 +123,7 @@ const FindGig = async (req, res) => {
 
         //No gigs found
         if (gigs.length === 0) {
+            console.error(`No Gigs Found`, error);
             return res.status(404).json({
                 message: 'No gigs found'
 
@@ -141,10 +143,10 @@ const FindGig = async (req, res) => {
 
     } 
     catch (error) {
-        console.error('Error retrieving gigs:', error);
+        console.error(`Internal Server Error`, error);
 
         return res.status(500).json({
-            error: 'Something went wrong while retrieving gigs'
+            error: 'Something went wrong'
 
         });
 
@@ -153,15 +155,14 @@ const FindGig = async (req, res) => {
 };
 
 //Method used to update a gig (if said gig is owned by the current user)
-//(The IIE, 2026)
+//(The IIE, 2026) (W3 Schools, s.a.)
 const UpdateGig = async (req, res) => {
     try {
         const userName= getUserName(req);
         const userRole = getUserRole(req);
 
-        const { GigID } = req.body;
-
         if (!userName) {
+            console.error(`No Auth`, error);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -169,7 +170,10 @@ const UpdateGig = async (req, res) => {
 
         }
 
-        if (!GigID) {
+        const { gigID } = req.body;
+
+        if (!gigID) {
+            console.error(`No Gig ID provided to update Gig`, error);
             return res.status(400).json({
                 error: 'GigID is required to update a gig'
 
@@ -181,6 +185,7 @@ const UpdateGig = async (req, res) => {
         const existingGig = await Gig.findOne({ gigID });
 
         if (!existingGig) {
+            console.error(`No matching Gig Found`, error);
             return res.status(404).json({
                 error: 'Matching Gig not found'
 
@@ -190,6 +195,7 @@ const UpdateGig = async (req, res) => {
 
         //Ensuring that the Gig belongs to the person trying to update it's info
         if (((existingGig.usernamePerformer.toString() !== userName.toString()) && (userRole != 'admin'))) {
+            console.error(`Outside Access Scope`, error);
             return res.status(403).json({
                 error: 'You are not authorised to update this gig (belongs to another performer)'
 
@@ -211,6 +217,7 @@ const UpdateGig = async (req, res) => {
         }
 
         if (Object.keys(updates).length === 0) {
+            console.error(`Invalid inputs to update Gig Info Provided`, error);
             return res.status(400).json({
                 error: 'No valid fields supplied for updating'
 
@@ -241,7 +248,7 @@ const UpdateGig = async (req, res) => {
 
     } 
     catch (error) {
-        console.error('Error updating gig:', error);
+        console.error(`Internal Server Error`, error);
 
         if (error.name === 'ValidationError') {
             return res.status(400).json({
@@ -265,15 +272,16 @@ const UpdateGig = async (req, res) => {
 };
 
 //Method used to remove a gig (only if the authenticated user owns it)
-//(The IIE, 2026)
+//(The IIE, 2026) (W3 Schools, s.a.)
 const RemoveGig = async (req, res) => {
     try {
         const userName = getUserName(req);
         const userRole = getUserRole(req);
 
-        const { gigID } = req.body;
+        const { gigID } = req.query;
 
         if (!userName) {
+            console.error(`No Auth`, error);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -282,6 +290,7 @@ const RemoveGig = async (req, res) => {
         }
 
         if (!gigID) {
+            console.error(`No Gig ID provided to remove a Gig`, error);
             return res.status(400).json({
                 error: 'GigID is required to remove a gig'
 
@@ -289,10 +298,11 @@ const RemoveGig = async (req, res) => {
 
         }
 
-        //Retrieving th current gig
+        //Retrieving the current gig
         const existingGig = await Gig.findOne({ gigID });
 
         if (!existingGig) {
+            console.error(`No matching Gig Found`, error);
             return res.status(404).json({
                 error: 'Matching Gig not found'
 
@@ -302,6 +312,7 @@ const RemoveGig = async (req, res) => {
 
         //Ensruing that the owner of the gig is the one removing it
         if (((existingGig.usernamePerformer.toString() !== userId.toString()) && (userRole != 'admin'))) {
+            console.error(`Outside Of Access Scope`, error);
             return res.status(403).json({
                 error: 'You are not authorised to remove this gig'
 
@@ -322,7 +333,7 @@ const RemoveGig = async (req, res) => {
 
     } 
     catch (error) {
-        console.error('Error removing gig:', error);
+        console.error(`Internal Server Error`, error);
 
         return res.status(500).json({
             error: 'Something went wrong (Gig Removal)'

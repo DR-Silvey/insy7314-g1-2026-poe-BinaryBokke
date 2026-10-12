@@ -53,7 +53,7 @@ const BookingSchema = new mongoose.Schema(
 
         },
 
-        dateToPerform: {
+        dateTimeToPerform: {
             type: Date,
             required: [true, 'Performance date is required']
 

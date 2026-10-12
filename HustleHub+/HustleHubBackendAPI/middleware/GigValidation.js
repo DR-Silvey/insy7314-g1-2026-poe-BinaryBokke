@@ -72,7 +72,7 @@ const CreateGigValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Gig attempt met the input requirements');
+    console.log('Gig Creation attempt met the input requirements');
     next();
 
 };
@@ -84,8 +84,9 @@ const FindGigValidityChecks = (req, res, next) => {
     //Validation should occur only on supplied filters
     if ((gigID !== undefined) && !(inputValidator.CommonInputValidation(gigID))) 
     {
-        return res.status(400).json({
-            error: 'Invalid Gig ID'
+        console.error('User attempted an input that does not meet common criteria');
+            return res.status(400).json({
+                error: 'Invalid Input (Does not meet common criteria)'
 
         });
 
@@ -93,8 +94,9 @@ const FindGigValidityChecks = (req, res, next) => {
 
     if ((usernamePerformer !== undefined) && !(inputValidator.CommonInputValidation(usernamePerformer))) 
     {
-        return res.status(400).json({
-            error: 'Invalid performer username'
+        console.error('User attempted an input that does not meet common criteria');
+            return res.status(400).json({
+                error: 'Invalid Input (Does not meet common criteria)'
 
         });
 
@@ -102,8 +104,9 @@ const FindGigValidityChecks = (req, res, next) => {
 
     if ((gigID !== undefined) && !(inputValidator.isValidString(gigID))) 
     {
-        return res.status(400).json({
-            error: 'GigID must be a valid string'
+        console.error('User attempted an input that does not meet common criteria');
+            return res.status(400).json({
+                error: 'Invalid String Input (Gig ID does not meet length Requirements)'
 
         });
 
@@ -111,14 +114,15 @@ const FindGigValidityChecks = (req, res, next) => {
 
     if ((usernamePerformer !== undefined) && !(inputValidator.isValidString(usernamePerformer))) 
     {
-        return res.status(400).json({
-            error: 'Performer username must be a valid string'
+        console.error('User attempted an input that does not meet common criteria');
+            return res.status(400).json({
+                error: 'Invalid String Input (Performer Username does not meet length Requirements)'
 
         });
 
     }
 
-    console.log('Gig attempt met the input requirements');
+    console.log('Gig Viewing attempt met the input requirements');
     next();
 
 };
@@ -213,14 +217,14 @@ const UpdateGigValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Gig attempt met the input requirements');
+    console.log('Gig Update attempt met the input requirements');
     next();
 
 };
 
 //(The IIE, 2026)
 const RemoveGigValidityChecks = (req, res, next) => {
-    const { gigID } = req.body;
+    const { gigID } = req.query;
 
     //Ensuring that all the user input is valid in terms of data type and is non malicious
     //(w3 Schools, s.a.)
@@ -235,7 +239,18 @@ const RemoveGigValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Gig attempt met the input requirements');
+    //Input length check
+    if(!(inputValidator.isValidString(gigID))){
+        //(w3 Schools, s.a.)
+        console.error('User attempted an input that does not meet common criteria');
+            return res.status(400).json({
+                error: 'Invalid String Input (Gig ID does not meet length Requirements)'
+            
+        });
+
+    }
+
+    console.log('Gig Removal attempt met the input requirements');
     next();
 
 };
