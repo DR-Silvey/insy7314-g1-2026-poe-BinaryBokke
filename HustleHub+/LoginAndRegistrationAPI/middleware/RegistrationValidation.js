@@ -68,7 +68,7 @@ const RegistrationValidityChecks = (req, res, next) => {
 
     }
 
-    if(!(inputValidator.CommonInputValidation(role) && role != ['GENERIC', 'freelancer', 'client'])){
+    if(!(inputValidator.CommonInputValidation(role) && !(role === 'GENERIC' || role === 'freelancer' || role === 'client'))){
         console.error('User attempted to enter an role that does not meet the predefined citeria');
             return res.status(400).json({
                 error: 'Role is incorrect (has to be string or either generic, freelancer or client)'

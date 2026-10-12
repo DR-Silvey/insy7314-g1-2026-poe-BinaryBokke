@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "test:api": "newman run ../HustleHubBackendAPI/postman/HustleHubBackendCollection.postman_collection.json -e ../HustleHubBackendAPI/postman/HustleHubBackendAPI.postman_environment.json --insecure"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +17,11 @@
     "express": "^5.3.0",
     "helmet": "^8.3.0",
     "mongoose": "^9.11.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "newman": "^6.2.3"
   }
 }

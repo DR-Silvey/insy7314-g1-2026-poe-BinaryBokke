@@ -27,8 +27,8 @@ const protect = ( req, res, next ) => {
         next();
 
     }
-    catch(errror){
-        console.error('JWT token for attempt is expired or invalid');
+    catch(error){
+        console.error('JWT token for attempt is expired or invalid', error);
         return  res.status(401).json({
             error: 'Invalid or expired token'
 

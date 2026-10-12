@@ -13,6 +13,13 @@ const BookingSchema = new mongoose.Schema(
             
         },
 
+        gigID: { //FK referencing User
+            type: String,
+            ref: 'Gig',
+            required: [true, 'Gig ID is required']
+
+        },
+
         usernameClient: { //FK referencing User
             type: String,
             ref: 'User',

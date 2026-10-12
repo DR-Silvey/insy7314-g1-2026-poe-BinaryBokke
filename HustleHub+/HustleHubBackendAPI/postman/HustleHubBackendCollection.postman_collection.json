@@ -1,0 +1,335 @@
+{
+  "info": {
+    "_postman_id": "ce618fe2-c8f1-4d00-84a6-fcaadb6ee8d3",
+    "name": "HustleHubBackendCollection",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49054922",
+    "_collection_link": "https://go.postman.co/collection/49054922-ce618fe2-c8f1-4d00-84a6-fcaadb6ee8d3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Generic Call",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:5000/",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Generic Call Copy",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:5000/",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Generic Call (HEALTH)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:5000/health",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Booking Creation Failure (Not Client or Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imt6cnNrb25meXQiLCJyb2xlIjoiR0VORVJJQyIsImlhdCI6MTc5MTgzMTY0NSwiZXhwIjoxNzkxODM1MjQ1fQ.Yh1-sW5KTMLwQx9OjcBWOvfayv9x-TzGliwjVhqYb88",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"message\": \"test\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:5000/booking",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "booking"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Booking Info Update Failure (Not Client or Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imt6cnNrb25meXQiLCJyb2xlIjoiR0VORVJJQyIsImlhdCI6MTc5MTgzMTY0NSwiZXhwIjoxNzkxODM1MjQ1fQ.Yh1-sW5KTMLwQx9OjcBWOvfayv9x-TzGliwjVhqYb88",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"message\": \"test\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:5000/booking",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "booking"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Booking Removal Failure (Not Client or Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imt6cnNrb25meXQiLCJyb2xlIjoiR0VORVJJQyIsImlhdCI6MTc5MTgzMTY0NSwiZXhwIjoxNzkxODM1MjQ1fQ.Yh1-sW5KTMLwQx9OjcBWOvfayv9x-TzGliwjVhqYb88",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"message\": \"test\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:5000/booking",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "booking"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Gig Creation (Not Freelancer or Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imt6cnNrb25meXQiLCJyb2xlIjoiR0VORVJJQyIsImlhdCI6MTc5MTgzMTY0NSwiZXhwIjoxNzkxODM1MjQ1fQ.Yh1-sW5KTMLwQx9OjcBWOvfayv9x-TzGliwjVhqYb88",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"message\": \"test\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:5000/gig",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "gig"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Gig Info Update Failure (Not Freelancer or Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imt6cnNrb25meXQiLCJyb2xlIjoiR0VORVJJQyIsImlhdCI6MTc5MTgzMTY0NSwiZXhwIjoxNzkxODM1MjQ1fQ.Yh1-sW5KTMLwQx9OjcBWOvfayv9x-TzGliwjVhqYb88",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"message\": \"test\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:5000/gig",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "gig"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Gig Removal Failure (Not Freelancer or Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imt6cnNrb25meXQiLCJyb2xlIjoiR0VORVJJQyIsImlhdCI6MTc5MTgzMTY0NSwiZXhwIjoxNzkxODM1MjQ1fQ.Yh1-sW5KTMLwQx9OjcBWOvfayv9x-TzGliwjVhqYb88",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"message\": \"test\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:5000/gig",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "gig"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Booking View Success",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:5000/booking",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "booking"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Gig View Success",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:5000/gig",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "gig"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

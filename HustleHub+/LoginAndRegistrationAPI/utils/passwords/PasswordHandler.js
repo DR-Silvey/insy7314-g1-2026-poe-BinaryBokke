@@ -92,7 +92,7 @@ class PasswordHandler {
                 //Fallback to a basic list of 10 common passwords (see below) that still meet the outlined requirements
             
             //Logging the error
-            console.error('Error importing CommonPasswords class');
+            console.error('Error importing CommonPasswords class', error);
 
             //Fallback to a basic list of common passwords (see below) that still meet the outlined requirements (assumed list of common passwords as I could not find a list of common passwords that would meet our outlined requirements)
             //(w3 Schools, s.a.)

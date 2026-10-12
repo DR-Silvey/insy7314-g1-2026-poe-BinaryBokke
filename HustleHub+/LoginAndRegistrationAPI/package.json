@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "test:api": "newman run ../LoginAndRegistrationAPI/postman/LogInAndRegTestCollection.postman_collection.json -e ../LoginAndRegistrationAPI/postman/LoginAndRegistrationAPI.postman_environment.json --insecure"
   },
   "keywords": [],
   "author": "",
@@ -22,5 +24,11 @@
   },
   "allowScripts": {
     "bcrypt@6.0.0": true
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "newman": "^6.2.3"
   }
 }
