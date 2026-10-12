@@ -4,11 +4,11 @@ const inputValidator = new CommonInputValidator();
 //Ensures that all inputs relating to a Booking attempt are valid
 //(The IIE, 2026)
 const CreateBookingValidityChecks = (req, res, next) => {
-    const { usernamePerformer, eventName, capacity, numOfHours, dateTimeToPerform, venue, paymentReceived  } = req.body;
+    const { gigID, usernamePerformer, eventName, capacity, numOfHours, dateTimeToPerform, venue, paymentReceived  } = req.body;
 
     //Ensuring that all the user input is valid in terms of data type and is non malicious
     //(w3 Schools, s.a.)
-    if(!(inputValidator.CommonInputValidation(usernamePerformer) && inputValidator.CommonInputValidation(eventName) && inputValidator.CommonInputValidation(venue))){
+    if(!(inputValidator.CommonInputValidation(gigID) && inputValidator.CommonInputValidation(usernamePerformer) && inputValidator.CommonInputValidation(eventName) && inputValidator.CommonInputValidation(venue))){
         //(w3 Schools, s.a.)
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
@@ -19,6 +19,16 @@ const CreateBookingValidityChecks = (req, res, next) => {
     }     
     
     //Length Check
+    if(!(inputValidator.isValidString(gigID))){
+        //(w3 Schools, s.a.)
+        console.error('User attempted an input that does not meet common criteria');
+            return res.status(400).json({
+                error: 'Invalid String Input (Gig ID does not meet length Requirements)'
+            
+        });
+
+    }
+
     if(!(inputValidator.isValidString(usernamePerformer))){
         //(w3 Schools, s.a.)
         console.error('User attempted an input that does not meet common criteria');
@@ -97,11 +107,21 @@ const CreateBookingValidityChecks = (req, res, next) => {
 };
 
 const FindBookingValidityChecks = (req, res, next) => {
-    const { bookingID, usernameClient, usernamePerformer } = req.query;
+    const { bookingID, gigID, usernameClient, usernamePerformer } = req.query;
 
     //Ensuring that all the user input is valid in terms of data type and is non malicious, validation should occur only on supplied filters
     //(w3 Schools, s.a.)
     if ((bookingID !== undefined) && !(inputValidator.CommonInputValidation(bookingID))) 
+    {
+        console.error('User attempted an input that does not meet common criteria');
+            return res.status(400).json({
+                error: 'Invalid Input (Does not meet common criteria)'
+
+        });
+
+    }
+
+    if ((gigID !== undefined) && !(inputValidator.CommonInputValidation(gigID))) 
     {
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
@@ -142,6 +162,16 @@ const FindBookingValidityChecks = (req, res, next) => {
 
     }
 
+    if ((gigID !== undefined) && !(inputValidator.isValidString(gigID))) 
+    {
+        console.error('User attempted an input that does not meet common criteria');
+            return res.status(400).json({
+                error: 'Invalid String Input (Gig ID does not meet length Requirements)'
+
+        });
+
+    }
+
     if ((usernameClient !== undefined) && !(inputValidator.isValidString(usernameClient))) 
     {
         console.error('User attempted an input that does not meet common criteria');
@@ -168,11 +198,11 @@ const FindBookingValidityChecks = (req, res, next) => {
 };
 
 const UpdateBookingValidityChecks = (req, res, next) => {
-    const { usernameClient, usernamePerformer, eventName, capacity, numOfHours, dateTimeToPerform, venue, paymentReceived  } = req.body;
+    const { usernameClient, gigID,  usernamePerformer, eventName, capacity, numOfHours, dateTimeToPerform, venue, paymentReceived  } = req.body;
 
     //Ensuring that all the user input is valid in terms of data type and is non malicious
     //(w3 Schools, s.a.)
-    if(!(inputValidator.CommonInputValidation(usernameClient) && inputValidator.CommonInputValidation(usernamePerformer) && inputValidator.CommonInputValidation(eventName) && inputValidator.CommonInputValidation(venue))){
+    if(!(inputValidator.CommonInputValidation(gigID) && inputValidator.CommonInputValidation(usernameClient) && inputValidator.CommonInputValidation(usernamePerformer) && inputValidator.CommonInputValidation(eventName) && inputValidator.CommonInputValidation(venue))){
         //(w3 Schools, s.a.)
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
@@ -193,6 +223,15 @@ const UpdateBookingValidityChecks = (req, res, next) => {
 
     }
 
+    if(!(inputValidator.isValidString(gigID))){
+        //(w3 Schools, s.a.)
+        console.error('User attempted an input that does not meet common criteria');
+            return res.status(400).json({
+                error: 'Invalid String Input (Gig ID does not meet length Requirements)'
+            
+        });
+
+    }
 
     if(!(inputValidator.isValidString(usernamePerformer))){
         //(w3 Schools, s.a.)
