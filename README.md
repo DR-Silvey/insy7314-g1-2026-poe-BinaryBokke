@@ -174,16 +174,16 @@ Protected routes require authentication and, where needed, the correct user role
 Middleware is used to perform checks before requests reach the controllers. Rate-limiting middleware helps restrict the number of requests made to booking and gig routes within a specified period. Authentication middleware verifies the user's JWT before allowing access to protected routes. Role-authorisation middleware ensures that only users with the appropriate roles can access the relevant booking and gig routes. BookingValidityChecks validates inputs relating to booking creation, retrieval, updating and deletion. GigValidityChecks validates inputs relating to gig creation, retrieval, updating and deletion. This provides a separation between request validation, security checks and business logic.
 
  - Models:
-The Users.js model defines the structure of user information stored by the application.
+    - The Users.js model defines the structure of user information stored by the application.
 User information includes:
 Username, Password, Full name, Email, Age, and Role.
 New accounts use the general role by default.
 
-The Booking.js model defines the structure of booking information stored by the application.
+    - The Booking.js model defines the structure of booking information stored by the application.
 Booking information includes:
 BookingID, UsernameClient, UsernamePerformer, EventName, Capacity, NumOfHours, DateToPerform, Venue and PaymentReceived.
 
-The Gig.js model defines the structure of gig information stored by the application.
+    - The Gig.js model defines the structure of gig information stored by the application.
 Gig information includes:
 GigID, UsernamePerformer, GigType, Description, StageName, CostPerHour and IsAvailable.
 
