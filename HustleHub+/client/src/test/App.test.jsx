@@ -3,9 +3,11 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../App';
 import { loginUser, registerUser } from '../services/authApi';
+import { getGigs } from '../services/gigApi';
 import createToken from './createToken';
 
 vi.mock('../services/authApi');
+vi.mock('../services/gigApi');
 
 async function openRegistration(user) {
   await user.click(screen.getByRole('tab', { name: 'Create account' }));
@@ -34,6 +36,7 @@ const validRegistration = {
 describe('App', () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    getGigs.mockResolvedValue([]);
   });
 
   it('shows the sign in form by default', () => {
@@ -159,7 +162,7 @@ describe('App', () => {
     expect(sessionStorage.getItem('hustlehub_token')).toBeNull();
   });
 
-  it('signs in, shows the user and signs out again', async () => {
+  it('signs in, opens the gigs page and signs out again', async () => {
     const token = createToken({ username: 'johndoe', role: 'GENERIC' });
     loginUser.mockResolvedValue({ message: 'LogIn attempt was SUCCESSFULL', token });
     const user = userEvent.setup();
@@ -169,8 +172,8 @@ describe('App', () => {
     await user.type(screen.getByLabelText('Password'), 'Secret#Pass123');
     await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    expect(await screen.findByRole('heading', { name: 'Welcome, johndoe' })).toBeInTheDocument();
-    expect(screen.getByText('GENERIC')).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Gigs' })).toBeInTheDocument();
+    expect(await screen.findByText('No gigs are available yet.')).toBeInTheDocument();
     expect(sessionStorage.getItem('hustlehub_token')).toBe(token);
 
     await user.click(screen.getByRole('button', { name: 'Sign out' }));
@@ -179,11 +182,28 @@ describe('App', () => {
     expect(sessionStorage.getItem('hustlehub_token')).toBeNull();
   });
 
-  it('keeps the user signed in after a page refresh while the token is valid', () => {
+  it('moves between the gigs and account pages', async () => {
+    sessionStorage.setItem('hustlehub_token', createToken({ username: 'johndoe', role: 'GENERIC' }));
+    const user = userEvent.setup();
+    render(<App />);
+    await screen.findByText('No gigs are available yet.');
+
+    await user.click(screen.getByRole('button', { name: 'My account' }));
+
+    expect(screen.getByRole('heading', { name: 'Welcome, johndoe' })).toBeInTheDocument();
+    expect(screen.getAllByText('General').length).toBeGreaterThan(0);
+
+    await user.click(screen.getByRole('button', { name: 'Gigs' }));
+
+    expect(screen.getByRole('heading', { name: 'Gigs' })).toBeInTheDocument();
+  });
+
+  it('keeps the user signed in after a page refresh while the token is valid', async () => {
     sessionStorage.setItem('hustlehub_token', createToken({ username: 'johndoe' }));
 
     render(<App />);
 
-    expect(screen.getByRole('heading', { name: 'Welcome, johndoe' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Gigs' })).toBeInTheDocument();
+    expect(await screen.findByText('No gigs are available yet.')).toBeInTheDocument();
   });
 });
