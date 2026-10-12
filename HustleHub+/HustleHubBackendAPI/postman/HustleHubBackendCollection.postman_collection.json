@@ -334,17 +334,27 @@
     {
       "name": "Transaction View Success",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImtlZXJza29uZnl0Iiwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc5MTgzODcwNSwiZXhwIjoxNzkxODQyMzA1fQ.v_mAbHwg62_EsDTZCBSLAjgR8VZW-90NDPA-whTCNzE",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://localhost:5000/gig",
+          "raw": "https://localhost:5000/transaction",
           "protocol": "https",
           "host": [
             "localhost"
           ],
           "port": "5000",
           "path": [
-            "gig"
+            "transaction"
           ]
         }
       },
