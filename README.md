@@ -1,9 +1,3 @@
-Main Work Done in:
-  - https://github.com/DR-Silvey/insy7314-g1-2026-poe-BinaryBokke
-
-Email(If Access can't be obtained):
-  - ST10443098@myemeris.edu.za
-
 Admin Login Credentials:
  - Username:
     - admin
