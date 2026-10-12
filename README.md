@@ -9,11 +9,18 @@ HusstleHub uses a modular design, so its easier to add additional functionality 
 
 •General Users:
 These are the main users of the platform, they can do the following:
-Create an account, log into the system, manage their personal information, and interact with the opportunities and services provided by HustleHub+.
+Create an account, log into the system, manage their personal information, and interact with the opportunities and services provided by HustleHub+  in terms of viewing all available Gigs and Bookings.
 
 •Administrators:
 Administrators have additional permissions that normal users should not have access to, they can do the following:
 Managing user accounts and roles, accessing administrator-only functionality, and maintenance of the application.
+Has access to all functionalities within the system (power user).
+
+•Freelancers:
+Create, View, Update and Delete Gigs.
+
+•Clients:
+Create, View, Update and Delete Bookings.
 
 **System Architecture:**
 HusstleHub+ makes use of a layered client-server architecture. 
@@ -41,6 +48,17 @@ Frontend recieves token --> API Request --> JWT Verification --> Role Authentica
 
 After successful authentication, the users JWT is used when accessing protected functionality.
 Protected requests use the standard Bearer token format: Authorisation: Bearer <Token>
+
+**API Backend Flow:**
+HustleHub+ uses a middleware-based backend flow to process booking and gig requests. The logic is as follows:
+
+User --> Frontend --> API Request --> Rate-Limiting Middleware --> JWT Verification (where required) --> Role Authorisation (where required) --> Input Validation --> Booking/Gig Controller --> Database Operation --> API Response --> Frontend.
+
+The booking and gig creation routes apply rate-limiting and input-validation middleware before the controllers process the requests. The retrieval, update and deletion routes additionally require JWT verification and role authorisation before input validation and controller execution.
+
+The controllers handle the relevant database operations, including creating, retrieving, updating and deleting booking and gig records. Ownership checks are performed where applicable to ensure that users can only modify or delete records they are authorised to manage.
+
+After processing a request, the backend returns an appropriate HTTP status code and JSON response to the frontend, indicating whether the operation was successful or an error occurred.
 
 **Security Decisions:**
 Security controls have been included at multiple levels of the backend rather than relying only on the login process.
@@ -111,6 +129,14 @@ Registration - handles creation of new accounts.
 LogIn - handles user auth.
 UpdateUserInfo - handles changes to user information.
 UpdateUserRoles - handles authorised user-role management.
+CreateBooking - handles the creation of new bookings.
+FindBooking - handles the retrieval of existing bookings.
+UpdateBooking - handles changes to booking information.
+RemoveBooking - handles the deletion of existing bookings.
+CreateGig - handles the creation of new gigs.
+FindGig - handles the retrieval of existing gigs.
+UpdateGig - handles changes to gig information.
+RemoveGig - handles the deletion of existing gigs.
 
 •Routes:
 POST/register ->Register a new user
@@ -120,20 +146,33 @@ PATCH/register/:username/role -> Update a user's role
 GET/ -> API root
 GET/health -> Check API availability
 POST/message -> API test endpoint
+POST/booking -> Create a new booking
+GET/booking -> Retrieve existing bookings
+PUT/booking -> Update booking information
+DELETE/booking -> Delete an existing booking
+POST/gig -> Create a new gig
+GET/gig -> Retrieve existing gigs
+PUT/gig -> Update gig information
+DELETE/gig -> Delete an existing gig
 
 Protected routes require authentication and, where needed, the correct user role(The Independent Institute of Education (IIE), 2026).
 
 •Middleware:
-Middleware is used to perform checks before requests reach the controllers.
-The backend includes middleware for:
-Registration and Login validation, JWT authentication, Role-based authorisation, and centralised error handling.
-This provides a separation between request validation, security checks and business logic.
+Middleware is used to perform checks before requests reach the controllers. Rate-limiting middleware helps restrict the number of requests made to booking and gig routes within a specified period. Authentication middleware verifies the user's JWT before allowing access to protected routes. Role-authorisation middleware ensures that only users with the appropriate roles can access the relevant booking and gig routes. BookingValidityChecks validates inputs relating to booking creation, retrieval, updating and deletion. GigValidityChecks validates inputs relating to gig creation, retrieval, updating and deletion. This provides a separation between request validation, security checks and business logic.
 
 •Models:
 The Users.js model defines the structure of user information stored by the application.
 User information includes:
 Username, Password, Full name, Email, Age, and Role.
 New accounts use the general role by default.
+
+The Booking.js model defines the structure of booking information stored by the application.
+Booking information includes:
+BookingID, UsernameClient, UsernamePerformer, EventName, Capacity, NumOfHours, DateToPerform, Venue and PaymentReceived.
+
+The Gig.js model defines the structure of gig information stored by the application.
+Gig information includes:
+GigID, UsernamePerformer, GigType, Description, StageName, CostPerHour and IsAvailable.
 
 •Utilities:
 Utility classes contain reusable functionality used throughout the backend(The Independent Institute of Education (IIE), 2026).
