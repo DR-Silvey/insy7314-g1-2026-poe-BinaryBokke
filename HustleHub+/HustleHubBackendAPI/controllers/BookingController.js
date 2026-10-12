@@ -104,7 +104,7 @@ const CreateBooking =  async (req, res) => {
 const FindBooking =  async (req, res) => {
     try{
         //Inputs we expect to receive from the query
-        const { bookingID, usernameClient } = req.query;
+        const { bookingID, usernameClient, usernamePerformer } = req.query;
         const filter = {};
         
         //Filter by bookingID
@@ -115,10 +115,16 @@ const FindBooking =  async (req, res) => {
         
         //Filter by the client's username
         if (usernameClient) {
-            filter.usernamePerformer = UsernamePerformer;
+            filter.usernameClient = usernameClient;
         
         }
         
+        //Filter by the client's username
+        if (usernamePerformer) {
+            filter.usernamePerformer = usernamePerformer;
+        
+        }
+
         //Retrieve matching bookings
         const bookings = await Booking.find(filter);
         

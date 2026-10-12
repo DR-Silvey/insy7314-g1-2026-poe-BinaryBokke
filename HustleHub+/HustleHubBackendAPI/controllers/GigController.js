@@ -114,7 +114,7 @@ const FindGig = async (req, res) => {
 
         //Filter by the performer's username
         if (usernamePerformer) {
-            filter.usernamePerformer = UsernamePerformer;
+            filter.usernamePerformer = usernamePerformer;
 
         }
 
