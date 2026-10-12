@@ -42,7 +42,7 @@ const RegisterUser = async (req, res) => {
             fullname: fullname,
             email: email,
             age: age,
-            //Users are all genric at start and can request access for higher privelages
+            role: role
 
         });
 

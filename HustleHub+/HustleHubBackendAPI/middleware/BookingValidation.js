@@ -50,7 +50,7 @@ const CreateBookingValidityChecks = (req, res, next) => {
     }
 
     //Number Type check
-    if(!(inputValidator.isValidNumber(capacity))){
+    if(!(inputValidator.isValidNumber(capacity, 0))){
         //(w3 Schools, s.a.)
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
@@ -60,7 +60,7 @@ const CreateBookingValidityChecks = (req, res, next) => {
 
     }
 
-    if(!(inputValidator.isValidNumber(numOfHours))){
+    if(!(inputValidator.isValidNumber(numOfHours, 0))){
         //(w3 Schools, s.a.)
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
@@ -70,7 +70,7 @@ const CreateBookingValidityChecks = (req, res, next) => {
 
     }
 
-    if(!(inputValidator.isValidNumber(paymentReceived))){
+    if(!(inputValidator.isValidNumber(paymentReceived, 0))){
         //(w3 Schools, s.a.)
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
@@ -225,7 +225,7 @@ const UpdateBookingValidityChecks = (req, res, next) => {
     }
 
     //Number Type check
-    if(!(inputValidator.isValidNumber(capacity))){
+    if(!(inputValidator.isValidNumber(capacity, 0))){
         //(w3 Schools, s.a.)
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
@@ -235,7 +235,7 @@ const UpdateBookingValidityChecks = (req, res, next) => {
 
     }
 
-    if(!(inputValidator.isValidNumber(numOfHours))){
+    if(!(inputValidator.isValidNumber(numOfHours, 0))){
         //(w3 Schools, s.a.)
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
@@ -245,7 +245,7 @@ const UpdateBookingValidityChecks = (req, res, next) => {
 
     }
 
-    if(!(inputValidator.isValidNumber(paymentReceived))){
+    if(!(inputValidator.isValidNumber(paymentReceived, 0))){
         //(w3 Schools, s.a.)
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({

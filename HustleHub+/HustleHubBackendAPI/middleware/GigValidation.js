@@ -51,7 +51,7 @@ const CreateGigValidityChecks = (req, res, next) => {
     }
 
     //Number Type check
-    if(!(inputValidator.isValidNumber(costPerHour))){
+    if(!(inputValidator.isValidNumber(costPerHour, 0))){
         //(w3 Schools, s.a.)
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
@@ -196,7 +196,7 @@ const UpdateGigValidityChecks = (req, res, next) => {
     }
 
     //Number Type check
-    if(!(inputValidator.isValidNumber(costPerHour))){
+    if(!(inputValidator.isValidNumber(costPerHour, 0))){
         //(w3 Schools, s.a.)
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({

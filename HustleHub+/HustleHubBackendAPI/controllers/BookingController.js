@@ -21,7 +21,7 @@ const CreateBooking =  async (req, res) => {
         const userName = getUserName(req);
         
         if (!userName) {
-            console.error(`No Auth`, error);
+            console.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -45,18 +45,6 @@ const CreateBooking =  async (req, res) => {
             paymentReceived: paymentReceived
 
         });
-
-        //Checking if a booking wiht this id already exists
-        let bookingExists = await Booking.exists({ bookingID: newBooking.bookingID });
-
-        //if a Booking with the current booking Id exists we create a new booking Id till it is unique
-        while(bookingExists){
-            //Creating a new Guid
-            newBooking.bookingID = crypto.randomUUID();
-
-            bookingExists = await Booking.exists({ bookingID: newBooking.bookingID });
-
-        }
 
         console.log(`Booking ${newBooking.bookingID} created successfully`);
             return res.status(201).json({
@@ -130,7 +118,7 @@ const FindBooking =  async (req, res) => {
         
         //No bookings found
         if (bookings.length === 0) {
-            console.error(`No Booking Found`, error);
+            console.error(`No Booking Found`);
             return res.status(404).json({
                 message: 'No bookings found'
         
@@ -167,7 +155,7 @@ const UpdateBooking =  async (req, res) => {
         const userRole = getUserRole(req);
 
         if (!userName) {
-            console.error(`No Auth`, error);
+            console.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -178,7 +166,7 @@ const UpdateBooking =  async (req, res) => {
         const { bookingID } = req.body;
 
         if (!bookingID) {
-            console.error(`No Booking Id preovided to update booking Info`, error);
+            console.error(`No Booking Id preovided to update booking Info`);
             return res.status(400).json({
                 error: 'Booking ID is required to update a booking'
         
@@ -190,7 +178,7 @@ const UpdateBooking =  async (req, res) => {
         const existingBooking = await Booking.findOne({ bookingID });
         
         if (!existingBooking) {
-            console.error(`Matching Booking not Found`, error);
+            console.error(`Matching Booking not Found`);
             return res.status(404).json({
                 error: 'Matching Booking not found'
         
@@ -200,7 +188,7 @@ const UpdateBooking =  async (req, res) => {
         
         //Ensuring that the Booking belongs to the person trying to update it's info
         if (((existingBooking.usernameClient.toString() !== userName.toString()) && (userRole != 'admin'))) {
-            console.error(`Outside Access Scope`, error);
+            console.error(`Outside Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to update this booking (belongs to another client)'
         
@@ -222,7 +210,7 @@ const UpdateBooking =  async (req, res) => {
         }
         
         if (Object.keys(updates).length === 0) {
-            console.error(`Invalid Fields For update Given`, error);
+            console.error(`Invalid Fields For update Given`);
             return res.status(400).json({
                 error: 'No valid fields supplied for updating'
         
@@ -284,7 +272,7 @@ const RemoveBooking =  async (req, res) => {
         const userRole = getUserRole(req);
 
         if (!userName) {
-            console.error(`No Auth`, error);
+            console.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -296,7 +284,7 @@ const RemoveBooking =  async (req, res) => {
 
 
         if (!bookingID) {
-            console.error(`No Bokking Id provided to remove Booking`, error);
+            console.error(`No Bokking Id provided to remove Booking`);
             return res.status(400).json({
                 error: 'Booking ID is required to remove a booking'
         
@@ -308,7 +296,7 @@ const RemoveBooking =  async (req, res) => {
         const existingBooking = await Booking.findOne({ bookingID });
         
         if (!existingBooking) {
-            console.error(`No Matching Booking Found`, error);
+            console.error(`No Matching Booking Found`);
             return res.status(404).json({
                 error: 'Matching Booking not found'
         
@@ -318,7 +306,7 @@ const RemoveBooking =  async (req, res) => {
         
         //Ensruing that the owner of the gig is the one removing it
         if (((existingBooking.usernameClient.toString() !== userId.toString()) && (userRole != 'admin'))) {
-            console.error(`Outside Access Scope`, error);
+            console.error(`Outside Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to remove this booking'
         

@@ -8,7 +8,7 @@ const passwordHandler = new PasswordHandler();
 //Esnures that all input realting to a Registration attempt is valid
 //(The IIE, 2026)
 const RegistrationValidityChecks = (req, res, next) => {
-    const { username, password, fullname, email, age } = req.body;
+    const { username, password, fullname, email, age, role } = req.body;
     
     //Ensuring that all the user input is valid in terms of data type and is non malicious
         if(!(inputValidator.IsValidUsername(username))){
@@ -65,6 +65,15 @@ const RegistrationValidityChecks = (req, res, next) => {
             error: 'Password does not meet the complexity requirements (length, complexity, commonality).'
         
         });
+
+    }
+
+    if(!(inputValidator.CommonInputValidation(role) && role != ['GENERIC', 'freelancer', 'client'])){
+        console.error('User attempted to enter an role that does not meet the predefined citeria');
+            return res.status(400).json({
+                error: 'Role is incorrect (has to be string or either generic, freelancer or client)'
+            
+            });
 
     }
 
