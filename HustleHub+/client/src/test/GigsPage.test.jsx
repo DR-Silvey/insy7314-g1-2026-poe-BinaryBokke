@@ -1,9 +1,11 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import GigsPage from '../components/GigsPage';
+import { createBooking } from '../services/bookingApi';
 import { createGig, deleteGig, getGigs, updateGig } from '../services/gigApi';
 
+vi.mock('../services/bookingApi');
 vi.mock('../services/gigApi');
 
 const freelancer = { token: 'token-123', username: 'djsunset', role: 'freelancer', expiresAt: Date.now() + 3600000 };
@@ -17,9 +19,22 @@ const validGig = { gigType: 'DJ', stageName: 'DJ Moonrise', description: 'Deep h
 
 function renderPage(session = freelancer) {
   const onSessionExpired = vi.fn();
-  render(<GigsPage session={session} onSessionExpired={onSessionExpired} />);
-  return { onSessionExpired };
+  const onViewBookings = vi.fn();
+  render(<GigsPage session={session} onSessionExpired={onSessionExpired} onViewBookings={onViewBookings} />);
+  return { onSessionExpired, onViewBookings };
 }
+
+async function fillBookingForm(user, values) {
+  const fields = { eventName: 'Event name', venue: 'Venue', numOfHours: 'Number of hours', capacity: 'Number of guests' };
+
+  for (const [name, label] of Object.entries(fields)) {
+    if (values[name]) await user.type(screen.getByLabelText(label), values[name]);
+  }
+
+  if (values.dateTimeToPerform) fireEvent.change(screen.getByLabelText('Date and time'), { target: { value: values.dateTimeToPerform } });
+}
+
+const validBooking = { eventName: 'Summer party', venue: 'Beach club', dateTimeToPerform: '2030-06-01T18:00', numOfHours: '3', capacity: '80' };
 
 async function fillGigForm(user, values) {
   const fields = { gigType: 'Gig type', stageName: 'Stage name', description: 'Description', costPerHour: 'Cost per hour (R)' };
@@ -194,5 +209,82 @@ describe('GigsPage', () => {
 
     expect(deleteGig).not.toHaveBeenCalled();
     expect(screen.getByRole('button', { name: 'Edit DJ Sunset' })).toBeInTheDocument();
+  });
+
+  it('only shows the Book button to clients', async () => {
+    getGigs.mockResolvedValue([ownGig, otherGig]);
+    renderPage(freelancer);
+
+    await screen.findByText('Snapshot Studio');
+
+    expect(screen.queryByRole('button', { name: 'Book Snapshot Studio' })).not.toBeInTheDocument();
+  });
+
+  it('blocks booking details the API would reject', async () => {
+    getGigs.mockResolvedValue([otherGig]);
+    const user = userEvent.setup();
+    renderPage(client);
+
+    await user.click(await screen.findByRole('button', { name: 'Book Snapshot Studio' }));
+    fireEvent.change(screen.getByLabelText('Date and time'), { target: { value: '2020-01-01T10:00' } });
+    await user.type(screen.getByLabelText('Venue'), "Joe's place");
+    await user.click(screen.getByRole('button', { name: 'Create booking' }));
+
+    expect(screen.getByText('Enter an event name.')).toBeInTheDocument();
+    expect(screen.getByText("The venue cannot contain apostrophes (') or double dashes (--).")).toBeInTheDocument();
+    expect(screen.getByText('Choose a date and time in the future.')).toBeInTheDocument();
+    expect(screen.getByText('Enter between 0.5 and 24 hours.')).toBeInTheDocument();
+    expect(screen.getByText('Enter the number of guests (at least 1).')).toBeInTheDocument();
+    expect(createBooking).not.toHaveBeenCalled();
+  });
+
+  it('shows the total price while the client fills in the hours', async () => {
+    getGigs.mockResolvedValue([otherGig]);
+    const user = userEvent.setup();
+    renderPage(client);
+
+    await user.click(await screen.findByRole('button', { name: 'Book Snapshot Studio' }));
+    await user.type(screen.getByLabelText('Number of hours'), '3');
+
+    expect(screen.getByText(/1[\s\u00a0]?200/)).toBeInTheDocument();
+  });
+
+  it('creates a booking for the chosen gig', async () => {
+    getGigs.mockResolvedValue([otherGig]);
+    createBooking.mockResolvedValue({ bookingID: 'b-1' });
+    const user = userEvent.setup();
+    const { onViewBookings } = renderPage(client);
+
+    await user.click(await screen.findByRole('button', { name: 'Book Snapshot Studio' }));
+    await fillBookingForm(user, validBooking);
+    await user.click(screen.getByRole('button', { name: 'Create booking' }));
+
+    expect(createBooking).toHaveBeenCalledWith('token-456', {
+      eventName: 'Summer party',
+      venue: 'Beach club',
+      dateTimeToPerform: new Date('2030-06-01T18:00').toISOString(),
+      numOfHours: 3,
+      capacity: 80,
+      gigID: 'gig-2',
+      usernamePerformer: 'snapshot',
+    });
+    expect(await screen.findByText(/Your booking for Snapshot Studio has been created/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Go to Bookings' }));
+
+    expect(onViewBookings).toHaveBeenCalled();
+  });
+
+  it('shows the API error when creating a booking fails', async () => {
+    getGigs.mockResolvedValue([otherGig]);
+    createBooking.mockRejectedValue(new Error('Booking validation failed'));
+    const user = userEvent.setup();
+    renderPage(client);
+
+    await user.click(await screen.findByRole('button', { name: 'Book Snapshot Studio' }));
+    await fillBookingForm(user, validBooking);
+    await user.click(screen.getByRole('button', { name: 'Create booking' }));
+
+    expect(await screen.findByText('Booking validation failed')).toBeInTheDocument();
   });
 });

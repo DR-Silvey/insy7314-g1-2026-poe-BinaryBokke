@@ -3,10 +3,12 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../App';
 import { loginUser, registerUser } from '../services/authApi';
+import { getBookings } from '../services/bookingApi';
 import { getGigs } from '../services/gigApi';
 import createToken from './createToken';
 
 vi.mock('../services/authApi');
+vi.mock('../services/bookingApi');
 vi.mock('../services/gigApi');
 
 async function openRegistration(user) {
@@ -37,6 +39,7 @@ describe('App', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     getGigs.mockResolvedValue([]);
+    getBookings.mockResolvedValue([]);
   });
 
   it('shows the sign in form by default', () => {
@@ -196,6 +199,19 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: 'Gigs' }));
 
     expect(screen.getByRole('heading', { name: 'Gigs' })).toBeInTheDocument();
+  });
+
+  it('opens the bookings page from the navigation', async () => {
+    sessionStorage.setItem('hustlehub_token', createToken({ username: 'eventco', role: 'client' }));
+    const user = userEvent.setup();
+    render(<App />);
+    await screen.findByText('No gigs are available yet.');
+
+    await user.click(screen.getByRole('button', { name: 'Bookings' }));
+
+    expect(screen.getByRole('heading', { name: 'My bookings' })).toBeInTheDocument();
+    expect(await screen.findByText('You have not made any bookings yet. Book a gig from the Gigs page.')).toBeInTheDocument();
+    expect(getBookings).toHaveBeenCalledWith({ usernameClient: 'eventco' });
   });
 
   it('keeps the user signed in after a page refresh while the token is valid', async () => {
