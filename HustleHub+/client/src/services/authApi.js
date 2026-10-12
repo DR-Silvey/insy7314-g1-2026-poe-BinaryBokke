@@ -23,8 +23,8 @@ async function send(path, body) {
   return data;
 }
 
-export function registerUser({ username, password, fullname, email, age }) {
-  return send('/register', { username, password, fullname, email, age });
+export function registerUser({ username, password, fullname, email, age, role }) {
+  return send('/register', { username, password, fullname, email, age, role });
 }
 
 export function loginUser({ username, password }) {

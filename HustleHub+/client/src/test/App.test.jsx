@@ -17,6 +17,8 @@ async function fillRegistration(user, values) {
   for (const [name, label] of Object.entries(fields)) {
     if (values[name] !== undefined) await user.type(screen.getByLabelText(label), values[name]);
   }
+
+  if (values.role) await user.click(screen.getByLabelText(new RegExp(`^${values.role}`, 'i')));
 }
 
 const validRegistration = {
@@ -24,6 +26,7 @@ const validRegistration = {
   fullname: 'JohnDoe',
   email: 'john@example.com',
   age: '21',
+  role: 'freelancer',
   password: 'Secret#Pass123',
   confirmPassword: 'Secret#Pass123',
 };
@@ -64,6 +67,7 @@ describe('App', () => {
     expect(screen.getByText(/Enter your full name without spaces/)).toBeInTheDocument();
     expect(screen.getByText('Enter a valid email address, e.g. you@example.com.')).toBeInTheDocument();
     expect(screen.getByText('Enter an age between 17 and 119.')).toBeInTheDocument();
+    expect(screen.getByText('Choose an account type.')).toBeInTheDocument();
     expect(screen.getByText('Choose a password with at least 13 characters.')).toBeInTheDocument();
     expect(screen.getByText('Passwords do not match.')).toBeInTheDocument();
     expect(screen.getByText('Please accept the terms to continue.')).toBeInTheDocument();
@@ -92,9 +96,41 @@ describe('App', () => {
     await user.click(screen.getByRole('checkbox'));
     await user.click(screen.getByRole('button', { name: 'Create account' }));
 
-    expect(registerUser).toHaveBeenCalledWith({ username: 'johndoe', fullname: 'JohnDoe', email: 'john@example.com', age: 21, password: 'Secret#Pass123' });
+    expect(registerUser).toHaveBeenCalledWith({ username: 'johndoe', fullname: 'JohnDoe', email: 'john@example.com', age: 21, role: 'freelancer', password: 'Secret#Pass123' });
     expect(await screen.findByText('Your account has been created. You can now sign in.')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Sign in to HustleHub+' })).toBeInTheDocument();
+  });
+
+  it('lets the user choose a client, freelancer or general account', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await openRegistration(user);
+
+    const client = screen.getByLabelText(/^client/i);
+    const freelancer = screen.getByLabelText(/^freelancer/i);
+    const general = screen.getByLabelText(/^general/i);
+    expect(client).not.toBeChecked();
+    expect(freelancer).not.toBeChecked();
+    expect(general).not.toBeChecked();
+
+    await user.click(client);
+
+    expect(client).toBeChecked();
+    expect(freelancer).not.toBeChecked();
+    expect(general).not.toBeChecked();
+  });
+
+  it('sends the general role to the API as GENERIC', async () => {
+    registerUser.mockResolvedValue({ message: 'User Registartion occurred SUCCESSFULLY' });
+    const user = userEvent.setup();
+    render(<App />);
+    await openRegistration(user);
+
+    await fillRegistration(user, { ...validRegistration, role: 'general' });
+    await user.click(screen.getByRole('checkbox'));
+    await user.click(screen.getByRole('button', { name: 'Create account' }));
+
+    expect(registerUser).toHaveBeenCalledWith(expect.objectContaining({ role: 'GENERIC' }));
   });
 
   it('shows the API error when registration fails', async () => {

@@ -28,6 +28,13 @@ input[aria-invalid='true'] { border-color: #bd3c4d; }
 .password-control { position: relative; }
 .password-control input { padding-right: 70px; }
 .password-control button { position: absolute; top: 0; right: 0; height: 48px; padding: 0 14px; border: 0; color: #3157bb; background: transparent; font-size: .78rem; font-weight: 700; }
+.role-options { display: grid; grid-template-columns: 1fr; gap: 8px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.role-options legend { margin-bottom: 7px; padding: 0; }
+.role-option { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1px solid #ccd4e0; border-radius: 8px; background: #fff; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+.role-option.selected { border-color: #3157bb; box-shadow: 0 0 0 3px rgba(49,87,187,.12); }
+.role-option input { accent-color: #3157bb; margin: 3px 0 0; }
+.role-option span { display: grid; gap: 2px; color: #68758b; font-size: .78rem; font-weight: 500; line-height: 1.35; }
+.role-option strong { color: #15233b; font-size: .88rem; }
 .checkbox-row { display: flex; gap: 8px; align-items: flex-start; margin: 5px 0 0; color: #637087; font-size: .79rem; font-weight: 500; line-height: 1.45; }
 .checkbox-row input { accent-color: #3157bb; margin: 3px 0 0; }
 .primary-button { width: 100%; min-height: 50px; margin-top: 14px; border: 0; border-radius: 8px; color: #fff; background: #203b7d; box-shadow: 0 8px 15px rgba(32,59,125,.16); font-weight: 700; transition: transform .15s, background .15s; }

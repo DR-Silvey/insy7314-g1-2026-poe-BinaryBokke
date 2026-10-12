@@ -6,10 +6,17 @@ const initialRegistration = {
   fullname: '',
   email: '',
   age: '',
+  role: '',
   password: '',
   confirmPassword: '',
   acceptedTerms: false,
 };
+
+const ROLE_OPTIONS = [
+  { value: 'client', label: 'Client', description: 'I want to book freelancers' },
+  { value: 'freelancer', label: 'Freelancer', description: 'I want to offer my services' },
+  { value: 'GENERIC', label: 'General', description: 'I just want to browse' },
+];
 
 const initialLogin = { username: '', password: '' };
 
@@ -51,7 +58,7 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
 
   function validateRegistration() {
     const nextErrors = {};
-    const { username, fullname, email, age, password, confirmPassword, acceptedTerms } = registerValues;
+    const { username, fullname, email, age, role, password, confirmPassword, acceptedTerms } = registerValues;
 
     const trimmedUsername = username.trim();
     const trimmedFullname = fullname.trim();
@@ -68,6 +75,8 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
     else if (!EMAIL_PATTERN.test(trimmedEmail) || hasBlockedCharacters(trimmedEmail)) nextErrors.email = 'Enter a valid email address, e.g. you@example.com.';
 
     if (age === '' || !Number.isInteger(numericAge) || numericAge < MIN_AGE || numericAge > MAX_AGE) nextErrors.age = `Enter an age between ${MIN_AGE} and ${MAX_AGE}.`;
+
+    if (!ROLE_OPTIONS.some((option) => option.value === role)) nextErrors.role = 'Choose an account type.';
 
     if (password.length < MIN_PASSWORD_LENGTH) nextErrors.password = `Choose a password with at least ${MIN_PASSWORD_LENGTH} characters.`;
     else if (!PASSWORD_PATTERN.test(password)) nextErrors.password = 'Use an uppercase letter, a lowercase letter, a number and a symbol. Only letters, numbers and # @ $ ! % * ? & are allowed.';
@@ -99,6 +108,7 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
           fullname: registerValues.fullname.trim(),
           email: registerValues.email.trim(),
           age: Number(registerValues.age),
+          role: registerValues.role,
           password: registerValues.password,
         });
         setRegisterValues(initialRegistration);
@@ -166,6 +176,16 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
               <label htmlFor={`${registerFormId}-age`}>Age</label>
               <input id={`${registerFormId}-age`} name="age" type="number" min={MIN_AGE} max={MAX_AGE} inputMode="numeric" value={values.age} onChange={updateValue} aria-invalid={Boolean(errors.age)} aria-describedby={errors.age ? 'age-error' : undefined} placeholder="18" />
               <div id="age-error"><FieldError>{errors.age}</FieldError></div>
+              <fieldset className="role-options" aria-describedby={errors.role ? 'role-error' : undefined}>
+                <legend>Account type</legend>
+                {ROLE_OPTIONS.map((option) => (
+                  <label key={option.value} className={values.role === option.value ? 'role-option selected' : 'role-option'}>
+                    <input name="role" type="radio" value={option.value} checked={values.role === option.value} onChange={updateValue} />
+                    <span><strong>{option.label}</strong>{option.description}</span>
+                  </label>
+                ))}
+              </fieldset>
+              <div id="role-error"><FieldError>{errors.role}</FieldError></div>
             </> : <>
               <label htmlFor={`${loginFormId}-username`}>Username</label>
               <input id={`${loginFormId}-username`} name="username" type="text" autoComplete="username" value={values.username} onChange={updateValue} aria-invalid={Boolean(errors.username)} aria-describedby={errors.username ? 'username-error' : undefined} placeholder="Enter your username" />

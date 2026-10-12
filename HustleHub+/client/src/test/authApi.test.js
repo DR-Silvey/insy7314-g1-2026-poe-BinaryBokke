@@ -31,11 +31,11 @@ describe('authApi', () => {
   it('posts only the registration fields the API expects', async () => {
     const fetchMock = mockFetch(201, { message: 'User Registartion occurred SUCCESSFULLY' });
 
-    await registerUser({ username: 'johndoe', password: 'Secret#Pass123', fullname: 'JohnDoe', email: 'john@example.com', age: 21, confirmPassword: 'x' });
+    await registerUser({ username: 'johndoe', password: 'Secret#Pass123', fullname: 'JohnDoe', email: 'john@example.com', age: 21, role: 'client', confirmPassword: 'x' });
 
     const [url, options] = fetchMock.mock.calls[0];
     expect(url).toMatch(/\/register$/);
-    expect(JSON.parse(options.body)).toEqual({ username: 'johndoe', password: 'Secret#Pass123', fullname: 'JohnDoe', email: 'john@example.com', age: 21 });
+    expect(JSON.parse(options.body)).toEqual({ username: 'johndoe', password: 'Secret#Pass123', fullname: 'JohnDoe', email: 'john@example.com', age: 21, role: 'client' });
   });
 
   it('shows the error message returned by the API', async () => {
