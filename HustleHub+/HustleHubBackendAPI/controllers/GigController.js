@@ -18,8 +18,9 @@ const getUserRole = (req) => {
 //Method to create a new Gig
 //(The IIE, 2026) (W3 Schools, s.a.)
 const CreateGig = async (req, res) => {
-    try {
+    try {  
         const userName = getUserName(req);
+        console.log('Extracted username:', userName);
         
         if (!userName) {
             console.error(`No Auth`);
@@ -96,7 +97,7 @@ const FindGig = async (req, res) => {
 
         //Filter by GigID
         if (gigID) {
-            filter.gigID = GigID;
+            filter.gigID = gigID;
 
         }
 
@@ -173,7 +174,7 @@ const UpdateGig = async (req, res) => {
         const existingGig = await Gig.findOne({ gigID });
 
         if (!existingGig) {
-            console.error(`No matching Gig Found`, error);
+            console.error(`No matching Gig Found`);
             return res.status(404).json({
                 error: 'Matching Gig not found'
 
@@ -299,7 +300,7 @@ const RemoveGig = async (req, res) => {
         }
 
         //Ensruing that the owner of the gig is the one removing it
-        if (((existingGig.usernamePerformer.toString() !== userId.toString()) && (userRole != 'admin'))) {
+        if (((existingGig.usernamePerformer.toString() !== userName.toString()) && (userRole != 'admin'))) {
             console.error(`Outside Of Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to remove this gig'
@@ -315,7 +316,7 @@ const RemoveGig = async (req, res) => {
 
         return res.status(200).json({
             message: 'Gig removed successfully',
-            GigID
+            gigID
 
         });
 

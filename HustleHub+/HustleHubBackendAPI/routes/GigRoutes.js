@@ -13,11 +13,11 @@ const Gig = require('../controllers/GigController');
 //Declared /gig as the endpoint to access gig functionalities
 //(The IIE, 2026)
 
-//Route used to create agig within the db
-router.post('/gig', CreateGigLimiter, GigValidityChecks.CreateGigValidityChecks, Gig.CreateGig);
-
 //Route used to find a gig(s) wihtin the db, only freelancers and admin can access this role
-router.get('/gig', ViewGigLimiter, protect, authorizeRoles('admin', 'freelancer'), GigValidityChecks.FindGigValidityChecks, Gig.FindGig);
+router.get('/gig', ViewGigLimiter, GigValidityChecks.FindGigValidityChecks, Gig.FindGig);
+
+//Route used to create agig within the db
+router.post('/gig', CreateGigLimiter, protect, authorizeRoles('admin', 'freelancer'), GigValidityChecks.CreateGigValidityChecks, Gig.CreateGig);
 
 //Route used to update a gig's info within the db, only freelancers and admin can access this role
 router.put('/gig', UpdateGigLimiter, protect, authorizeRoles('admin', 'freelancer'), GigValidityChecks.UpdateGigValidityChecks, Gig.UpdateGig);

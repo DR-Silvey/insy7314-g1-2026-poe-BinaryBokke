@@ -13,11 +13,11 @@ const Booking = require('../controllers/BookingController');
 //Declared /booking as the endpoint to access booking functionalities
 //(The IIE, 2026)
 
-//Route used to create a booking within the db
-router.post('/booking', CreateBookingLimiter, BookingValidityChecks.CreateBookingValidityChecks, Booking.CreateBooking);
-
 //Route used to find a booking(s) wihtin the db, only clients and admin can access this route
-router.get('/booking', ViewBookingLimiter, protect, authorizeRoles('admin', 'client'), BookingValidityChecks.FindBookingValidityChecks, Booking.FindBooking);
+router.get('/booking', ViewBookingLimiter, BookingValidityChecks.FindBookingValidityChecks, Booking.FindBooking);
+
+//Route used to create a booking within the db
+router.post('/booking', CreateBookingLimiter, protect, authorizeRoles('admin', 'client'), BookingValidityChecks.CreateBookingValidityChecks, Booking.CreateBooking);
 
 //Route used to update a booking's info within the db, only clients and admin can access this route
 router.put('/booking', UpdateBookingLimiter, protect, authorizeRoles('admin', 'client'), BookingValidityChecks.UpdateBookingValidityChecks, Booking.UpdateBooking);
