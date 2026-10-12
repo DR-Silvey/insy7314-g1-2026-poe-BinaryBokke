@@ -1,34 +1,28 @@
-export default function SignedInPage({ session, onSignOut }) {
+import { roleLabel } from '../services/roles';
+
+export default function SignedInPage({ session }) {
   const expiresAt = new Date(session.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   return (
-    <main className="auth-shell">
-      <section className="form-panel">
-        <div className="auth-card">
-          <div className="simple-brand">
-            <span aria-hidden="true">H+</span> HustleHub<strong>+</strong>
-          </div>
-
-          <header>
-            <p className="eyebrow">SIGNED IN</p>
-            <h2>Welcome, {session.username}</h2>
-            <p>You are signed in to HustleHub+. For your security, this session ends at {expiresAt}.</p>
-          </header>
-
-          <dl className="session-details">
-            <div>
-              <dt>Username</dt>
-              <dd>{session.username}</dd>
-            </div>
-            <div>
-              <dt>Role</dt>
-              <dd>{session.role}</dd>
-            </div>
-          </dl>
-
-          <button className="primary-button" type="button" onClick={onSignOut}>Sign out</button>
+    <main className="page">
+      <header className="page-header">
+        <div>
+          <p className="eyebrow">SIGNED IN</p>
+          <h1>Welcome, {session.username}</h1>
+          <p>You are signed in to HustleHub+. For your security, this session ends at {expiresAt}.</p>
         </div>
-      </section>
+      </header>
+
+      <dl className="session-details">
+        <div>
+          <dt>Username</dt>
+          <dd>{session.username}</dd>
+        </div>
+        <div>
+          <dt>Account type</dt>
+          <dd>{roleLabel(session.role)}</dd>
+        </div>
+      </dl>
     </main>
   );
 }

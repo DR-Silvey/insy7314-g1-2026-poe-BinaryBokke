@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import { loginUser, registerUser } from '../services/authApi';
+import FieldError from './FieldError';
 
 const initialRegistration = {
   username: '',
@@ -32,10 +33,6 @@ function hasBlockedCharacters(value) {
 
 function EyeIcon({ visible }) {
   return visible ? 'Hide' : 'Show';
-}
-
-function FieldError({ children }) {
-  return children ? <p className="field-error" role="alert">{children}</p> : null;
 }
 
 export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice = null }) {
