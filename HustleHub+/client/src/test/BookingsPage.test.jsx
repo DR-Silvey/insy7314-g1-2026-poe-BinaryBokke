@@ -4,9 +4,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import BookingsPage from '../components/BookingsPage';
 import { deleteBooking, getBookings, updateBooking } from '../services/bookingApi';
 import { getGigs } from '../services/gigApi';
+import { createTransaction } from '../services/transactionApi';
 
 vi.mock('../services/bookingApi');
 vi.mock('../services/gigApi');
+vi.mock('../services/transactionApi');
 
 const client = { token: 'token-456', username: 'eventco', role: 'client', expiresAt: Date.now() + 3600000 };
 const freelancer = { token: 'token-123', username: 'djsunset', role: 'freelancer', expiresAt: Date.now() + 3600000 };
@@ -27,6 +29,7 @@ describe('BookingsPage', () => {
     vi.resetAllMocks();
     getBookings.mockResolvedValue([]);
     getGigs.mockResolvedValue([gig]);
+    createTransaction.mockResolvedValue({ transactionID: 't-1' });
   });
 
   it('only loads the bookings made by the signed-in client', async () => {
@@ -82,10 +85,38 @@ describe('BookingsPage', () => {
     expect(updateBooking).not.toHaveBeenCalled();
     await user.click(screen.getByRole('button', { name: 'Confirm payment' }));
 
+    expect(createTransaction).toHaveBeenCalledWith('token-456', { bookingID: 'b-1', gigID: 'gig-1', usernamePerformer: 'djsunset', amount: 750 });
     expect(updateBooking).toHaveBeenCalledWith('token-456', { ...unpaidBooking, paymentReceived: 750 });
     expect(await screen.findByText(/Your booking for Summer party is confirmed/)).toBeInTheDocument();
     expect(screen.getByText('Paid', { selector: 'span' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /^Pay / })).not.toBeInTheDocument();
+  });
+
+  it('still marks the booking as paid when its transaction already exists', async () => {
+    getBookings.mockResolvedValue([unpaidBooking]);
+    createTransaction.mockRejectedValue(Object.assign(new Error('A transaction with this unique identifier already exists'), { status: 409 }));
+    updateBooking.mockImplementation(async (token, booking) => booking);
+    const user = userEvent.setup();
+    renderPage(client);
+
+    await user.click(await screen.findByRole('button', { name: /^Pay / }));
+    await user.click(screen.getByRole('button', { name: 'Confirm payment' }));
+
+    expect(await screen.findByText(/Your booking for Summer party is confirmed/)).toBeInTheDocument();
+    expect(updateBooking).toHaveBeenCalled();
+  });
+
+  it('does not mark the booking as paid when the transaction fails', async () => {
+    getBookings.mockResolvedValue([unpaidBooking]);
+    createTransaction.mockRejectedValue(Object.assign(new Error('Transaction validation failed'), { status: 400 }));
+    const user = userEvent.setup();
+    renderPage(client);
+
+    await user.click(await screen.findByRole('button', { name: /^Pay / }));
+    await user.click(screen.getByRole('button', { name: 'Confirm payment' }));
+
+    expect(await screen.findByText('Transaction validation failed')).toBeInTheDocument();
+    expect(updateBooking).not.toHaveBeenCalled();
   });
 
   it('lets the client go back without paying', async () => {
@@ -96,6 +127,7 @@ describe('BookingsPage', () => {
     await user.click(await screen.findByRole('button', { name: /^Pay / }));
     await user.click(screen.getByRole('button', { name: 'Back' }));
 
+    expect(createTransaction).not.toHaveBeenCalled();
     expect(updateBooking).not.toHaveBeenCalled();
     expect(screen.getByRole('button', { name: /^Pay / })).toBeInTheDocument();
   });

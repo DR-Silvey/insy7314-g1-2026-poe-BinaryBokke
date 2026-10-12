@@ -10,6 +10,7 @@ import createToken from './createToken';
 vi.mock('../services/authApi');
 vi.mock('../services/bookingApi');
 vi.mock('../services/gigApi');
+vi.mock('../services/transactionApi');
 
 async function openRegistration(user) {
   await user.click(screen.getByRole('tab', { name: 'Create account' }));
@@ -193,8 +194,9 @@ describe('App', () => {
 
     await user.click(screen.getByRole('button', { name: 'My account' }));
 
-    expect(screen.getByRole('heading', { name: 'Welcome, johndoe' })).toBeInTheDocument();
-    expect(screen.getAllByText('General').length).toBeGreaterThan(0);
+    expect(screen.getByRole('heading', { name: 'My account' })).toBeInTheDocument();
+    expect(screen.getByText('johndoe', { selector: 'dd' })).toBeInTheDocument();
+    expect(screen.getByText('General', { selector: 'dd' })).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Gigs' }));
 
