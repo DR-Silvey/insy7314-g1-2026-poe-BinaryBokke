@@ -1,3 +1,16 @@
+Main Work Done in:
+  -https://github.com/DR-Silvey/insy7314-g1-2026-poe-BinaryBokke
+
+Email(If Access can't be obtained):
+  - ST10443098@myemeris.edu.za
+
+Admin Login Credentials:
+ - Username:
+  - - admin
+
+ - Password
+  - - TestPassword123!
+
 **System Overview:**
 HusstleHub+ is a web based service that allows users to discover, interact, and manage services and opportunities in one place.
 The application follows a client-server architecture where the frontend is responsible for all user interactions and the backend does the logic, auth, API, and data management. 
