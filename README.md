@@ -33,7 +33,7 @@ Has access to all functionalities within the system (power user).
 Create, View, Update and Delete Gigs.
 
  - Clients:
-Create, View, Update and Delete Bookings.
+Create, View, Update and Delete Bookings. Create Transactions.
 
 **System Architecture:**
 HusstleHub+ makes use of a layered client-server architecture. 
@@ -67,7 +67,7 @@ HustleHub+ uses a middleware-based backend flow to process booking and gig reque
 
 User --> Frontend --> API Request --> Rate-Limiting Middleware --> JWT Verification (where required) --> Role Authorisation (where required) --> Input Validation --> Booking/Gig Controller --> Database Operation --> API Response --> Frontend.
 
-The booking and gig creation routes apply rate-limiting and input-validation middleware before the controllers process the requests. The retrieval, update and deletion routes additionally require JWT verification and role authorisation before input validation and controller execution.
+The booking, gig and transaction creation routes apply rate-limiting and input-validation middleware before the controllers process the requests. The creation, update and deletion routes additionally require JWT verification and role authorisation before input validation and controller execution.
 
 The controllers handle the relevant database operations, including creating, retrieving, updating and deleting booking and gig records. Ownership checks are performed where applicable to ensure that users can only modify or delete records they are authorised to manage.
 
@@ -92,7 +92,7 @@ These token contain information required to identify the authenticated user and 
 Tokens have an expiration period so that an authentication token doesn't remain valid indefinitely.
 
  - Role-based Access Controls:
-Users are assigned roles, with normal registered users receiving the "general" role by default.
+Users can choose to be either a Generic, Freelancer or Client role.
 Administrative functionality requires the appropriate administrator role.
 The backend checks the authenticated users role before allowing access to protected administrative operations.
 
@@ -102,8 +102,8 @@ Authorisation: Is the user allowed to perform this operation?
 
  - Input Validation:
 User input is validated before being processed by our application.
-Validation is applied to information such as:
-Usernames, Email addresses, passwords, names, and age.
+Validation is applied to information such as for e.g.
+Usernames, Email addresses, Passwords, etc.
 This helps prevent invalid data from entering the system and provides an additional layer of protection against malicious or unexpected input.
 
  - Security Headers:
@@ -150,6 +150,8 @@ The intention is to avoid exposing unnecessary internal implementation details t
     - FindGig - handles the retrieval of existing gigs.
     - UpdateGig - handles changes to gig information.
     - RemoveGig - handles the deletion of existing gigs.
+    - CreateTransaction - hanldes the creation of new transactions.
+    - FindTransaction - handles the retrieval of existing transactions.
 
  - Routes:
     - POST/register ->Register a new user
@@ -167,25 +169,31 @@ The intention is to avoid exposing unnecessary internal implementation details t
     - GET/gig -> Retrieve existing gigs
     - PUT/gig -> Update gig information
     - DELETE/gig -> Delete an existing gig
+    - POST/transaction -> Create a new transaction
+    - GET/transaction -> Retrieve existing transcations
 
 Protected routes require authentication and, where needed, the correct user role(The Independent Institute of Education (IIE), 2026).
 
  - Middleware:
-Middleware is used to perform checks before requests reach the controllers. Rate-limiting middleware helps restrict the number of requests made to booking and gig routes within a specified period. Authentication middleware verifies the user's JWT before allowing access to protected routes. Role-authorisation middleware ensures that only users with the appropriate roles can access the relevant booking and gig routes. BookingValidityChecks validates inputs relating to booking creation, retrieval, updating and deletion. GigValidityChecks validates inputs relating to gig creation, retrieval, updating and deletion. This provides a separation between request validation, security checks and business logic.
+Middleware is used to perform checks before requests reach the controllers. Rate-limiting middleware helps restrict the number of requests made to booking, gig and transaction routes within a specified period. Authentication middleware verifies the user's JWT before allowing access to protected routes. Role-authorisation middleware ensures that only users with the appropriate roles can access the relevant booking and gig routes. BookingValidityChecks validates inputs relating to booking creation, retrieval, updating and deletion. GigValidityChecks validates inputs relating to gig creation, retrieval, updating and deletion. TransactionalidityChecks validates inputs relating to transaction creation and retrieval. This provides a separation between request validation, security checks and business logic.
 
  - Models:
-    - The Users.js model defines the structure of user information stored by the application.
+    - The users.js model defines the structure of user information stored by the application.
 User information includes:
-Username, Password, Full name, Email, Age, and Role.
+username, password, full-name, email, age, and role.
 New accounts use the general role by default.
 
-    - The Booking.js model defines the structure of booking information stored by the application.
+    - The booking.js model defines the structure of booking information stored by the application.
 Booking information includes:
-BookingID, UsernameClient, UsernamePerformer, EventName, Capacity, NumOfHours, DateToPerform, Venue and PaymentReceived.
+bookingID, gigID, usernameClient, usernamePerformer, eventName, capacity, numOfHours, dateToPerform, venue and paymentReceived.
 
-    - The Gig.js model defines the structure of gig information stored by the application.
+    - The gig.js model defines the structure of gig information stored by the application.
 Gig information includes:
-GigID, UsernamePerformer, GigType, Description, StageName, CostPerHour and IsAvailable.
+gigID, ysernamePerformer, gigType, description, stageName, costPerHour and isAvailable.
+
+     - The transaction.js model defines the structure of transaction information stored by the application.
+Transaction information includes:
+bookingID, gigID, usernameClient, usernamePerformer and amount.
 
  - Utilities:
 Utility classes contain reusable functionality used throughout the backend(The Independent Institute of Education (IIE), 2026).

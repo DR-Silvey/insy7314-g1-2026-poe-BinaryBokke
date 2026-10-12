@@ -330,6 +330,25 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Transaction View Success",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:5000/gig",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "gig"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }

@@ -13,7 +13,7 @@ const BookingSchema = new mongoose.Schema(
             
         },
 
-        gigID: { //FK referencing User
+        gigID: { //FK referencing Gig
             type: String,
             ref: 'Gig',
             required: [true, 'Gig ID is required']
