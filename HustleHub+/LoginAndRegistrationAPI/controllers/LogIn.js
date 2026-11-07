@@ -6,7 +6,7 @@ const encryptionHandler = new EncryptionHandler();
 const TokenCreation = require('../utils/tokens/TokenCreation');
 
 //Temp to store and retreive data relating to user
-const user = require('../models/Users');
+const user = require('../models/users');
 
 //Method logs user in if their username and corelating password matches a saved one
 //(The IIE, 2026)
