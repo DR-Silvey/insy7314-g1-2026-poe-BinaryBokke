@@ -21,14 +21,6 @@ const TaxSchema = new mongoose.Schema(
 
         },
 
-        taxPercentage: {
-            type: Number,
-            required: [true, 'Tax percentage is required'],
-            min: [0, 'Tax percentage cannot be negative'],
-            max: [100, 'Tax percentage cannot exceed 100']
-
-        },
-
         taxAmount: {
             type: Number,
             required: [true, 'Tax amount is required'],
@@ -39,7 +31,7 @@ const TaxSchema = new mongoose.Schema(
         taxYear: {
             type: String,
             required: true,
-            default: '2026'
+            default: Date.now().getFullYear().toString()
 
         },
 
