@@ -16,7 +16,6 @@ connectDb();
 //Importing routes for Gig, Booking, ErrorHandling
 const GigRoutes = require('../HustleHubBackendAPI/routes/GigRoutes');
 const BookingRoutes = require('../HustleHubBackendAPI/routes/BookingRoutes');
-const TransactionRoutes = require('../HustleHubBackendAPI/routes/TransactionRoutes');
 
 const ErrorHandler = require('../HustleHubBackendAPI/middleware/ErrorHandler');
 
@@ -104,10 +103,6 @@ app.use('/', GigRoutes);
 //Booking route access
 //(The IIE, 2026)
 app.use('/', BookingRoutes);
-
-//Transaction route access
-//(The IIE, 2026)
-app.use('/', TransactionRoutes);
 
 app.use((req, res) => {
     console.error("API route not found");
