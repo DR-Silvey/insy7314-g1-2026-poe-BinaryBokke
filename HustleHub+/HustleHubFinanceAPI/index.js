@@ -58,7 +58,7 @@ app.use(
 app.use(
     cors({
         origin: CLIENT_ORIGIN,
-        methods: ['GET', 'POST'],
+        methods: ['GET', 'POST', 'PUT'],
         allowedHeaders: ['Content-Type', 'Authorization']
 
     })
