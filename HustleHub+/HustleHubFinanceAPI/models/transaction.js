@@ -15,9 +15,7 @@ const TransactionSchema = new mongoose.Schema(
 
         bookingID: { //FK referencing booking
             type: String,
-            required: [true, 'BookingID is required'],
-            unique: true,
-            default: () => new mongoose.Types.UUID().toString()
+            required: [true, 'BookingID is required']
             
         },
 
