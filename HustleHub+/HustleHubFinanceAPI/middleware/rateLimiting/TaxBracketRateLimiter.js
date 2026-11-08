@@ -28,7 +28,21 @@ const ViewTaxBracketLimiter = rateLimit({
 
 });
 
-module.exports = { CreateTaxBracketLimiter, ViewTaxBracketLimiter };
+//If the user tries to update tax brackets more than 2 times in 15 min they are not permitted to attempt again (The IIE, 2026)
+const UpdateTaxBracketLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 2,
+    standardHeaders: true,
+    legacyHeaders: false,
+
+    message: {
+        error: 'Too many Tax Bracket Update attempts. Please try again later.'
+
+    }
+
+});
+
+module.exports = { CreateTaxBracketLimiter, ViewTaxBracketLimiter, UpdateTaxBracketLimiter };
 
 /*
 

@@ -5,7 +5,7 @@ const router = express.Router();
 const { protect, authorizeRoles } = require('../middleware/auth/AuthMiddleware');
 
 //Rate Limiting
-const { CreateTaxBracketLimiter, ViewTaxBracketLimiter } = require('../middleware/rateLimiting/TaxBracketRateLimiter')
+const { CreateTaxBracketLimiter, ViewTaxBracketLimiter, UpdateTaxBracketLimiter } = require('../middleware/rateLimiting/TaxBracketRateLimiter')
 
 const TaxBracketValidityChecks = require('../middleware/TaxBracketValidation');
 const TaxBracket = require('../controllers/TaxBracketController');
@@ -18,6 +18,9 @@ router.post('/tax-brackets', CreateTaxBracketLimiter, protect, authorizeRoles('a
 
 //Route used to view a tax bracket(s) within the db
 router.get('/tax-brackets', ViewTaxBracketLimiter, protect, authorizeRoles('admin'), TaxBracketValidityChecks.FindTaxBracketValidityChecks, TaxBracket.FindTaxBracket);
+
+//Route used to update a tax bracket within the db
+router.put('/tax-brackets/:id', UpdateTaxBracketLimiter, protect, authorizeRoles('admin'), TaxBracketValidityChecks.UpdateTaxBracketChecks, TaxBracket.UpdateTaxBracket);
 
 module.exports = router;
 
