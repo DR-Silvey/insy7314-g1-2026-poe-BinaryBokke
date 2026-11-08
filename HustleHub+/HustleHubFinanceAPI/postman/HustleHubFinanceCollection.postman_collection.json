@@ -1,0 +1,311 @@
+{
+  "info": {
+    "_postman_id": "ce618fe2-c8f1-4d00-84a6-fcaadb6ee8d3",
+    "name": "HustleHubFinanceCollection",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49054922",
+    "_collection_link": "https://go.postman.co/collection/49054922-ce618fe2-c8f1-4d00-84a6-fcaadb6ee8d3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Generic Call",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:6000/",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "6000",
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Generic Call Copy",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:6000/",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "6000",
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Generic Call (HEALTH)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:6000/health",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "6000",
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Transaction View Success",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImtlZXJza29uZnl0Iiwicm9sZSI6ImNsaWVudCIsImlhdCI6MTc5MTgzODcwNSwiZXhwIjoxNzkxODQyMzA1fQ.v_mAbHwg62_EsDTZCBSLAjgR8VZW-90NDPA-whTCNzE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:6000/transaction",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "6000",
+          "path": [
+            "transaction"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Tax Bracket View Success",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_0f7j}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:6000/tax-brackets",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "6000",
+          "path": [
+            "tax-brackets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Tax Record View Success",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_0jy5}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:6000/tax-records",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "6000",
+          "path": [
+            "tax-records"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Tax Estimation Access Denied (Invalid Role)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_13ks}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n        \"taxYear\": \"2026\",\r\n        \"minimumIncome\": 1817001,\r\n        \"maximumIncome\": null,\r\n        \"taxRate\": 45,\r\n        \"baseTax\": 643458\r\n    }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:6000/tax-estimation",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "6000",
+          "path": [
+            "tax-estimation"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Tax Estimation Access Denied (No Token)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:6000/tax-estimation",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "6000",
+          "path": [
+            "tax-estimation"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Tax Record creation (Freelancer)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_16d8}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:6000/tax-estimation",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "6000",
+          "path": [
+            "tax-estimation"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Tax Record creation (Client)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_0m8m}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:6000/tax-estimation",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "6000",
+          "path": [
+            "tax-estimation"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "json_web_token_0jy5",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_13ks",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_0m8m",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_16d8",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_0f7j",
+      "secret": true
+    }
+  ]
+}

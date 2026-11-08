@@ -16,14 +16,14 @@ const TaxSchema = new mongoose.Schema(
          usernamePerformer: { //FK referencing User
             type: String,
             ref: 'User',
-            required: [true, 'Performer is required']
+            required: false
 
         },
 
         usernameClient: { //FK referencing User
             type: String,
             ref: 'User',
-            required: [true, 'Client is required']
+            required: false
 
         },
 

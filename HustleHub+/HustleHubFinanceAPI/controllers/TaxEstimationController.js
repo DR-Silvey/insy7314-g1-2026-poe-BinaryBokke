@@ -172,25 +172,25 @@ const EstimateTax =  async (req, res) => {
 //(The IIE, 2026) (W3 Schools, s.a.)
 const FindTaxRecord =  async (req, res) => {
     try{
+        //Retrieving username from jwt
+        const userName = getUserName(req);
+
+        if (!userName) {
+            console.error(`No Auth`);
+            return res.status(401).json({
+                error: 'Invalid or missing authenticated user'
+
+            });
+
+        }
+
         //Inputs we expect to receive from the query
-        const { taxID, usernamePerformer, usernameClient, taxYearStart, taxYearEnd, calculationDateStart, calculationDateEnd } = req.query;
+        const { taxID, taxYearStart, taxYearEnd, calculationDateStart, calculationDateEnd } = req.query;
         const filter = {};
         
         //Filter by taxID
         if (taxID) {
             filter.taxID = taxID;
-        }
-
-        //Filter by usernamePerformer
-        if (usernamePerformer) {
-            filter.usernamePerformer = usernamePerformer;
-
-        }
-
-        //Filter by usernameClient
-        if (usernameClient) {
-            filter.usernameClient = usernameClient;
-
         }
 
         //Filter by taxYear range
@@ -225,8 +225,17 @@ const FindTaxRecord =  async (req, res) => {
             
         }
 
-        //Retrieve matching tax records
-        const taxRecords = await Tax.find(filter);
+        //Retrieve matching tax records, ensuring that they belong to the authenticated user (either as a performer or client)
+        const taxRecords = await Tax.find({
+            $or: [
+                { usernamePerformer: userName },
+                { usernameClient: userName }
+
+            ],
+
+            ...filter//Aplying the other filter's after we have filtered by the authenticated user to ensure that they can only access their own tax records
+
+        });
         
         //No tax records found
         if (taxRecords.length === 0) {

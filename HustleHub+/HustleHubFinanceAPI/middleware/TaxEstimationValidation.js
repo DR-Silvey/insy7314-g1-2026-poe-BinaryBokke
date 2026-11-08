@@ -4,30 +4,10 @@ const inputValidator = new CommonInputValidator();
 //No Inputs required for tax estimation
 
 const FindTaxRecordValidityChecks = (req, res, next) => {
-    const { taxID, usernamePerformer, usernameClient, taxYearStart, taxYearEnd, calculationDateStart, calculationDateEnd } = req.query;
+    const { taxID, taxYearStart, taxYearEnd, calculationDateStart, calculationDateEnd } = req.query;
 
     //Ensuring that all the user input is valid in terms of data type and is non malicious, validation should occur only on supplied filters
     //(w3 Schools, s.a.)
-    if ((usernamePerformer !== undefined) && !(inputValidator.CommonInputValidation(usernamePerformer))) 
-    {
-        console.error('User attempted an input that does not meet common criteria');
-            return res.status(400).json({
-                error: 'Invalid Input (Does not meet common criteria)'
-
-        });
-
-    }
-
-    if ((usernameClient !== undefined) && !(inputValidator.CommonInputValidation(usernameClient))) 
-    {
-        console.error('User attempted an input that does not meet common criteria');
-            return res.status(400).json({
-                error: 'Invalid Input (Does not meet common criteria)'
-
-        });
-
-    }
-
    if ((taxID !== undefined) && !(inputValidator.CommonInputValidation(taxID))) 
     {
         console.error('User attempted an input that does not meet common criteria');
@@ -74,27 +54,6 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
                 
-        });
-
-    }
-
-    //Length Check and datatype check
-    if ((usernamePerformer !== undefined) && !(inputValidator.isValidString(usernamePerformer))) 
-    {
-        console.error('User attempted an input that does not meet common criteria');
-            return res.status(400).json({
-                error: 'Invalid String Input (Username Performer does not meet length Requirements)'
-
-        });
-
-    }
-
-    if ((usernameClient !== undefined) && !(inputValidator.isValidString(usernameClient))) 
-    {
-        console.error('User attempted an input that does not meet common criteria');
-            return res.status(400).json({
-                error: 'Invalid String Input (Username Client does not meet length Requirements)'
-
         });
 
     }
