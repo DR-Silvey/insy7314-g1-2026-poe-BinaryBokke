@@ -10,15 +10,13 @@ const fs = require('fs');
 const path = require('path');
 
 //Attempting connection to db
-const connectDb = require('../HustleHubBackendAPI/config/db');
+const connectDb = require('../HustleHubFinanceAPI/config/db');
 connectDb();
 
 //Importing routes for Gig, Booking, ErrorHandling
-const GigRoutes = require('../HustleHubBackendAPI/routes/GigRoutes');
-const BookingRoutes = require('../HustleHubBackendAPI/routes/BookingRoutes');
-const TransactionRoutes = require('../HustleHubBackendAPI/routes/TransactionRoutes');
+const TransactionRoutes = require('../HustleHubFinanceAPI/routes/TransactionRoutes');
 
-const ErrorHandler = require('../HustleHubBackendAPI/middleware/ErrorHandler');
+const ErrorHandler = require('../HustleHubFinanceAPI/middleware/ErrorHandler');
 
 const app = express();
 
@@ -96,14 +94,6 @@ app.use(express.json({limit: '10kb'}));
         });
 
     });
-
-//Gig route access
-//(The IIE, 2026)
-app.use('/', GigRoutes);
-
-//Booking route access
-//(The IIE, 2026)
-app.use('/', BookingRoutes);
 
 //Transaction route access
 //(The IIE, 2026)

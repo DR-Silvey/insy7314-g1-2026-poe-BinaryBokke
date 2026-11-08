@@ -1,4 +1,4 @@
-//To store and retreive data relating to transaction
+//To store and retreive data relating to transactions, tax and tax brackets
 const Transaction = require('../models/transaction');
 const Tax = require('../models/tax/tax');
 const TaxBracket = require('../models/tax/taxBracket');
@@ -9,13 +9,20 @@ const getUserName = (req) => {
 
 };
 
+//Using the Username attached to the JWT to retrieve the current user's role
+const getUserRole = (req) => {
+    return req.user?.role;
+
+};
+
 //Method to estimate tax based on the transaction amount and the tax brackets for the current year
 //(The IIE, 2026) (W3 Schools, s.a.)
 const EstimateTax =  async (req, res) => {
     try{
         //Retrieving username from jwt
         const userName = getUserName(req);
-        
+        const userRole = getUserRole(req);
+
         if (!userName) {
             console.error(`No Auth`);
             return res.status(401).json({
@@ -31,22 +38,57 @@ const EstimateTax =  async (req, res) => {
         //Retrieve the tax brackets for the current year
         const taxBrackets = await TaxBracket.find({taxYear: taxYear}).sort({ minimumIncome: 1 });
 
-        //Retrieve the transactions matching the current user
-        const transactions = await Transaction.find({usernamePerformer: userName,
-            createdAt: {
-                $gte: new Date(`${Number(taxYear) - 1}-03-01`),
-                $lt: new Date(`${taxYear}-03-01`)
+        //Used to store transactions and bookings for the current user based on their role (freelancer or client)
+        let transactions;
+        let bookings;
 
-            }
+        //Used to store total income
+        let totalIncome = 0;
 
-        });
+        switch (userRole) {
+            case 'freelancer':
+                //Freelancers's tax is estimated on their total income from transactions for the current tax year
+                //Retrieve the transactions matching the current user
+                transactions = await Transaction.find({usernamePerformer: userName,
+                    createdAt: {
+                        $gte: new Date(`${Number(taxYear) - 1}-03-01`),
+                        $lt: new Date(`${taxYear}-03-01`)
+
+                    }
+
+                });
+
+                // Calculate total income
+                totalIncome = transactions.reduce((total, transaction) => total + transaction.amount, 0);
+                break;
+
+            case 'client':
+                //Clients's tax is estimated on their total income from bookings for the current tax year
+                bookings = await Booking.find({usernameClient: userName,
+                    createdAt: {
+                        $gte: new Date(`${Number(taxYear) - 1}-03-01`),
+                        $lt: new Date(`${taxYear}-03-01`)
+
+                    }
+                });
+
+                // Calculate total income
+                totalIncome = bookings.reduce((total, booking) => total + booking.amount, 0);
+                break;
+
+            default:
+                console.error(`Invalid user role: ${userRole}`);
+                return res.status(400).json({
+                    error: 'Invalid user role (Only Freelancer or Clients can estimate their tax)'
+
+                });
+
+        }
 
         //To calculate the tax amount we get the transaction amount and the calculate the tax base on the first tax bracket 
         //We then move to the next tack bracket if their is left over after reached the max of the first tax bracket and then
         //Remove the total that fit into the first tax bracket we then repeat this process for each tax bracket until we reach the 
         //last tax bracket or we have no more left over to calculate tax on
-        // Calculate total income
-        const totalIncome = transactions.reduce((total, transaction) => total + transaction.amount, 0);
 
         //Calculate tax using the progressive tax brackets
         let taxAmount = 0;
