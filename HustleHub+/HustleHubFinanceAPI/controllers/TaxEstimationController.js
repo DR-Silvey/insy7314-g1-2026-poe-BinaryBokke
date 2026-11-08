@@ -1,6 +1,6 @@
 //To store and retreive data relating to transactions, tax and tax brackets
 const Transaction = require('../models/transaction');
-const Tax = require('../models/tax/tax');
+const Tax = require('../models/tax/taxRecord');
 const TaxBracket = require('../models/tax/taxBracket');
 
 //Using the Username attached to the JWT to retrieve the current user's username

@@ -13,8 +13,10 @@ const path = require('path');
 const connectDb = require('../HustleHubFinanceAPI/config/db');
 connectDb();
 
-//Importing routes for Gig, Booking, ErrorHandling
+//Importing routes for transaction, tax estimation, and tax bracket functionalities
 const TransactionRoutes = require('../HustleHubFinanceAPI/routes/TransactionRoutes');
+const TaxEstimationRoutes = require('../HustleHubFinanceAPI/routes/TaxEstimationRoutes');
+const TaxBracketRoutes = require('../HustleHubFinanceAPI/routes/TaxBracketRoutes');
 
 const ErrorHandler = require('../HustleHubFinanceAPI/middleware/ErrorHandler');
 
@@ -56,7 +58,7 @@ app.use(
 app.use(
     cors({
         origin: CLIENT_ORIGIN,
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+        methods: ['GET', 'POST'],
         allowedHeaders: ['Content-Type', 'Authorization']
 
     })
@@ -98,6 +100,14 @@ app.use(express.json({limit: '10kb'}));
 //Transaction route access
 //(The IIE, 2026)
 app.use('/', TransactionRoutes);
+
+//Tax Estimation route access
+//(The IIE, 2026)
+app.use('/', TaxEstimationRoutes);
+
+//Tax Bracket route access
+//(The IIE, 2026)
+app.use('/', TaxBracketRoutes);
 
 app.use((req, res) => {
     console.error("API route not found");
