@@ -2,6 +2,7 @@
 const Transaction = require('../models/transaction');
 const Tax = require('../models/tax/taxRecord');
 const TaxBracket = require('../models/tax/taxBracket');
+const Booking = require('../models/related/booking');
 
 //Using the Username attached to the JWT to retrieve the current user's username
 const getUserName = (req) => {
@@ -40,7 +41,10 @@ const EstimateTax =  async (req, res) => {
 
         //Used to store transactions and bookings for the current user based on their role (freelancer or client)
         let transactions;
+        let usernamePerformer = "";
+        
         let bookings;
+        let usernameClient = "";
 
         //Used to store total income
         let totalIncome = 0;
@@ -60,6 +64,9 @@ const EstimateTax =  async (req, res) => {
 
                 // Calculate total income
                 totalIncome = transactions.reduce((total, transaction) => total + transaction.amount, 0);
+
+                usernamePerformer = userName;
+
                 break;
 
             case 'client':
@@ -74,6 +81,9 @@ const EstimateTax =  async (req, res) => {
 
                 // Calculate total income
                 totalIncome = bookings.reduce((total, booking) => total + booking.amount, 0);
+
+                usernameClient = userName;
+
                 break;
 
             default:
@@ -107,17 +117,17 @@ const EstimateTax =  async (req, res) => {
         //Tax amount to 2 decimal places
         taxAmount = Number(taxAmount.toFixed(2));
 
-        const estimatedTax = await await Booking.create({
+        const estimatedTax = await Tax.create({
             //taxId: Auto genned Guid,
-            TransactionID: transactionID,
-            taxPercentage: taxRate,
+            usernamePerformer: usernamePerformer,
+            usernameClient: usernameClient,
             taxAmount: taxAmount,
             taxYear: taxYear,
             calculationDate: new Date()
 
         });
     
-        console.log(`Transaction ${newTransaction.transactionID} created successfully`);
+        console.log(`Tax Record ${estimatedTax.taxID} created successfully`);
             return res.status(201).json({
                 message: 'Tax estimated successfully',
                 estimatedTax: estimatedTax
@@ -163,7 +173,7 @@ const EstimateTax =  async (req, res) => {
 const FindTaxRecord =  async (req, res) => {
     try{
         //Inputs we expect to receive from the query
-        const { taxID, transactionID, taxYearStart, taxYearEnd, calculationDateStart, calculationDateEnd } = req.query;
+        const { taxID, usernamePerformer, usernameClient, taxYearStart, taxYearEnd, calculationDateStart, calculationDateEnd } = req.query;
         const filter = {};
         
         //Filter by taxID
@@ -171,10 +181,16 @@ const FindTaxRecord =  async (req, res) => {
             filter.taxID = taxID;
         }
 
-        //Filter by transactionID
-        if (transactionID) {
-            filter.transactionID = transactionID;
-        
+        //Filter by usernamePerformer
+        if (usernamePerformer) {
+            filter.usernamePerformer = usernamePerformer;
+
+        }
+
+        //Filter by usernameClient
+        if (usernameClient) {
+            filter.usernameClient = usernameClient;
+
         }
 
         //Filter by taxYear range
@@ -227,7 +243,7 @@ const FindTaxRecord =  async (req, res) => {
             return res.status(200).json({
                 message: 'Tax Records retrieved successfully',
                 count: taxRecords.length,
-                transactions
+                taxRecords: taxRecords
         
         });
 
@@ -244,7 +260,7 @@ const FindTaxRecord =  async (req, res) => {
 }
 
 
-module.exports = { CreateTransaction, FindTransaction };
+module.exports = { EstimateTax, FindTaxRecord };
 
 /*
 W3 Schools, s.a. JavaScript Tutorial.

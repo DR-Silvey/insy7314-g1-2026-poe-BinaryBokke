@@ -4,11 +4,21 @@ const inputValidator = new CommonInputValidator();
 //No Inputs required for tax estimation
 
 const FindTaxRecordValidityChecks = (req, res, next) => {
-    const { taxID, transactionID, taxYearStart, taxYearEnd, calculationDateStart, calculationDateEnd } = req.query;
+    const { taxID, usernamePerformer, usernameClient, taxYearStart, taxYearEnd, calculationDateStart, calculationDateEnd } = req.query;
 
     //Ensuring that all the user input is valid in terms of data type and is non malicious, validation should occur only on supplied filters
     //(w3 Schools, s.a.)
-    if ((transactionID !== undefined) && !(inputValidator.CommonInputValidation(transactionID))) 
+    if ((usernamePerformer !== undefined) && !(inputValidator.CommonInputValidation(usernamePerformer))) 
+    {
+        console.error('User attempted an input that does not meet common criteria');
+            return res.status(400).json({
+                error: 'Invalid Input (Does not meet common criteria)'
+
+        });
+
+    }
+
+    if ((usernameClient !== undefined) && !(inputValidator.CommonInputValidation(usernameClient))) 
     {
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
@@ -69,11 +79,21 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
     }
 
     //Length Check and datatype check
-    if ((transactionID !== undefined) && !(inputValidator.isValidString(transactionID))) 
+    if ((usernamePerformer !== undefined) && !(inputValidator.isValidString(usernamePerformer))) 
     {
         console.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
-                error: 'Invalid String Input (Transaction ID does not meet length Requirements)'
+                error: 'Invalid String Input (Username Performer does not meet length Requirements)'
+
+        });
+
+    }
+
+    if ((usernameClient !== undefined) && !(inputValidator.isValidString(usernameClient))) 
+    {
+        console.error('User attempted an input that does not meet common criteria');
+            return res.status(400).json({
+                error: 'Invalid String Input (Username Client does not meet length Requirements)'
 
         });
 
@@ -134,7 +154,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
 
 };
 
-module.exports = { CreateTransactionValidityChecks, FindTransactionValidityChecks };
+module.exports = { FindTaxRecordValidityChecks };
 
 /*
 W3 Schools, s.a. JavaScript Tutorial.

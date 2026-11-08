@@ -23,9 +23,9 @@ const ErrorHandler = require('../HustleHubFinanceAPI/middleware/ErrorHandler');
 const app = express();
 
 //(The IIE, 2026)
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 6000;
 const USE_HTTPS = process.env.USE_HTTPS === 'true';
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:5273';
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:5373';
 
 //(The IIE, 2026)
 app.disable('x-powered-by');

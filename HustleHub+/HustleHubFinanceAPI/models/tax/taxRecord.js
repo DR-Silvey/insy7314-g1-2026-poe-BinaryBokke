@@ -13,11 +13,17 @@ const TaxSchema = new mongoose.Schema(
 
         },
 
-        transactionID: { //FK referencing booking
+         usernamePerformer: { //FK referencing User
             type: String,
-            ref: 'Transaction',
-            required: [true, 'Transaction ID is required'],
-            unique: true
+            ref: 'User',
+            required: [true, 'Performer is required']
+
+        },
+
+        usernameClient: { //FK referencing User
+            type: String,
+            ref: 'User',
+            required: [true, 'Client is required']
 
         },
 
@@ -31,7 +37,7 @@ const TaxSchema = new mongoose.Schema(
         taxYear: {
             type: String,
             required: true,
-            default: Date.now().getFullYear().toString()
+            default: () => new Date().getFullYear().toString()
 
         },
 

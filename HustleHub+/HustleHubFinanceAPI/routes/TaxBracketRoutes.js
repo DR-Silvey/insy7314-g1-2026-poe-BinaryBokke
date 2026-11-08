@@ -17,7 +17,7 @@ const TaxBracket = require('../controllers/TaxBracketController');
 router.post('/tax-brackets', CreateTaxBracketLimiter, protect, authorizeRoles('admin'), TaxBracketValidityChecks.CreateTaxBracketValidityChecks, TaxBracket.CreateTaxBracket);
 
 //Route used to view a tax bracket(s) within the db
-router.get('/tax-brackets', ViewTaxBracketLimiter, protect, authorizeRoles('admin'), TaxBracketValidityChecks.ViewTaxBracketLimiter, TaxBracket.FindTaxBracket);
+router.get('/tax-brackets', ViewTaxBracketLimiter, protect, authorizeRoles('admin'), TaxBracketValidityChecks.FindTaxBracketValidityChecks, TaxBracket.FindTaxBracket);
 
 module.exports = router;
 
