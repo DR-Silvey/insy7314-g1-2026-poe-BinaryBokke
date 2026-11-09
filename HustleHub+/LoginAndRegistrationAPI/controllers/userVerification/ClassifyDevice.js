@@ -56,7 +56,7 @@ const ClassifyDevice = async (req, res) => {
         }
 
         //Confirm the browser still has the device cookie
-        const deviceToken = req.cookies?.[DEVICE_COOKIE];
+        const deviceToken = req.cookies?.[`${DEVICE_COOKIE}_${decoded.userId}`];
 
         if (!deviceToken) { //(The IIE, 2026)(W3 Schools, s.a.)
             return res.status(401).json({
