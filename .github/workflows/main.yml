@@ -20,26 +20,30 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
+    defaults:
+      run:
+        working-directory: HustleHub+
+
     steps:
       # 1. Get repository source code
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Check that the required folders and Dockerfiles exist
+      # 2. Verify repository structure
       - name: Verify Repository Structure
+        working-directory: .
         run: |
           echo "Repository root:"
           pwd
           echo ""
-          echo "Repository contents:"
-          ls -la
-          echo ""
-
+          echo "HustleHub+ contents:"
+          ls -la "HustleHub+"
+          
           for folder in \
-            HustleHubBackendAPI \
-            HustleHubFinanceAPI \
-            LoginAndRegistrationAPI \
-            client
+            "HustleHub+/HustleHubBackendAPI" \
+            "HustleHub+/HustleHubFinanceAPI" \
+            "HustleHub+/LoginAndRegistrationAPI" \
+            "HustleHub+/client"
           do
             if [ ! -d "$folder" ]; then
               echo "ERROR: Required folder '$folder' was not found."
@@ -48,10 +52,10 @@ jobs:
           done
 
           for dockerfile in \
-            HustleHubBackendAPI/Dockerfile \
-            HustleHubFinanceAPI/Dockerfile \
-            LoginAndRegistrationAPI/Dockerfile \
-            client/Dockerfile
+            "HustleHub+/HustleHubBackendAPI/Dockerfile" \
+            "HustleHub+/HustleHubFinanceAPI/Dockerfile" \
+            "HustleHub+/LoginAndRegistrationAPI/Dockerfile" \
+            "HustleHub+/client/Dockerfile"
           do
             if [ ! -f "$dockerfile" ]; then
               echo "ERROR: Required file '$dockerfile' was not found."
@@ -59,8 +63,8 @@ jobs:
             fi
           done
 
-          if [ ! -f compose.yml ]; then
-            echo "ERROR: compose.yml was not found in the repository root."
+          if [ ! -f "HustleHub+/compose.yml" ]; then
+            echo "ERROR: compose.yml was not found inside HustleHub+."
             exit 1
           fi
 
@@ -69,19 +73,16 @@ jobs:
       # 3. Generate all three API environment files
       - name: Create Environment Files
         env:
-          # Backend
           BACKEND_JWT_SECRET: ${{ secrets.BACKEND_JWT_SECRET }}
           BACKEND_MONGODB_USERNAME: ${{ secrets.BACKEND_MONGODB_USERNAME }}
           BACKEND_MONGODB_PASSWORD: ${{ secrets.BACKEND_MONGODB_PASSWORD }}
           BACKEND_MONGODB_URI: ${{ secrets.BACKEND_MONGODB_URI }}
 
-          # Finance
           FINANCE_JWT_SECRET: ${{ secrets.FINANCE_JWT_SECRET }}
           FINANCE_MONGODB_USERNAME: ${{ secrets.FINANCE_MONGODB_USERNAME }}
           FINANCE_MONGODB_PASSWORD: ${{ secrets.FINANCE_MONGODB_PASSWORD }}
           FINANCE_MONGODB_URI: ${{ secrets.FINANCE_MONGODB_URI }}
 
-          # Login and Registration
           LOGIN_JWT_SECRET: ${{ secrets.LOGIN_JWT_SECRET }}
           LOGIN_MONGODB_USERNAME: ${{ secrets.LOGIN_MONGODB_USERNAME }}
           LOGIN_MONGODB_PASSWORD: ${{ secrets.LOGIN_MONGODB_PASSWORD }}
