@@ -59,6 +59,39 @@ Where: LoginAndRegistrationAPI/controllers/passwords; client/src/components/Pass
 
  - Broken access control: the role in the signed token is checked on every protected route, and controllers check ownership so users can only change their own gigs and bookings (OWASP Foundation, 2025).
 
+**CI/CD Pipeline:**
+
+HustleHub+ uses GitHub Actions to run the pipeline automatically on every push and pull request to master. The pipeline:
+ - Checks out the latest code from the repository
+ - Builds the Docker images for the client and the three APIs and starts them together with Docker Compose
+ - Runs the automated tests against the running application
+
+If a build or a test fails, the pipeline run fails and is marked red on GitHub, so broken or insecure code is caught before it is merged into master. Running the pipeline on every change is part of a DevSecOps approach, where security and quality checks happen automatically throughout development instead of only at the end.
+
+**Static Code Analysis:**
+
+ESLint analyses the source code of the APIs without running it. Each API has its own eslint.config.js, which uses ESLint's recommended rules for Node.js. These rules catch problems such as unused variables, unreachable code, undefined variables and duplicate keys, which can hide bugs or lead to security issues. Finding these problems automatically means they are fixed during development, before the code reaches users. ESLint can be run inside any API folder with npm run lint.
+
+**Docker:**
+
+Each application has its own Dockerfile, and Docker Compose runs all four as separate containers on one network: the client, LoginAndRegistrationAPI, HustleHubBackendAPI and HustleHubFinanceAPI.
+
+ - APIs: each API image is based on node:22-alpine, a small Node.js image, and installs only the production packages, which keeps the image small and reduces the attack surface.
+ - Client: the client uses a two-stage build. The first stage builds the React application with Node.js, and the second stage the finished files with nginx, so the final image contains no source code or development tools.
+ - Security: each folder has a .dockerignore file that keeps node_modules, .env files, certificates and the .git folder out of the images, so secrets are never built into a container.
+
+To start the whole application in containers, run the following command from the HustleHub+ folder:
+docker compose up --build
+
+**Logging:**
+
+The APIs use Winston to log key system events, including login attempts, bookings, transactions and errors. Each log entry records the time, the level (such as info, warn or error) and a message describing the event.
+
+ - Login attempts: logging failed and successful logins helps detect brute-force attacks and suspicious sign-ins.
+ - Bookings and transactions: logging these creates a record of financial activity that can be traced if a payment or booking is disputed.
+ - Errors: logging errors helps the team find and fix problems quickly, without showing internal details to users.
+
+
 **Part 1 and Part 2 Documentation:**
 
 Admin Login Credentials:
