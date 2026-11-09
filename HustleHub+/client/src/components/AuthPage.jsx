@@ -2,6 +2,8 @@ import { useId, useState } from 'react';
 import { loginUser, registerUser } from '../services/authApi';
 import AuthVerification from './AuthVerification';
 import FieldError from './FieldError';
+import PasswordReset from './PasswordReset';
+import { EMAIL_PATTERN, MIN_PASSWORD_LENGTH, validatePassword } from '../services/validation';
 
 const initialRegistration = {
   username: '',
@@ -24,12 +26,14 @@ const initialLogin = { username: '', password: '' };
 
 const MIN_AGE = 17;
 const MAX_AGE = 119;
-const MIN_PASSWORD_LENGTH = 13;
-const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]+$/;
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function hasBlockedCharacters(value) {
   return value.includes(' ') || value.includes("'") || value.includes('--');
+}
+
+function readResetLink() {
+  const token = new URLSearchParams(window.location.search).get('token');
+  return window.location.pathname === '/reset-password' && token ? { type: 'reset', token } : null;
 }
 
 function EyeIcon({ visible }) {
@@ -45,7 +49,7 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
   const [notice, setNotice] = useState(initialNotice);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [step, setStep] = useState(null);
+  const [step, setStep] = useState(readResetLink);
   const isRegistration = mode === 'register';
 
   function switchMode(nextMode) {
@@ -77,8 +81,8 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
 
     if (!ROLE_OPTIONS.some((option) => option.value === role)) nextErrors.role = 'Choose an account type.';
 
-    if (password.length < MIN_PASSWORD_LENGTH) nextErrors.password = `Choose a password with at least ${MIN_PASSWORD_LENGTH} characters.`;
-    else if (!PASSWORD_PATTERN.test(password)) nextErrors.password = 'Use an uppercase letter, a lowercase letter, a number and a symbol. Only letters, numbers and # @ $ ! % * ? & are allowed.';
+    const passwordError = validatePassword(password);
+    if (passwordError) nextErrors.password = passwordError;
 
     if (password !== confirmPassword) nextErrors.confirmPassword = 'Passwords do not match.';
     if (!acceptedTerms) nextErrors.acceptedTerms = 'Please accept the terms to continue.';
@@ -101,16 +105,25 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
     }
   }
 
-  function handleEmailVerified() {
+  function returnToSignIn(nextNotice) {
+    if (window.location.pathname === '/reset-password') window.history.replaceState(null, '', '/');
     setStep(null);
-    setNotice({ type: 'success', text: 'Your email address is verified. You can now sign in.' });
+    setNotice(nextNotice);
     onModeChange('login');
   }
 
+  function requestNewResetLink() {
+    window.history.replaceState(null, '', '/');
+    setNotice(null);
+    setStep({ type: 'forgot' });
+  }
+
+  function handleEmailVerified() {
+    returnToSignIn({ type: 'success', text: 'Your email address is verified. You can now sign in.' });
+  }
+
   function restartSignIn(message) {
-    setStep(null);
-    setNotice(message ? { type: 'error', text: message } : null);
-    onModeChange('login');
+    returnToSignIn(message ? { type: 'error', text: message } : null);
   }
 
   function validateLogin() {
@@ -181,7 +194,7 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
           <a className="simple-brand" href="#top" aria-label="HustleHub+ home">
             <span aria-hidden="true">H+</span> HustleHub<strong>+</strong>
           </a>
-          {step ? <AuthVerification key={step.type} step={step} onResult={handleVerificationResult} onEmailVerified={handleEmailVerified} onRestart={restartSignIn} /> : <>
+          {step?.type === 'forgot' || step?.type === 'reset' ? <PasswordReset key={step.type} step={step} onDone={(message) => returnToSignIn({ type: 'success', text: message })} onBack={() => returnToSignIn(null)} onRequestNewLink={requestNewResetLink} /> : step ? <AuthVerification key={step.type} step={step} onResult={handleVerificationResult} onEmailVerified={handleEmailVerified} onRestart={restartSignIn} /> : <>
             <div className="mode-switch" role="tablist" aria-label="Authentication options">
               <button className={!isRegistration ? 'active' : ''} type="button" role="tab" aria-selected={!isRegistration} onClick={() => switchMode('login')}>Sign in</button>
               <button className={isRegistration ? 'active' : ''} type="button" role="tab" aria-selected={isRegistration} onClick={() => switchMode('register')}>Create account</button>
@@ -234,6 +247,7 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
                 <button type="button" onClick={() => setShowPassword((current) => !current)} aria-label={`${showPassword ? 'Hide' : 'Show'} password`}><EyeIcon visible={showPassword} /></button>
               </div>
               <div id="password-error"><FieldError>{errors.password}</FieldError></div>
+              {!isRegistration && <p className="forgot-link"><button type="button" onClick={() => { setNotice(null); setStep({ type: 'forgot' }); }}>Forgot password?</button></p>}
 
               {isRegistration && <>
                 <label htmlFor={`${registerFormId}-confirm-password`}>Confirm password</label>

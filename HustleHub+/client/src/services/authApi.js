@@ -45,3 +45,11 @@ export function verifyLoginOtp({ otp, temporaryToken }) {
 export function classifyDevice({ classificationToken, location }) {
   return send('/classify-device', { classificationToken, location });
 }
+
+export function forgotPassword({ email }) {
+  return send('/forgot-password', { email });
+}
+
+export function resetPassword({ token, newPassword, confirmPassword }) {
+  return send('/reset-password', { token, newPassword, confirmPassword });
+}
