@@ -8,7 +8,7 @@ const VerifyLoginOtp = require('./../controllers/userVerification/VerifyLoginOtp
 const ClassifyDevice = require('./../controllers/userVerification/ClassifyDevice');
 const ForgotPassword = require('./../controllers/passwords/ForgotPassword');
 const ResetPassword = require('./../controllers/passwords/ResetPassword');
-const ResendLoginOtp = require('./../controllers/userVerification/ResendLoginOtp');
+const ResendLoginOtp = require('./../controllers/userVerification/ResendLogInOtp');
 
 //Rate Limiting
 const { LogInLimiter, ProfileInfoLimiter, OtpLimiter, ClassifyDeviceLimiter, ForgotPasswordLimiter, ResetPasswordLimiter } = require('./../middleware/rateLimiting/AuthRateLimiter');
