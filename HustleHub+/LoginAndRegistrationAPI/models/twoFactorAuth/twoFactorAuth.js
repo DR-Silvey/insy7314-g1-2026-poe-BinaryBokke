@@ -1,6 +1,8 @@
 //importing mongoose
 const mongoose = require('mongoose');
 
+const RecognisedDevice = require('./recognizedDevice');
+
 //Schema that defines how the two factor authentication data will be stored
 //(The IIE, 2026)
 const TwoFactorSchema = new mongoose.Schema({
@@ -12,26 +14,52 @@ const TwoFactorSchema = new mongoose.Schema({
 
     },
 
-    secret: {
-        type: String,
-        required: true
-
-    },
-
     enabled: {
         type: Boolean,
-        default: false
+        default: true
 
     },
 
-    recoveryCodes: [{
-        type: String
+    //Account-wide seven-day OTP verification period
+    lastVerifiedAt: {
+        type: Date,
+        default: null
 
-    }]
+    },
 
-}, 
+    //Temporary email OTP information
+    otpHash: {
+        type: String,
+        default: null
 
-{ timestamps: true });
+    },
+
+    otpExpiresAt: {
+        type: Date,
+        default: null
+
+    },
+
+    otpAttempts: {
+        type: Number,
+        default: 0
+
+    },
+    otpPurpose: {
+        type: String,
+        enum: ['LOGIN', null],
+        default: null
+
+    },
+
+    //Recognised Home, Work and Away browsers/devices
+    devices: {
+        type: [RecognisedDevice],
+        default: []
+        
+    }
+
+}, { timestamps: true });
 
 module.exports = mongoose.model('TwoFactor', TwoFactorSchema);
 
