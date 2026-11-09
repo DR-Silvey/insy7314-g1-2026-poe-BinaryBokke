@@ -25,7 +25,48 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Generate all three API environment files
+      # 2. Check that the required folders and Dockerfiles exist
+      - name: Verify Repository Structure
+        run: |
+          echo "Repository root:"
+          pwd
+          echo ""
+          echo "Repository contents:"
+          ls -la
+          echo ""
+
+          for folder in \
+            HustleHubBackendAPI \
+            HustleHubFinanceAPI \
+            LoginAndRegistrationAPI \
+            client
+          do
+            if [ ! -d "$folder" ]; then
+              echo "ERROR: Required folder '$folder' was not found."
+              exit 1
+            fi
+          done
+
+          for dockerfile in \
+            HustleHubBackendAPI/Dockerfile \
+            HustleHubFinanceAPI/Dockerfile \
+            LoginAndRegistrationAPI/Dockerfile \
+            client/Dockerfile
+          do
+            if [ ! -f "$dockerfile" ]; then
+              echo "ERROR: Required file '$dockerfile' was not found."
+              exit 1
+            fi
+          done
+
+          if [ ! -f compose.yml ]; then
+            echo "ERROR: compose.yml was not found in the repository root."
+            exit 1
+          fi
+
+          echo "All required folders and Dockerfiles exist."
+
+      # 3. Generate all three API environment files
       - name: Create Environment Files
         env:
           # Backend
@@ -107,19 +148,21 @@ jobs:
           FRONTEND_URL=http://localhost:5173
           EOF
 
-      # 3. Validate Compose configuration
+          echo "Environment files created successfully."
+
+      # 4. Validate Compose configuration
       - name: Validate Docker Compose
         run: docker compose -f compose.yml config --quiet
 
-      # 4. Build all four Docker images
+      # 5. Build all four Docker images
       - name: Build Docker Images
         run: docker compose -f compose.yml build
 
-      # 5. Start all services
+      # 6. Start all services
       - name: Start Docker Compose
         run: docker compose -f compose.yml up -d
 
-      # 6. Wait for all four services
+      # 7. Wait for all four services
       - name: Verify Containers
         run: |
           for i in {1..12}; do
@@ -139,16 +182,16 @@ jobs:
           docker compose -f compose.yml ps
           exit 1
 
-      # 7. Show container status
+      # 8. Show container status
       - name: Display Container Status
         run: docker compose -f compose.yml ps
 
-      # 8. Display logs if anything fails
+      # 9. Display logs if anything fails
       - name: Display Logs on Failure
         if: failure()
         run: docker compose -f compose.yml logs --no-color
 
-      # 9. Always clean up
+      # 10. Always clean up
       - name: Stop Docker Compose
         if: always()
         run: docker compose -f compose.yml down --remove-orphans
