@@ -1,16 +1,16 @@
 //Loading required utils
 //(The IIE, 2026)
-const EncryptionHandler = require('../utils/passwords/EncryptionHandler');
+const EncryptionHandler = require('./../utils/passwords/EncryptionHandler');
 const encryptionHandler = new EncryptionHandler();
 
-const TokenCreation = require('../utils/tokens/TokenCreation');
+const TokenCreation = require('./../utils/tokens/TokenCreation');
 
 //Temp to store and retreive data relating to user
-const user = require('../models/users');
-const EmailVerification = require('../models/userVerificiation/emailVerification');
-const TwoFactor = require('../models/twoFactorAuth/twoFactorAuth');
-const SendEmail = require('../utils/email/EmailHandler');
-const { GenerateOtp, HashOtp } = require('../utils/email/OtpHandler');
+const user = require('./../models/users');
+const EmailVerification = require('./../models/userVerificiation/emailVerification');
+const TwoFactor = require('./../models/twoFactorAuth/twoFactorAuth');
+const SendEmail = require('./../utils/email/EmailHandler');
+const { GenerateOtp, HashOtp } = require('./../utils/email/OtpHandler');
 
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');

@@ -1,5 +1,5 @@
 //Temp to store and retreive data relating to transaction
-const Transaction = require('../models/transaction');
+const Transaction = require('./../models/transaction');
 
 //Using the Username attached to the JWT to retrieve the current user's username
 const getUserName = (req) => {

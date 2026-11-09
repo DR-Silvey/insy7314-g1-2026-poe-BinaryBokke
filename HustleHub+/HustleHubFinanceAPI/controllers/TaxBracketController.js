@@ -1,5 +1,5 @@
 //Temp to store and retreive data relating to tax brackets
-const TaxBracket = require('../models/tax/taxBracket');
+const TaxBracket = require('./../models/tax/taxBracket');
 
 //Method creates a new Tax Bracket
 //(The IIE, 2026) (W3 Schools, s.a.)

@@ -1,13 +1,13 @@
 //Loading required utils
-const EncryptionHandler = require('../utils/passwords/EncryptionHandler');
+const EncryptionHandler = require('./../utils/passwords/EncryptionHandler');
 const encryptHandler = new EncryptionHandler();
 
-const SendEmail = require('../utils/email/EmailHandler');
-const { GenerateOtp, HashOtp } = require('../utils/email/OtpHandler');
+const SendEmail = require('./../utils/email/EmailHandler');
+const { GenerateOtp, HashOtp } = require('./../utils/email/OtpHandler');
 
 //Temp to store and retreive data relating to user
-const user = require('../models/users');
-const EmailVerification = require('../models/userVerificiation/emailVerification');
+const user = require('./../models/users');
+const EmailVerification = require('./../models/userVerificiation/emailVerification');
 
 //Registration route
 //Steps

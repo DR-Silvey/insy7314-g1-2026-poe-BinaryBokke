@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const User = require('../../models/users');
-const TwoFactor = require('../../models/twoFactorAuth/twoFactorAuth');
-const TokenCreation = require('../../utils/tokens/TokenCreation');
-const SendEmail = require('../../utils/email/EmailHandler');
-const { CompareOtp } = require('../../utils/email/OtpHandler');
+const User = require('./../../models/users');
+const TwoFactor = require('./../../models/twoFactorAuth/twoFactorAuth');
+const TokenCreation = require('./../../utils/tokens/TokenCreation');
+const SendEmail = require('./../../utils/email/EmailHandler');
+const { CompareOtp } = require('./../../utils/email/OtpHandler');
 
 //(The IIE, 2026)(W3 Schools, s.a.)
 const VerifyLoginOtp = async (req, res) => {

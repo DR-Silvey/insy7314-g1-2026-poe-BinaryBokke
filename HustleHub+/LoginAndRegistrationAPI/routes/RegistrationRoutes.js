@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
 
-const { RegistrationValidityChecks, VerifyEmailValidityChecks } = require('../middleware/RegistrationValidation');
-const RegisterUser = require('../controllers/Registration');
-const UpdateUserInfo = require('../controllers/userInfo/UpdateUserInfo');
-const UpdateUserRole = require('../controllers/userInfo/UpdateUserRole');
-const VerifyEmail = require('../controllers/userVerification/VerifyEmail');
+const { RegistrationValidityChecks, VerifyEmailValidityChecks } = require('./../middleware/RegistrationValidation');
+const RegisterUser = require('./../controllers/Registration');
+const UpdateUserInfo = require('./../controllers/userInfo/UpdateUserInfo');
+const UpdateUserRole = require('./../controllers/userInfo/UpdateUserRole');
+const VerifyEmail = require('./../controllers/userVerification/VerifyEmail');
 
 //RBAC enforcement
-const AuthMiddleware = require('../middleware/tokens/AuthMiddleware');
+const AuthMiddleware = require('./../middleware/tokens/AuthMiddleware');
 
 //Rate Limiting
-const { RegistrationLimiter } = require('../middleware/rateLimiting/AuthRateLimiter')
+const { RegistrationLimiter } = require('./../middleware/rateLimiting/AuthRateLimiter')
 
 //base verb sets /register as endpoint to access registration
 //(The IIE, 2026)

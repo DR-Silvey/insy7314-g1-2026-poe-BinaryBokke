@@ -1,5 +1,5 @@
 //Loading required utils
-const CommonInputValidator = require('../utils/inputs/CommonInputValidator');
+const CommonInputValidator = require('./../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
 const PasswordHandler = require('../utils/passwords/PasswordHandler');

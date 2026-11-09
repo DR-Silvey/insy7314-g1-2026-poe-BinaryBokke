@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 //Importing verification model
-const EmailVerification = require('../../models/userVerificiation/emailVerification');
+const EmailVerification = require('./../../models/userVerificiation/emailVerification');
 
-const User = require('../../models/users');
+const User = require('./../../models/users');
 
 //Importing OTP comparison utility
-const { CompareOtp } = require('../../utils/email/OtpHandler');
+const { CompareOtp } = require('./../../utils/email/OtpHandler');
 
 const VerifyEmail = async (req, res) => {
     try {

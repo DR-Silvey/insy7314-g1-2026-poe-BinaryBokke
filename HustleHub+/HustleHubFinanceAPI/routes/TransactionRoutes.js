@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 //RBAC enforcement
-const { protect, authorizeRoles } = require('../middleware/auth/AuthMiddleware');
+const { protect, authorizeRoles } = require('./../middleware/auth/AuthMiddleware');
 
 //Rate Limiting
-const { CreateTransactionLimiter, ViewTransactionLimiter } = require('../middleware/rateLimiting/TransactionRateLimiter')
+const { CreateTransactionLimiter, ViewTransactionLimiter } = require('./../middleware/rateLimiting/TransactionRateLimiter')
 
-const TransactionValidityChecks = require('../middleware/TransactionValidation');
-const Transaction = require('../controllers/TransactionController');
+const TransactionValidityChecks = require('./../middleware/TransactionValidation');
+const Transaction = require('./../controllers/TransactionController');
 
 //Declared /transaction as the endpoint to access transaction functionalities
 //(The IIE, 2026)

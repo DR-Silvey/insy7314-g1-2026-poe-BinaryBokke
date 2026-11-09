@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
-const user = require('../../models/users');
-const TwoFactor = require('../../models/twoFactorAuth/twoFactorAuth');
-const TokenCreation = require('../../utils/tokens/TokenCreation');
-const SendEmail = require('../../utils/email/EmailHandler');
+const user = require('./../../models/users');
+const TwoFactor = require('./../../models/twoFactorAuth/twoFactorAuth');
+const TokenCreation = require('./../../utils/tokens/TokenCreation');
+const SendEmail = require('./../../utils/email/EmailHandler');
 
 const DEVICE_COOKIE = 'hustlehub_device';
 

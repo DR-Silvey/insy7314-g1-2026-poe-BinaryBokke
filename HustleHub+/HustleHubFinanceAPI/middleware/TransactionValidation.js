@@ -1,4 +1,4 @@
-const CommonInputValidator = require('../utils/inputs/CommonInputValidator');
+const CommonInputValidator = require('./../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
 //Ensures that all inputs relating to a Transaction attempt are valid

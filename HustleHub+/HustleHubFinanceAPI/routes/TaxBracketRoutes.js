@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 //RBAC enforcement
-const { protect, authorizeRoles } = require('../middleware/auth/AuthMiddleware');
+const { protect, authorizeRoles } = require('./../middleware/auth/AuthMiddleware');
 
 //Rate Limiting
-const { CreateTaxBracketLimiter, ViewTaxBracketLimiter, UpdateTaxBracketLimiter } = require('../middleware/rateLimiting/TaxBracketRateLimiter')
+const { CreateTaxBracketLimiter, ViewTaxBracketLimiter, UpdateTaxBracketLimiter } = require('./../middleware/rateLimiting/TaxBracketRateLimiter')
 
-const TaxBracketValidityChecks = require('../middleware/TaxBracketValidation');
-const TaxBracket = require('../controllers/TaxBracketController');
+const TaxBracketValidityChecks = require('./../middleware/TaxBracketValidation');
+const TaxBracket = require('./../controllers/TaxBracketController');
 
 //Declared /tax-brackets as the endpoint to access tax bracket functionalities
 //(The IIE, 2026)
