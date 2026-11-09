@@ -55,7 +55,20 @@ const OtpLimiter = rateLimit({
 
 });
 
-module.exports = { LogInLimiter, RegistrationLimiter, ProfileInfoLimiter, OtpLimiter };
+const ClassifyDeviceLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+
+    message: {
+        error: 'Too many Device Classification attempts. Please try again later.'
+
+    }
+
+});
+
+module.exports = { LogInLimiter, RegistrationLimiter, ProfileInfoLimiter, OtpLimiter, ClassifyDeviceLimiter };
 
 /*
 

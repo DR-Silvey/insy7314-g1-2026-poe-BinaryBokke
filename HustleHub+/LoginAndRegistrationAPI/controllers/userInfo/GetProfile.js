@@ -1,5 +1,5 @@
 //Temp to store and retreive data relating to user
-const User = require('../../models/Users');
+const User = require('../../models/users');
 
 //Method used to retrive an account's details by username
 //(The IIE, 2026)

@@ -5,10 +5,11 @@ const TokenCreation = require('../../utils/tokens/TokenCreation');
 const SendEmail = require('../../utils/email/EmailHandler');
 const { CompareOtp } = require('../../utils/email/OtpHandler');
 
+//(The IIE, 2026)(W3 Schools, s.a.)
 const VerifyLoginOtp = async (req, res) => {
     try {
         const { otp, temporaryToken } = req.body;
-        
+
         if (!otp || !/^\d{6}$/.test(otp)) {
             return res.status(400).json({ error: 'Please enter a valid six-digit OTP' });
 
@@ -20,7 +21,7 @@ const VerifyLoginOtp = async (req, res) => {
         }
 
         //Verify the temporary token created during login.
-        let decoded;
+        let decoded; //(The IIE, 2026)(W3 Schools, s.a.)
 
         try {
             decoded = jwt.verify(temporaryToken, process.env.TWO_FACTOR_JWT_SECRET);
@@ -34,7 +35,7 @@ const VerifyLoginOtp = async (req, res) => {
 
         }
 
-        if (decoded.purpose !== 'LOGIN_2FA') {
+        if (decoded.purpose !== 'LOGIN_2FA') {//(The IIE, 2026)(W3 Schools, s.a.)
             return res.status(401).json({ 
                 error: 'Invalid verification session' 
             
@@ -52,7 +53,7 @@ const VerifyLoginOtp = async (req, res) => {
 
         }
 
-        const twoFactor = await TwoFactor.findOne({ user: foundUser._id });
+        const twoFactor = await TwoFactor.findOne({ user: foundUser._id }); //(The IIE, 2026)(W3 Schools, s.a.)
 
         if (!twoFactor || !twoFactor.enabled) {
             return res.status(400).json({ 
@@ -89,10 +90,11 @@ const VerifyLoginOtp = async (req, res) => {
             return res.status(429).json({
                 error: 'Too many incorrect OTP attempts. Please log in again.'
 
-            });
+            });//(The IIE, 2026)(W3 Schools, s.a.)
 
         }
 
+        //(The IIE, 2026)(W3 Schools, s.a.)
         const otpMatches = await CompareOtp(otp, twoFactor.otpHash);
 
         if (!otpMatches) {
@@ -130,7 +132,7 @@ const VerifyLoginOtp = async (req, res) => {
                 ? recognisedDevice
                 : null;
 
-        if (validRecognisedDevice) 
+        if (validRecognisedDevice) //(The IIE, 2026)(W3 Schools, s.a.)
         {
             validRecognisedDevice.lastSeenAt = new Date();
             validRecognisedDevice.loginCount += 1;
@@ -144,7 +146,7 @@ const VerifyLoginOtp = async (req, res) => {
                 if (validRecognisedDevice.loginCount > 1 && !validRecognisedDevice.classificationPrompted) 
                 {
                     validRecognisedDevice.classificationPrompted = true;
-                    requiresClassification = true;
+                    requiresClassification = true;//(The IIE, 2026)(W3 Schools, s.a.)
 
                 }
 
@@ -173,11 +175,11 @@ const VerifyLoginOtp = async (req, res) => {
 
                     );
 
-                    return res.status(200).json({
+                    return res.status(200).json({//(The IIE, 2026)(W3 Schools, s.a.)
                         message: 'OTP verified. Please confirm this browser classification.',
                         requiresDeviceClassification: true,
                         classificationToken,
-                        currentLocation: 'AWAY'
+                        currentLocation: 'AWAY'//(The IIE, 2026)(W3 Schools, s.a.)
 
                     });
                 }
@@ -188,7 +190,7 @@ const VerifyLoginOtp = async (req, res) => {
 
             }
 
-            const token = TokenCreation(foundUser.username, foundUser.role);
+            const token = TokenCreation(foundUser.username, foundUser.role);//(The IIE, 2026)(W3 Schools, s.a.)
 
             return res.status(200).json({
                 message: 'Login successful',
@@ -225,7 +227,7 @@ const VerifyLoginOtp = async (req, res) => {
     catch (error) {
         console.error('Login OTP verification error:', error);
         return res.status(500).json({ 
-            error: 'Something went wrong' 
+            error: 'Something went wrong' //(The IIE, 2026)(W3 Schools, s.a.)
         
         });
 
