@@ -14,10 +14,10 @@ const TaxEstimation = require('./../controllers/TaxEstimationController');
 //(The IIE, 2026)
 
 //Route used to view a tax record(s) within the db, only clients and admin can access this route
-router.get('/tax-records', ViewTaxRecordLimiter, protect, authorizeRoles('freelancer', 'client', 'admin'), TaxEstimationValidityChecks.FindTaxRecordValidityChecks, TaxEstimation.FindTaxRecord);
+router.get('/tax-records', ViewTaxRecordLimiter, protect, authorizeRoles('freelancer'), TaxEstimationValidityChecks.FindTaxRecordValidityChecks, TaxEstimation.FindTaxRecord);
 
 //Route used to estimate tax based on transaction amount
-router.post('/tax-estimation', EstimateTaxLimiter, protect, authorizeRoles('freelancer', 'client'), TaxEstimation.EstimateTax);
+router.post('/tax-estimation', EstimateTaxLimiter, protect, authorizeRoles('freelancer'), TaxEstimation.EstimateTax);
 
 module.exports = router;
 

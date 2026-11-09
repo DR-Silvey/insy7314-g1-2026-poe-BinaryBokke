@@ -42,7 +42,21 @@ const UpdateTaxBracketLimiter = rateLimit({
 
 });
 
-module.exports = { CreateTaxBracketLimiter, ViewTaxBracketLimiter, UpdateTaxBracketLimiter };
+//If the user tries to delete tax brackets more than 2 times in 15 min they are not permitted to attempt again (The IIE, 2026)
+const DeleteTaxBracketLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 2,
+    standardHeaders: true,
+    legacyHeaders: false,
+
+    message: {
+        error: 'Too many Tax Bracket Delete attempts. Please try again later.'
+
+    }
+
+});
+
+module.exports = { CreateTaxBracketLimiter, ViewTaxBracketLimiter, UpdateTaxBracketLimiter, DeleteTaxBracketLimiter };
 
 /*
 

@@ -8,6 +8,7 @@ const VerifyLoginOtp = require('./../controllers/userVerification/VerifyLoginOtp
 const ClassifyDevice = require('./../controllers/userVerification/ClassifyDevice');
 const ForgotPassword = require('./../controllers/passwords/ForgotPassword');
 const ResetPassword = require('./../controllers/passwords/ResetPassword');
+const ResendLoginOtp = require('./../controllers/userVerification/ResendLoginOtp');
 
 //Rate Limiting
 const { LogInLimiter, ProfileInfoLimiter, OtpLimiter, ClassifyDeviceLimiter, ForgotPasswordLimiter, ResetPasswordLimiter } = require('./../middleware/rateLimiting/AuthRateLimiter');
@@ -35,6 +36,9 @@ router.post('/forgot-password', ForgotPasswordLimiter, ForgotPasswordValidityChe
 
 //Used to reset a user's password after they have forgotten it.
 router.post('/reset-password', ResetPasswordLimiter, ResetPasswordValidityChecks, ResetPassword)
+
+//Route to resend the LogIn OTP
+router.post('/resend-login-otp', OtpLimiter, ResendLoginOtp);
 
 module.exports = router;
 

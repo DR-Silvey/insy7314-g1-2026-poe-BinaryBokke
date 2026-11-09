@@ -132,103 +132,68 @@ const FindTaxBracket =  async (req, res) => {
 
 }
 
-//Method updates a tax bracket by its ID or other criteria, and returns the tax bracket data
+//Method updates a tax bracket using its MongoDB _id
 //(The IIE, 2026) (W3 Schools, s.a.)
-const UpdateTaxBracket =  async (req, res) => {
-    try{
-        //Inputs we expect to receive from the query
-        const { taxYear, minimumIncome, maximumIncome, taxRate, baseTax } = req.query;
-        const filter = {};
-        
-        //Filter by taxYear
-        if (taxYear) {
-            filter.taxYear = taxYear;
-        
-        }
+const UpdateTaxBracket = async (req, res) => {
+    try {
+        //The ID comes from the route parameter
+        const { id } = req.params;
 
-        //Filter by minimumIncome
-        if (minimumIncome) {
-            filter.minimumIncome = minimumIncome;
-        
-        }
-
-        //Filter by maximumIncome
-        if (maximumIncome) {
-            filter.maximumIncome = maximumIncome;
-        
-        }
-
-        //Filter by taxRate
-        if (taxRate) {
-            filter.taxRate = taxRate;
-        
-        }
-
-        //Filter by baseTax
-        if (baseTax) {
-            filter.baseTax = baseTax;
-        
-        }
-
-        //Retrieve matching tax bracket
-        const taxBrackets = await TaxBracket.findOne(filter);
-        
-        //No tax brackets found
-        if (!taxBrackets) {
-            console.error(`No Tax Bracket Found`);
-            return res.status(404).json({
-                message: 'No Tax Bracket found'
-        
-            });
-        
-        }
-        
-        //Updating TaxBracket's model (The TaxBracket's ID or Client cannot be updated)
+        //Only these fields can be updated
         const allowedFields = [ 'taxYear', 'minimumIncome', 'maximumIncome', 'taxRate', 'baseTax' ];
+
         const updates = {};
-        
-        //Ensruing the valididty of the new info in terms of data type
+
+        //Only accept permitted fields from the request body
         for (const field of allowedFields) {
             if (req.body[field] !== undefined) {
                 updates[field] = req.body[field];
-        
+
             }
-        
+
         }
-        
+
         if (Object.keys(updates).length === 0) {
-            console.error(`Invalid Fields For update Given`);
             return res.status(400).json({
                 error: 'No valid fields supplied for updating'
-        
+
             });
-        
+
         }
-        
-        //Updating the actual values stored regarding a tax bracket
-        const updatedTaxBracket = await TaxBracket.findOneAndUpdate(
-            { taxYear, minimumIncome, maximumIncome, taxRate, baseTax },
+
+        //Find and update the tax bracket using MongoDB _id
+        const updatedTaxBracket = await TaxBracket.findByIdAndUpdate(
+            id,
             { $set: updates },
+
             {
                 new: true,
                 runValidators: true
-        
+
             }
-        
+
         );
-        
-        console.log(`Tax Bracket updated successfully`);
-        
-        //Retruning the new version of the tax bracket to the front-end
+
+        if (!updatedTaxBracket) {
+            return res.status(404).json({
+                message: 'Tax Bracket not found'
+
+            });
+
+        }
+
+        console.log('Tax Bracket updated successfully');
+
         return res.status(200).json({
             message: 'Tax Bracket updated successfully',
             taxBracket: updatedTaxBracket
-        
+
         });
 
+
     }
-    catch(error){
-        console.error(`Internal Server Error`, error);
+    catch (error) {
+        console.error('Internal Server Error', error);
 
         if (error.name === 'ValidationError') {
             return res.status(400).json({
@@ -242,16 +207,70 @@ const UpdateTaxBracket =  async (req, res) => {
 
         }
 
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                error: 'Invalid Tax Bracket ID'
+
+            });
+
+        }
+
         return res.status(500).json({
             error: 'Something went wrong (Tax Bracket Info Update)'
-        
+
         });
 
     }
 
-}
+};
 
-module.exports = { CreateTaxBracket, FindTaxBracket, UpdateTaxBracket };
+//Method deletes a tax bracket using its MongoDB _id
+//(The IIE, 2026) (W3 Schools, s.a.)
+const DeleteTaxBracket = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        //Find and delete the tax bracket using MongoDB _id
+        const deletedTaxBracket = await TaxBracket.findByIdAndDelete(id);
+
+        if (!deletedTaxBracket) {
+            return res.status(404).json({
+                message: 'Tax Bracket not found'
+
+            });
+
+        }
+
+        console.log('Tax Bracket deleted successfully');
+
+        return res.status(200).json({
+            message: 'Tax Bracket deleted successfully',
+            taxBracket: deletedTaxBracket
+
+        });
+
+    }
+    catch (error) {
+        console.error('Internal Server Error', error);
+
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                error: 'Invalid Tax Bracket ID'
+
+            });
+
+        }
+
+        return res.status(500).json({
+            error: 'Something went wrong (Tax Bracket Deletion)'
+
+        });
+
+    }
+    
+};
+
+module.exports = { CreateTaxBracket, FindTaxBracket, UpdateTaxBracket, DeleteTaxBracket };
 
 /*
 W3 Schools, s.a. JavaScript Tutorial.

@@ -179,6 +179,7 @@ const logUserIn =  async (req, res) => {
         twoFactor.otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000);
         twoFactor.otpAttempts = 0;
         twoFactor.otpPurpose = 'LOGIN';
+        twoFactor.otpLastSentAt = new Date();
 
         await twoFactor.save();
 
@@ -194,7 +195,7 @@ const logUserIn =  async (req, res) => {
                     ? recognisedDevice._id.toString()
                     : null
             },
-            process.env.TWO_FACTOR_JWT_SECRET, { expiresIn: '5m' }
+            process.env.TWO_FACTOR_JWT_SECRET, { expiresIn: '15m' }
 
         );
 

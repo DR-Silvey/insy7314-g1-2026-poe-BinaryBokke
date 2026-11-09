@@ -6,12 +6,13 @@ const RegisterUser = require('./../controllers/Registration');
 const UpdateUserInfo = require('./../controllers/userInfo/UpdateUserInfo');
 const UpdateUserRole = require('./../controllers/userInfo/UpdateUserRole');
 const VerifyEmail = require('./../controllers/userVerification/VerifyEmail');
+const ResendEmailOtp = require('./../controllers/userVerification/ResendEmailOtp');
 
 //RBAC enforcement
 const AuthMiddleware = require('./../middleware/tokens/AuthMiddleware');
 
 //Rate Limiting
-const { RegistrationLimiter } = require('./../middleware/rateLimiting/AuthRateLimiter')
+const { RegistrationLimiter, OtpLimiter } = require('./../middleware/rateLimiting/AuthRateLimiter')
 
 //base verb sets /register as endpoint to access registration
 //(The IIE, 2026)
@@ -25,6 +26,10 @@ router.patch('/register/:username/role', RegistrationLimiter, AuthMiddleware.pro
 
 //used to veridy an account based on an OTP sent to the user's email address
 router.post('/register/verify-email', RegistrationLimiter, VerifyEmailValidityChecks, VerifyEmail);
+
+//Resend Otp for failed requests
+//Resend an email verification OTP
+router.post('/register/resend-otp', OtpLimiter, ResendEmailOtp);
 
 module.exports = router;
 

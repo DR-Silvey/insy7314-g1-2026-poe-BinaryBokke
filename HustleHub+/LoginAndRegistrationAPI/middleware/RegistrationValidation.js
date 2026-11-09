@@ -2,7 +2,7 @@
 const CommonInputValidator = require('./../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
-const PasswordHandler = require('../utils/passwords/PasswordHandler');
+const PasswordHandler = require('./../utils/passwords/PasswordHandler');
 const passwordHandler = new PasswordHandler();
 
 //Esnures that all input realting to a Registration attempt is valid

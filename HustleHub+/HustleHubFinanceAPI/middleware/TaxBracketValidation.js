@@ -149,6 +149,14 @@ const FindTaxBracketValidityChecks = (req, res, next) => {
 const UpdateTaxBracketChecks = (req, res, next) => {
     const { taxYear, minimumIncome, maximumIncome, taxRate, baseTax  } = req.body;
 
+    if (taxYear === undefined && minimumIncome === undefined && maximumIncome === undefined && taxRate === undefined && baseTax === undefined) {
+        return res.status(400).json({
+            error: 'At least one valid field must be supplied for updating'
+
+        });
+        
+    }
+
     //Ensuring that all the user input is valid in terms of data type and is non malicious
     //(w3 Schools, s.a.)
     if((taxYear !== undefined) && !(inputValidator.CommonInputValidation(taxYear))){
