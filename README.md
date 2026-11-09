@@ -1,5 +1,6 @@
 **HustleHub+ – Final Submission (Part 3)**
-
+- Please Note that ST10443470 and ZanderScholtz are the same person (collaborator)
+  
 Youtube Links:
  - FrontEnd: https://youtu.be/HGuoOD86-Jk
  - BackEnd: https://youtu.be/a8p_b7fveWg
