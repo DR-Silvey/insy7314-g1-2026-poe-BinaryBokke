@@ -1,5 +1,9 @@
 const user = require('../../models/users');
 
+const EncryptionHandler = require('../../utils/passwords/EncryptionHandler');
+
+const encryptionHandler = new EncryptionHandler();
+
 //We'll use the full required schema and then basically just rerun it rough the registartion's valididty check just to ensure the data's integrity
 //(The IIE, 2025)
 //(w3 Schools, s.a.)
@@ -43,7 +47,8 @@ const UpdateUserInfo =  async ( req, res ) => {
             }
 
             if(req.body.password){
-                foundUser.password = req.body.password;
+                const encryptedPassword = await encryptionHandler.EncryptPassword(req.body.password);
+                foundUser.password = encryptedPassword;
 
             }
 

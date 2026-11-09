@@ -68,7 +68,33 @@ const ClassifyDeviceLimiter = rateLimit({
 
 });
 
-module.exports = { LogInLimiter, RegistrationLimiter, ProfileInfoLimiter, OtpLimiter, ClassifyDeviceLimiter };
+const ForgotPasswordLimiter = rateLimit({//Only 3 attempts allowed per 15 min
+    windowMs: 3 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+
+    message: {
+        error: 'Too many Device Classification attempts. Please try again later.'
+
+    }
+
+});
+
+const ResetPasswordLimiter = rateLimit({//Only 3 attempts allowed per 15 min
+    windowMs: 3 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+
+    message: {
+        error: 'Too many Device Classification attempts. Please try again later.'
+
+    }
+
+});
+
+module.exports = { LogInLimiter, RegistrationLimiter, ProfileInfoLimiter, OtpLimiter, ClassifyDeviceLimiter, ForgotPasswordLimiter, ResetPasswordLimiter };
 
 /*
 

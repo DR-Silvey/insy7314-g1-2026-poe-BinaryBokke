@@ -31,7 +31,63 @@ const LogInValidityChecks = (req, res, next) => {
 
 };
 
-module.exports = LogInValidityChecks;
+const ForgotPasswordValidityChecks = (req, res, next) => {
+    const { email } = req.body;
+
+    //Ensuring that all the user input is valid in terms of data type and is non malicious
+    //(w3 Schools, s.a.)
+    if(!(inputValidator.IsValidEmail(email))){
+        console.error('User attempted to enter an email that does not meet the predefined citeria');
+        return res.status(400).json({
+            error: 'Email is incorrect (has to be string and include an @ symbol)'
+            
+        });
+
+    }
+
+    console.log('Forgot Password met the input requirements');
+    next();
+
+};
+
+const ResetPasswordValidityChecks = (req, res, next) => {
+    const { token, newPassword, confirmPassword } = req.body;
+
+    //Ensuring that all the user input is valid in terms of data type and is non malicious
+    //(w3 Schools, s.a.)
+     // Validate reset token format.
+    if (typeof token !== 'string' || !/^[a-fA-F0-9]{64}$/.test(token)) {
+        return res.status(400).json({
+            error: 'Invalid password reset token'
+
+        });
+
+    }
+
+    if(!(inputValidator.IsValidPassword(newPassword))){
+        console.error('User attempted to enter a username that does not meet the predefined citeria');
+        return res.status(400).json({
+            error: 'Username is incorrect (has to be string and atleast 3 characters long)'
+            
+        });
+
+    }
+
+    if(!(inputValidator.IsValidPassword(confirmPassword))){
+        console.error('User attempted to enter a password that does not meet the predefined citeria');
+        return res.status(400).json({
+            error: 'Password is incorrect (has to be string)'
+            
+        });
+
+    }
+
+    console.log('Password Reset attempt met the input requirements');
+    next();
+
+};
+
+module.exports = { LogInValidityChecks, ForgotPasswordValidityChecks, ResetPasswordValidityChecks };
 
 /*
 W3 Schools, s.a. JavaScript Tutorial.
