@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
@@ -166,7 +168,7 @@ const ClassifyDevice = async (req, res) => {
                 );
             } 
             catch (emailError) {
-                console.error('Away login notification failed:', emailError);
+                logger.error('Away login notification failed:', emailError);
 
             }
 
@@ -184,7 +186,7 @@ const ClassifyDevice = async (req, res) => {
 
     } 
     catch (error) { //(The IIE, 2026)(W3 Schools, s.a.)
-        console.error('Device classification error:', error);
+        logger.error('Device classification error:', error);
 
         return res.status(500).json({
             error: 'Something went wrong'

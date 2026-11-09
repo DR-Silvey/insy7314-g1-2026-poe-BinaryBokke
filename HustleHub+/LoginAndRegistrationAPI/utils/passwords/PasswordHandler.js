@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 //This class is responsible for checking if password meet the disgnated requirements before encryption
 //Checks for
     //Password length (min 12 chars)
@@ -28,7 +30,7 @@ class PasswordHandler {
             
         }
 
-        console.log('Password met minum complexity criteria (length, complexity, commonality)')
+        logger.log('Password met minum complexity criteria (length, complexity, commonality)')
         return true;
 
     }
@@ -37,12 +39,12 @@ class PasswordHandler {
     ValidLength(password) {
         //Password has to be at least 12 characters long
         if(password.length <= 12) {
-            console.error("Password was less than 12 chars");
+            logger.error("Password was less than 12 chars");
             return false;
 
         }
 
-        console.log('Password met length requirement');
+        logger.log('Password met length requirement');
         return true;
 
     }
@@ -60,12 +62,12 @@ class PasswordHandler {
         const complexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]+$/;
 
         if((!complexityRegex.test(password))) {
-            console.error('Password failed to meet complexity standard');
+            logger.error('Password failed to meet complexity standard');
             return false;
         
         }
         
-        console.log('Password met complexity standard');
+        logger.log('Password met complexity standard');
         return true;
 
     }
@@ -80,7 +82,7 @@ class PasswordHandler {
 
             //Check if the password is in the common passwords list
             if(commonPasswords.IsCommonPassword(password)) {
-                console.error('Password was too common');
+                logger.error('Password was too common');
                 return false;   
 
             }
@@ -92,7 +94,7 @@ class PasswordHandler {
                 //Fallback to a basic list of 10 common passwords (see below) that still meet the outlined requirements
             
             //Logging the error
-            console.error('Error importing CommonPasswords class', error);
+            logger.error('Error importing CommonPasswords class', error);
 
             //Fallback to a basic list of common passwords (see below) that still meet the outlined requirements (assumed list of common passwords as I could not find a list of common passwords that would meet our outlined requirements)
             //(w3 Schools, s.a.)
@@ -106,14 +108,14 @@ class PasswordHandler {
             ];
 
             if(fallbackCommonPasswords.includes(password)) {
-                console.error('Password was too common');
+                logger.error('Password was too common');
                 return false;
 
             }
 
         }
 
-        console.log('Password met commonality requirement');
+        logger.log('Password met commonality requirement');
         return true;
 
     }
@@ -124,17 +126,17 @@ class PasswordHandler {
         const length = password.length;
 
         if(length < 12) {
-            console.log('Password is weak');
+            logger.log('Password is weak');
             return 'weak';
 
         } else if(length < 16) {
-            console.log('Password is medium');
+            logger.log('Password is medium');
             return 'medium';
 
         } 
         else 
         {
-            console.log('Password is strong');
+            logger.log('Password is strong');
             return 'strong';
 
         }

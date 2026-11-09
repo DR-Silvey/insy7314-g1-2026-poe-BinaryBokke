@@ -1,3 +1,5 @@
+const logger = require("./../utils/inputs/Logger");
+
 //Temp to store and retreive data relating to transaction
 const Transaction = require('./../models/transaction');
 
@@ -15,7 +17,7 @@ const CreateTransaction =  async (req, res) => {
         const userName = getUserName(req);
         
         if (!userName) {
-            console.error(`No Auth`);
+            logger.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -37,7 +39,7 @@ const CreateTransaction =  async (req, res) => {
 
         });
 
-        console.log(`Transaction ${newTransaction.transactionID} created successfully`);
+        logger.log(`Transaction ${newTransaction.transactionID} created successfully`);
             return res.status(201).json({
                 message: 'Transaction created successfully',
                 transaction: newTransaction
@@ -46,7 +48,7 @@ const CreateTransaction =  async (req, res) => {
 
     }
     catch(error){
-        console.error(`Internal Server Error`, error)
+        logger.error(`Internal Server Error`, error)
 
         if (error.name === 'ValidationError') {
             return res.status(400).json({
@@ -121,7 +123,7 @@ const FindTransaction =  async (req, res) => {
         
         //No transactions found
         if (transactions.length === 0) {
-            console.error(`No Transactions Found`);
+            logger.error(`No Transactions Found`);
             return res.status(404).json({
                 message: 'No Transactions found'
         
@@ -130,7 +132,7 @@ const FindTransaction =  async (req, res) => {
         }
         
         //Returning all Transaction(s) that match the user's chosen criteria
-        console.log(`${transactions.length} transaction(s) retrieved successfully`);
+        logger.log(`${transactions.length} transaction(s) retrieved successfully`);
             return res.status(200).json({
                 message: 'Transactions retrieved successfully',
                 count: transactions.length,
@@ -140,7 +142,7 @@ const FindTransaction =  async (req, res) => {
 
     }
     catch(error){
-        console.error(`Internal Server Error`, error);
+        logger.error(`Internal Server Error`, error);
         return res.status(500).json({
             error: 'Something went wrong (Transaction Retrieval)'
         

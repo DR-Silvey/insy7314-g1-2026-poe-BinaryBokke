@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 const bcrypt = require('bcrypt');
 
 //This class is responsible for encrypting passwords
@@ -24,13 +26,13 @@ class EncryptionHandler {
 
             //Saltihn failure should return null
             if (saltAndHashPassword !== null) {
-                console.log('Password encryption wa a success');
+                logger.log('Password encryption wa a success');
                 return saltAndHashPassword;
 
             }
         }
 
-        console.error('Password encrytpion failed');
+        logger.error('Password encrytpion failed');
         return null;
 
     }
@@ -47,7 +49,7 @@ class EncryptionHandler {
             //(The IIE, 2026)(npm, 2025)
             const hashedPassword = bcrypt.hashSync(plaintextPassword, 12);
 
-            console.log('Password successfully hashed');
+            logger.log('Password successfully hashed');
             return hashedPassword;
 
         }
@@ -56,7 +58,7 @@ class EncryptionHandler {
                 //Log the error 
                 //return null
 
-            console.error('Error importing encryption module:', error);
+            logger.error('Error importing encryption module:', error);
             return null;
 
         }
@@ -109,12 +111,12 @@ class EncryptionHandler {
         //Ensuring the hashedPassword was salted by comparing it's new length with it's previous one
         if ((saltedHashedPassword.length <= originalHashedPassLength)) {
             //Password wasn't salted
-            console.error('Password salting failure');
+            logger.error('Password salting failure');
             return null;
 
         }
         else{
-            console.log('Password salting success');
+            logger.log('Password salting success');
             return saltedHashedPassword;
 
         }
@@ -154,7 +156,7 @@ class EncryptionHandler {
 
         }
 
-        console.log('Password unsalting success');
+        logger.log('Password unsalting success');
         return unsaltedHashedPassword;
 
     }

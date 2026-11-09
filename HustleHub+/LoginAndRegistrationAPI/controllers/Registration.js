@@ -1,3 +1,5 @@
+const logger = require("./../utils/Logger");
+
 //Loading required utils
 const EncryptionHandler = require('./../utils/passwords/EncryptionHandler');
 const encryptHandler = new EncryptionHandler();
@@ -35,7 +37,7 @@ const RegisterUser = async (req, res) => {
         });
 
         if (existingUser) {
-            console.error(`Instance of username ${username} or email ${email} already exists within db as (pk)`);
+            logger.error(`Instance of username ${username} or email ${email} already exists within db as (pk)`);
             return res.status(409).json({
                 error: 'Username or email already exists. If this is your account, please LogIn'
             
@@ -100,7 +102,7 @@ const RegisterUser = async (req, res) => {
 
         );
 
-        console.log(`Registration verification email sent for ${username}`);
+        logger.log(`Registration verification email sent for ${username}`);
 
         return res.status(201).json({
             message: 'Registration successful. Please verify your email address using the code we sent you.',
@@ -111,7 +113,7 @@ const RegisterUser = async (req, res) => {
 
     }
     catch(error){
-        console.error('Internal Server Error', error);
+        logger.error('Internal Server Error', error);
         
         if (createdUserId) {
             await EmailVerification.deleteOne({

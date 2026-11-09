@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 const jwt = require('jsonwebtoken');
 const User = require('./../../models/users');
 const TwoFactor = require('./../../models/twoFactorAuth/twoFactorAuth');
@@ -161,7 +163,7 @@ const VerifyLoginOtp = async (req, res) => {
 
                 } 
                 catch (emailError) {
-                    console.error('Away login notification failed:', emailError);
+                    logger.error('Away login notification failed:', emailError);
 
                 }
 
@@ -228,7 +230,7 @@ const VerifyLoginOtp = async (req, res) => {
 
     } 
     catch (error) {
-        console.error('Login OTP verification error:', error);
+        logger.error('Login OTP verification error:', error);
         return res.status(500).json({ 
             error: 'Something went wrong' //(The IIE, 2026)(W3 Schools, s.a.)
         

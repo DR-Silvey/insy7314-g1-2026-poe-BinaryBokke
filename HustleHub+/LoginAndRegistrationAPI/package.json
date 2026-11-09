@@ -22,7 +22,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.6.0",
     "mongoose": "^9.9.5",
-    "nodemailer": "^10.4.0"
+    "nodemailer": "^10.4.0",
+    "winston": "^3.19.0"
   },
   "allowScripts": {
     "bcrypt@6.0.0": true

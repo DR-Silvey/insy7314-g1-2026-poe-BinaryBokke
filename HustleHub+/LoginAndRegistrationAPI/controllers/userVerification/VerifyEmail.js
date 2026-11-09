@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 const mongoose = require('mongoose');
 
 //Importing verification model
@@ -129,7 +131,7 @@ const VerifyEmail = async (req, res) => {
 
         await verification.save();
 
-        console.log(`Email successfully verified for user ${foundUser.username}`);
+        logger.log(`Email successfully verified for user ${foundUser.username}`);
 
         return res.status(200).json({
             message: 'Email address successfully verified. You can now log in.',
@@ -139,7 +141,7 @@ const VerifyEmail = async (req, res) => {
 
     } 
     catch (error) {
-        console.error('Email Verification Error:', error);
+        logger.error('Email Verification Error:', error);
 
         return res.status(500).json({
             error: 'Something went wrong while verifying your email.'

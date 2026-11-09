@@ -1,3 +1,5 @@
+const logger = require("./../utils/Logger");
+
 //Loading required utils
 const CommonInputValidator = require('./../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
@@ -13,7 +15,7 @@ const RegistrationValidityChecks = (req, res, next) => {
     //Ensuring that all the user input is valid in terms of data type and is non malicious
         if(!(inputValidator.IsValidUsername(username))){
             //(w3 Schools, s.a.)
-            console.error('User attempted to enter a username that does not meet the predefined citeria');
+            logger.error('User attempted to enter a username that does not meet the predefined citeria');
             return res.status(400).json({
                 error: 'Username is incorrect (has to be string and atleast 3 characters long)'
             
@@ -22,7 +24,7 @@ const RegistrationValidityChecks = (req, res, next) => {
         }
 
         if(!(inputValidator.IsValidPassword(password))){
-            console.error('User attempted to enter a password that does not meet the predefined citeria');
+            logger.error('User attempted to enter a password that does not meet the predefined citeria');
             return res.status(400).json({
                 error: 'Password is incorrect (has to be string)'
             
@@ -31,7 +33,7 @@ const RegistrationValidityChecks = (req, res, next) => {
         }
 
         if(!(inputValidator.IsValidEmail(email))){
-            console.error('User attempted to enter an email that does not meet the predefined citeria');
+            logger.error('User attempted to enter an email that does not meet the predefined citeria');
             return res.status(400).json({
                 error: 'Email is incorrect (has to be string and include an @ symbol)'
             
@@ -40,7 +42,7 @@ const RegistrationValidityChecks = (req, res, next) => {
         }
 
         if(!(inputValidator.IsValidFullname(fullname))){
-            console.error('User attempted to enter a fullname that does not meet the predefined citeria');
+            logger.error('User attempted to enter a fullname that does not meet the predefined citeria');
             return res.status(400).json({
                 error: 'Fullname is incorrect (has to be string)'
             
@@ -50,7 +52,7 @@ const RegistrationValidityChecks = (req, res, next) => {
 
         //(w3 Schools, s.a.)
         if(!(inputValidator.IsValidAge(age))){
-            console.error('User attempted to enter an age that does not meet the predefined citeria');
+            logger.error('User attempted to enter an age that does not meet the predefined citeria');
             return res.status(400).json({
                 error: 'Age is incorrect (has to be an int between 16 and 120)'
             
@@ -60,7 +62,7 @@ const RegistrationValidityChecks = (req, res, next) => {
 
     //Ensuring that all the chosen password meets all criteria (length, complexity, commonality)
     if(!(passwordHandler.ValidPassword(password))){
-        console.error('User attempted to enter a password that does not meet the predefined complexity citeria');
+        logger.error('User attempted to enter a password that does not meet the predefined complexity citeria');
         return res.status(400).json({
             error: 'Password does not meet the complexity requirements (length, complexity, commonality).'
         
@@ -69,7 +71,7 @@ const RegistrationValidityChecks = (req, res, next) => {
     }
 
     if(!(inputValidator.CommonInputValidation(role) && (role === 'GENERIC' || role === 'freelancer' || role === 'client'))){
-        console.error('User attempted to enter an role that does not meet the predefined citeria');
+        logger.error('User attempted to enter an role that does not meet the predefined citeria');
             return res.status(400).json({
                 error: 'Role is incorrect (has to be string or either generic, freelancer or client)'
             
@@ -77,7 +79,7 @@ const RegistrationValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Registration attempt met the input requirements');
+    logger.log('Registration attempt met the input requirements');
     next();
 
 };
@@ -88,7 +90,7 @@ const VerifyEmailValidityChecks = (req, res, next) => {
     //Ensuring that all the user input is valid in terms of data type and is non malicious
     if(!(inputValidator.IsValidUsername(username))){
         //(w3 Schools, s.a.)
-        console.error('User attempted to enter a username that does not meet the predefined citeria');
+        logger.error('User attempted to enter a username that does not meet the predefined citeria');
             return res.status(400).json({
                 error: 'Username is incorrect (has to be string and atleast 3 characters long)'
             
@@ -97,7 +99,7 @@ const VerifyEmailValidityChecks = (req, res, next) => {
     }
 
     if(!(inputValidator.CommonInputValidation(otp) && (otp.length === 6 && /^\d+$/.test(otp)))){
-        console.error('User attempted to enter an OTP that does not meet the predefined citeria');
+        logger.error('User attempted to enter an OTP that does not meet the predefined citeria');
             return res.status(400).json({
                 error: 'OTP is incorrect (has to be a 6-digit number)'
             
@@ -105,7 +107,7 @@ const VerifyEmailValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Verification attempt met the input requirements');
+    logger.log('Verification attempt met the input requirements');
     next();
 
 };

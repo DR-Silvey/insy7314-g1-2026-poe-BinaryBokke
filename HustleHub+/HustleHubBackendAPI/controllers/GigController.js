@@ -1,3 +1,5 @@
+const logger = require("./../utils/Logger");
+
 //Model used perform CRUD to Gig model
 const Gig = require('./../models/gig');
 
@@ -18,10 +20,10 @@ const getUserRole = (req) => {
 const CreateGig = async (req, res) => {
     try {  
         const userName = getUserName(req);
-        console.log('Extracted username:', userName);
+        logger.log('Extracted username:', userName);
         
         if (!userName) {
-            console.error(`No Auth`);
+            logger.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -44,7 +46,7 @@ const CreateGig = async (req, res) => {
 
         });
 
-        console.log(`Gig ${newGig.gigID} created successfully`);
+        logger.log(`Gig ${newGig.gigID} created successfully`);
 
         return res.status(201).json({
             message: 'Gig created successfully',
@@ -54,7 +56,7 @@ const CreateGig = async (req, res) => {
 
     } 
     catch (error) {
-        console.error(`Internal Server Error`, error)
+        logger.error(`Internal Server Error`, error)
 
         if (error.name === 'ValidationError') {
             return res.status(400).json({
@@ -110,7 +112,7 @@ const FindGig = async (req, res) => {
 
         //No gigs found
         if (gigs.length === 0) {
-            console.error(`No Gigs Found`);
+            logger.error(`No Gigs Found`);
             return res.status(404).json({
                 message: 'No gigs found'
 
@@ -118,7 +120,7 @@ const FindGig = async (req, res) => {
 
         }
 
-        console.log(`${gigs.length} gig(s) retrieved successfully`);
+        logger.log(`${gigs.length} gig(s) retrieved successfully`);
 
         //Returning all Gig(s) that match the user's chosen criteria
         return res.status(200).json({
@@ -130,7 +132,7 @@ const FindGig = async (req, res) => {
 
     } 
     catch (error) {
-        console.error(`Internal Server Error`, error);
+        logger.error(`Internal Server Error`, error);
 
         return res.status(500).json({
             error: 'Something went wrong'
@@ -149,7 +151,7 @@ const UpdateGig = async (req, res) => {
         const userRole = getUserRole(req);
 
         if (!userName) {
-            console.error(`No Auth`);
+            logger.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -160,7 +162,7 @@ const UpdateGig = async (req, res) => {
         const { gigID } = req.body;
 
         if (!gigID) {
-            console.error(`No Gig ID provided to update Gig`);
+            logger.error(`No Gig ID provided to update Gig`);
             return res.status(400).json({
                 error: 'GigID is required to update a gig'
 
@@ -172,7 +174,7 @@ const UpdateGig = async (req, res) => {
         const existingGig = await Gig.findOne({ gigID });
 
         if (!existingGig) {
-            console.error(`No matching Gig Found`);
+            logger.error(`No matching Gig Found`);
             return res.status(404).json({
                 error: 'Matching Gig not found'
 
@@ -182,7 +184,7 @@ const UpdateGig = async (req, res) => {
 
         //Ensuring that the Gig belongs to the person trying to update it's info
         if (((existingGig.usernamePerformer.toString() !== userName.toString()) && (userRole !== 'admin'))) {
-            console.error(`Outside Access Scope`);
+            logger.error(`Outside Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to update this gig (belongs to another performer)'
 
@@ -204,7 +206,7 @@ const UpdateGig = async (req, res) => {
         }
 
         if (Object.keys(updates).length === 0) {
-            console.error(`Invalid inputs to update Gig Info Provided`);
+            logger.error(`Invalid inputs to update Gig Info Provided`);
             return res.status(400).json({
                 error: 'No valid fields supplied for updating'
 
@@ -224,7 +226,7 @@ const UpdateGig = async (req, res) => {
 
         );
 
-        console.log(`Gig ${gigID} updated successfully`);
+        logger.log(`Gig ${gigID} updated successfully`);
 
         //Retruning the new version of the gig to the front-end
         return res.status(200).json({
@@ -235,7 +237,7 @@ const UpdateGig = async (req, res) => {
 
     } 
     catch (error) {
-        console.error(`Internal Server Error`, error);
+        logger.error(`Internal Server Error`, error);
 
         if (error.name === 'ValidationError') {
             return res.status(400).json({
@@ -268,7 +270,7 @@ const RemoveGig = async (req, res) => {
         const { gigID } = req.query;
 
         if (!userName) {
-            console.error(`No Auth`);
+            logger.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -277,7 +279,7 @@ const RemoveGig = async (req, res) => {
         }
 
         if (!gigID) {
-            console.error(`No Gig ID provided to remove a Gig`);
+            logger.error(`No Gig ID provided to remove a Gig`);
             return res.status(400).json({
                 error: 'GigID is required to remove a gig'
 
@@ -289,7 +291,7 @@ const RemoveGig = async (req, res) => {
         const existingGig = await Gig.findOne({ gigID });
 
         if (!existingGig) {
-            console.error(`No matching Gig Found`);
+            logger.error(`No matching Gig Found`);
             return res.status(404).json({
                 error: 'Matching Gig not found'
 
@@ -299,7 +301,7 @@ const RemoveGig = async (req, res) => {
 
         //Ensruing that the owner of the gig is the one removing it
         if (((existingGig.usernamePerformer.toString() !== userName.toString()) && (userRole !== 'admin'))) {
-            console.error(`Outside Of Access Scope`);
+            logger.error(`Outside Of Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to remove this gig'
 
@@ -310,7 +312,7 @@ const RemoveGig = async (req, res) => {
         //Removing gig from cluster
         await Gig.deleteOne({ _id: existingGig._id });
 
-        console.log(`Gig ${gigID} removed successfully`);
+        logger.log(`Gig ${gigID} removed successfully`);
 
         return res.status(200).json({
             message: 'Gig removed successfully',
@@ -320,7 +322,7 @@ const RemoveGig = async (req, res) => {
 
     } 
     catch (error) {
-        console.error(`Internal Server Error`, error);
+        logger.error(`Internal Server Error`, error);
 
         return res.status(500).json({
             error: 'Something went wrong (Gig Removal)'

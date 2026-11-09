@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 const jwt = require('jsonwebtoken');
 
 const User = require('./../../models/users');
@@ -117,7 +119,7 @@ const ResendLoginOtp = async (req, res) => {
 
     } 
     catch (error) {
-        console.error('Resend Login OTP Error:', error);
+        logger.error('Resend Login OTP Error:', error);
 
         return res.status(500).json({
             error: 'Something went wrong while resending your login verification code.'

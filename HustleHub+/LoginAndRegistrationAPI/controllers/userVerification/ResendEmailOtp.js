@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 const User = require('./../../models/users');
 const EmailVerification = require('./../../models/userVerificiation/emailVerification');
 
@@ -101,7 +103,7 @@ const ResendEmailOtp = async (req, res) => {
 
     } 
     catch (error) {
-        console.error('Resend Email OTP Error:', error);
+        logger.error('Resend Email OTP Error:', error);
 
         return res.status(500).json({
             error: 'Something went wrong while resending your verification code.'

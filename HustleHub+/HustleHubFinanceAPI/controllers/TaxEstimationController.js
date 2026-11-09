@@ -1,3 +1,5 @@
+const logger = require("./../utils/inputs/Logger");
+
 //To store and retreive data relating to transactions, tax and tax brackets
 const Transaction = require('./../models/transaction');
 const Tax = require('./../models/tax/taxRecord');
@@ -25,7 +27,7 @@ const EstimateTax =  async (req, res) => {
         const userRole = getUserRole(req);
 
         if (!userName) {
-            console.error(`No Auth`);
+            logger.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -87,7 +89,7 @@ const EstimateTax =  async (req, res) => {
                 break;
 
             default:
-                console.error(`Invalid user role: ${userRole}`);
+                logger.error(`Invalid user role: ${userRole}`);
                 return res.status(400).json({
                     error: 'Invalid user role (Only Freelancer or Clients can estimate their tax)'
 
@@ -127,7 +129,7 @@ const EstimateTax =  async (req, res) => {
 
         });
     
-        console.log(`Tax Record ${estimatedTax.taxID} created successfully`);
+        logger.log(`Tax Record ${estimatedTax.taxID} created successfully`);
             return res.status(201).json({
                 message: 'Tax estimated successfully',
                 estimatedTax: estimatedTax
@@ -136,7 +138,7 @@ const EstimateTax =  async (req, res) => {
 
     }
     catch(error){
-        console.error(`Internal Server Error`, error)
+        logger.error(`Internal Server Error`, error)
 
         if (error.name === 'ValidationError') {
             return res.status(400).json({
@@ -176,7 +178,7 @@ const FindTaxRecord =  async (req, res) => {
         const userName = getUserName(req);
 
         if (!userName) {
-            console.error(`No Auth`);
+            logger.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -239,7 +241,7 @@ const FindTaxRecord =  async (req, res) => {
         
         //No tax records found
         if (taxRecords.length === 0) {
-            console.error(`No Tax Records Found`);
+            logger.error(`No Tax Records Found`);
             return res.status(404).json({
                 message: 'No Tax Records found'
         
@@ -248,7 +250,7 @@ const FindTaxRecord =  async (req, res) => {
         }
         
         //Returning all Tax Record(s) that match the user's chosen criteria
-        console.log(`${taxRecords.length} tax record(s) retrieved successfully`);
+        logger.log(`${taxRecords.length} tax record(s) retrieved successfully`);
             return res.status(200).json({
                 message: 'Tax Records retrieved successfully',
                 count: taxRecords.length,
@@ -258,7 +260,7 @@ const FindTaxRecord =  async (req, res) => {
 
     }
     catch(error){
-        console.error(`Internal Server Error`, error);
+        logger.error(`Internal Server Error`, error);
         return res.status(500).json({
             error: 'Something went wrong (Tax Record Retrieval)'
         

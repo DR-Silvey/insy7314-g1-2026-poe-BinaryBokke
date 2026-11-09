@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 const user = require('./../../models/users');
 
 //We'll use the full required schema and then basically just rerun it rough the registartion's valididty check just to ensure the data's integrity
@@ -12,7 +14,7 @@ const UpdateUserRole =  async ( req, res ) => {
         const foundUser = await user.findOne({ username: usernameToFind });
         
         if(!foundUser){
-            console.error(`Username (${usernameToFind}) not found within db`);
+            logger.error(`Username (${usernameToFind}) not found within db`);
             return res.status(404).json({
                 error: 'User not found'
 
@@ -27,7 +29,7 @@ const UpdateUserRole =  async ( req, res ) => {
         //(The IIE, 2026)
         await user.save();
 
-        console.log(`User's role was successfully changed to ${role}`);
+        logger.log(`User's role was successfully changed to ${role}`);
         return res.status(200).json({
             message: 'User ROLE was SUCCESSFULLY UPDATED'
 
@@ -35,7 +37,7 @@ const UpdateUserRole =  async ( req, res ) => {
 
     }
     catch(error){
-        console.error('Internal Server Error', error);
+        logger.error('Internal Server Error', error);
         return res.status(500).json({
                 error: 'Something went wrong'
 

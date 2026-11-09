@@ -1,3 +1,5 @@
+const logger = require("./../utils/Logger");
+
 //Temp to store and retreive data relating to booking
 const Booking = require('./../models/booking');
 
@@ -21,7 +23,7 @@ const CreateBooking =  async (req, res) => {
         const userName = getUserName(req);
         
         if (!userName) {
-            console.error(`No Auth`);
+            logger.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -47,7 +49,7 @@ const CreateBooking =  async (req, res) => {
 
         });
 
-        console.log(`Booking ${newBooking.bookingID} created successfully`);
+        logger.log(`Booking ${newBooking.bookingID} created successfully`);
             return res.status(201).json({
                 message: 'Booking created successfully',
                 booking: newBooking
@@ -56,7 +58,7 @@ const CreateBooking =  async (req, res) => {
 
     }
     catch(error){
-        console.error(`Internal Server Error`, error)
+        logger.error(`Internal Server Error`, error)
 
         if (error.name === 'ValidationError') {
             return res.status(400).json({
@@ -125,7 +127,7 @@ const FindBooking =  async (req, res) => {
         
         //No bookings found
         if (bookings.length === 0) {
-            console.error(`No Booking Found`);
+            logger.error(`No Booking Found`);
             return res.status(404).json({
                 message: 'No bookings found'
         
@@ -134,7 +136,7 @@ const FindBooking =  async (req, res) => {
         }
         
         //Returning all Booking(s) that match the user's chosen criteria
-        console.log(`${bookings.length} booking(s) retrieved successfully`);
+        logger.log(`${bookings.length} booking(s) retrieved successfully`);
             return res.status(200).json({
                 message: 'Bookings retrieved successfully',
                 count: bookings.length,
@@ -144,7 +146,7 @@ const FindBooking =  async (req, res) => {
 
     }
     catch(error){
-        console.error(`Internal Server Error`, error);
+        logger.error(`Internal Server Error`, error);
         return res.status(500).json({
             error: 'Something went wrong (Booking Retrieval)'
         
@@ -162,7 +164,7 @@ const UpdateBooking =  async (req, res) => {
         const userRole = getUserRole(req);
 
         if (!userName) {
-            console.error(`No Auth`);
+            logger.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -173,7 +175,7 @@ const UpdateBooking =  async (req, res) => {
         const { bookingID } = req.body;
 
         if (!bookingID) {
-            console.error(`No Booking Id preovided to update booking Info`);
+            logger.error(`No Booking Id preovided to update booking Info`);
             return res.status(400).json({
                 error: 'Booking ID is required to update a booking'
         
@@ -185,7 +187,7 @@ const UpdateBooking =  async (req, res) => {
         const existingBooking = await Booking.findOne({ bookingID });
         
         if (!existingBooking) {
-            console.error(`Matching Booking not Found`);
+            logger.error(`Matching Booking not Found`);
             return res.status(404).json({
                 error: 'Matching Booking not found'
         
@@ -195,7 +197,7 @@ const UpdateBooking =  async (req, res) => {
         
         //Ensuring that the Booking belongs to the person trying to update it's info
         if (((existingBooking.usernameClient.toString() !== userName.toString()) && (userRole !== 'admin'))) {
-            console.error(`Outside Access Scope`);
+            logger.error(`Outside Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to update this booking (belongs to another client)'
         
@@ -217,7 +219,7 @@ const UpdateBooking =  async (req, res) => {
         }
         
         if (Object.keys(updates).length === 0) {
-            console.error(`Invalid Fields For update Given`);
+            logger.error(`Invalid Fields For update Given`);
             return res.status(400).json({
                 error: 'No valid fields supplied for updating'
         
@@ -237,7 +239,7 @@ const UpdateBooking =  async (req, res) => {
         
         );
         
-        console.log(`Booking ${bookingID} updated successfully`);
+        logger.log(`Booking ${bookingID} updated successfully`);
         
         //Retruning the new version of the booking to the front-end
         return res.status(200).json({
@@ -248,7 +250,7 @@ const UpdateBooking =  async (req, res) => {
 
     }
     catch(error){
-        console.error(`Internal Server Error`, error);
+        logger.error(`Internal Server Error`, error);
 
         if (error.name === 'ValidationError') {
             return res.status(400).json({
@@ -279,7 +281,7 @@ const RemoveBooking =  async (req, res) => {
         const userRole = getUserRole(req);
 
         if (!userName) {
-            console.error(`No Auth`);
+            logger.error(`No Auth`);
             return res.status(401).json({
                 error: 'Invalid or missing authenticated user'
 
@@ -291,7 +293,7 @@ const RemoveBooking =  async (req, res) => {
 
 
         if (!bookingID) {
-            console.error(`No Bokking Id provided to remove Booking`);
+            logger.error(`No Bokking Id provided to remove Booking`);
             return res.status(400).json({
                 error: 'Booking ID is required to remove a booking'
         
@@ -303,7 +305,7 @@ const RemoveBooking =  async (req, res) => {
         const existingBooking = await Booking.findOne({ bookingID });
         
         if (!existingBooking) {
-            console.error(`No Matching Booking Found`);
+            logger.error(`No Matching Booking Found`);
             return res.status(404).json({
                 error: 'Matching Booking not found'
         
@@ -313,7 +315,7 @@ const RemoveBooking =  async (req, res) => {
         
         //Ensruing that the owner of the booking is the one removing it
         if (((existingBooking.usernameClient.toString() !== userName.toString()) && (userRole !== 'admin'))) {
-            console.error(`Outside Access Scope`);
+            logger.error(`Outside Access Scope`);
             return res.status(403).json({
                 error: 'You are not authorised to remove this booking'
         
@@ -324,7 +326,7 @@ const RemoveBooking =  async (req, res) => {
         //Removing bookingfrom cluster
         await Booking.deleteOne({ _id: existingBooking._id });
         
-        console.log(`Bookling ${bookingID} removed successfully`);
+        logger.log(`Bookling ${bookingID} removed successfully`);
         
         return res.status(200).json({
             message: 'Booking removed successfully',
@@ -334,7 +336,7 @@ const RemoveBooking =  async (req, res) => {
 
     }
     catch(error){
-        console.error(`Internal Server Error`, error);
+        logger.error(`Internal Server Error`, error);
         return res.status(500).json({
             error: 'Something went wrong (Booking Removal)'
         

@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 const crypto = require('crypto');
 
 const user = require('./../../models/users');
@@ -95,7 +97,7 @@ const ResetPassword = async (req, res) => {
 
     } 
     catch (error) {
-        console.error('Password reset error:', error);
+        logger.error('Password reset error:', error);
 
         return res.status(500).json({
             error: 'Something went wrong while resetting your password'

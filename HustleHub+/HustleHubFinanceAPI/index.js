@@ -20,12 +20,14 @@ const TaxBracketRoutes = require('./routes/TaxBracketRoutes');
 
 const ErrorHandler = require('./middleware/ErrorHandler');
 
+const logger = require("./utils/inputs/Logger");
+
 const app = express();
 
 //(The IIE, 2026)
 const PORT = process.env.PORT || 6100;
 const USE_HTTPS = process.env.USE_HTTPS === 'true';
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:5373';
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
 
 //(The IIE, 2026)
 app.disable('x-powered-by');
@@ -72,7 +74,7 @@ app.use(express.json({limit: '10kb'}));
     //ROOT route
     //(The IIE, 2026)
     app.get('/', (req, res) => {
-        console.log('ROOT request occured');
+        logger.log('ROOT request occured');
         res.send(process.env.APP_NAME);
 
     });
@@ -80,7 +82,7 @@ app.use(express.json({limit: '10kb'}));
     //Health route
     //(The IIE, 2026)
     app.get('/health', (req, res) => {
-        console.log('HEALTH request occured');
+        logger.log('HEALTH request occured');
         res.json({ status: 'OK' });
 
     });
@@ -90,7 +92,7 @@ app.use(express.json({limit: '10kb'}));
     app.post('/message', (req, res) => {
         const { message } = req.body;
 
-        console.log('MESSAGE request occured');
+        logger.log('MESSAGE request occured');
         res.json({ 
             received: message 
         
@@ -111,7 +113,7 @@ app.use('/', TaxEstimationRoutes);
 app.use('/', TaxBracketRoutes);
 
 app.use((req, res) => {
-    console.error("API route not found");
+    logger.error("API route not found");
     res.status(404).json({
         error: 'Route not found'
     
@@ -134,14 +136,14 @@ if(USE_HTTPS){
     };
 
     https.createServer(httpsOptions, app).listen(PORT, () => {
-        console.log(`HTTPS sever running on port ${PORT}`);
+        logger.log(`HTTPS sever running on port ${PORT}`);
 
     });
 
 }
 else{
     app.listen(PORT, () => {
-        console.log(`HTTP sever running on port ${PORT}`)
+        logger.log(`HTTP sever running on port ${PORT}`)
 
     });
 

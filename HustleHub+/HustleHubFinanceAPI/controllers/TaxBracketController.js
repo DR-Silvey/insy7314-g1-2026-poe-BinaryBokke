@@ -1,3 +1,5 @@
+const logger = require("./../utils/inputs/Logger");
+
 //Temp to store and retreive data relating to tax brackets
 const TaxBracket = require('./../models/tax/taxBracket');
 
@@ -19,7 +21,7 @@ const CreateTaxBracket =  async (req, res) => {
 
         });
 
-        console.log(`Tax Bracket ${newTaxBracket.taxBracketId} created successfully`);
+        logger.log(`Tax Bracket ${newTaxBracket.taxBracketId} created successfully`);
             return res.status(201).json({
                 message: 'Tax Bracket created successfully',
                 taxBracket: newTaxBracket
@@ -28,7 +30,7 @@ const CreateTaxBracket =  async (req, res) => {
 
     }
     catch(error){
-        console.error(`Internal Server Error`, error)
+        logger.error(`Internal Server Error`, error)
 
         if (error.name === 'ValidationError') {
             return res.status(400).json({
@@ -103,7 +105,7 @@ const FindTaxBracket =  async (req, res) => {
         
         //No tax brackets found
         if (taxBrackets.length === 0) {
-            console.error(`No Tax Brackets Found`);
+            logger.error(`No Tax Brackets Found`);
             return res.status(404).json({
                 message: 'No Tax Brackets found'
         
@@ -112,7 +114,7 @@ const FindTaxBracket =  async (req, res) => {
         }
         
         //Returning all Tax Bracket(s) that match the user's chosen criteria
-        console.log(`${taxBrackets.length} tax bracket(s) retrieved successfully`);
+        logger.log(`${taxBrackets.length} tax bracket(s) retrieved successfully`);
             return res.status(200).json({
                 message: 'Tax Brackets retrieved successfully',
                 count: taxBrackets.length,
@@ -122,7 +124,7 @@ const FindTaxBracket =  async (req, res) => {
 
     }
     catch(error){
-        console.error(`Internal Server Error`, error);
+        logger.error(`Internal Server Error`, error);
         return res.status(500).json({
             error: 'Something went wrong (Tax Bracket Retrieval)'
         
@@ -182,7 +184,7 @@ const UpdateTaxBracket = async (req, res) => {
 
         }
 
-        console.log('Tax Bracket updated successfully');
+        logger.log('Tax Bracket updated successfully');
 
         return res.status(200).json({
             message: 'Tax Bracket updated successfully',
@@ -193,7 +195,7 @@ const UpdateTaxBracket = async (req, res) => {
 
     }
     catch (error) {
-        console.error('Internal Server Error', error);
+        logger.error('Internal Server Error', error);
 
         if (error.name === 'ValidationError') {
             return res.status(400).json({
@@ -241,7 +243,7 @@ const DeleteTaxBracket = async (req, res) => {
 
         }
 
-        console.log('Tax Bracket deleted successfully');
+        logger.log('Tax Bracket deleted successfully');
 
         return res.status(200).json({
             message: 'Tax Bracket deleted successfully',
@@ -251,7 +253,7 @@ const DeleteTaxBracket = async (req, res) => {
 
     }
     catch (error) {
-        console.error('Internal Server Error', error);
+        logger.error('Internal Server Error', error);
 
         if (error.name === 'CastError') {
             return res.status(400).json({

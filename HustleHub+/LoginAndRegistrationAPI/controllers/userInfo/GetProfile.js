@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 //Temp to store and retreive data relating to user
 const User = require('./../../models/users');
 
@@ -13,7 +15,7 @@ const GetProfile =  async (req, res) => {
         
         //User doesn't exist
         if(!foundUser){
-           console.error(`Username ${username} not found within db`);
+           logger.error(`Username ${username} not found within db`);
            return res.status(404).json({
             error: 'User not found'
                 
@@ -25,7 +27,7 @@ const GetProfile =  async (req, res) => {
 
     }
     catch(error){
-        console.error(`Internal Server Error`, error);
+        logger.error(`Internal Server Error`, error);
         return res.status(500).json({
             error: 'Something went wrong'
         

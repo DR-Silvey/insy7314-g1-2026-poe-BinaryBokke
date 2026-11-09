@@ -1,10 +1,12 @@
+const logger = require("./../../utils/Logger");
+
 //Jwst used to create session tokens
 const jwt = require('jsonwebtoken');
 
 //Creatin a token to store the user's username, role
 //(The IIE, 2026)
 const CreateToken = ( username, role ) =>  {
-    console.log('Token creation attempt');
+    logger.log('Token creation attempt');
     return jwt.sign({
         username: username,
         role: role

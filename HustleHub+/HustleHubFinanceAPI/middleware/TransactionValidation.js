@@ -1,3 +1,5 @@
+const logger = require("./../utils/inputs/Logger");
+
 const CommonInputValidator = require('./../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
@@ -10,7 +12,7 @@ const CreateTransactionValidityChecks = (req, res, next) => {
     //(w3 Schools, s.a.)
     if(!(inputValidator.CommonInputValidation(bookingID) &&inputValidator.CommonInputValidation(gigID) && inputValidator.CommonInputValidation(usernamePerformer))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
             
@@ -21,7 +23,7 @@ const CreateTransactionValidityChecks = (req, res, next) => {
     //Length Check
     if(!(inputValidator.isValidString(gigID))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Gig ID does not meet length Requirements)'
             
@@ -31,7 +33,7 @@ const CreateTransactionValidityChecks = (req, res, next) => {
 
     if(!(inputValidator.isValidString(bookingID))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Booking ID does not meet length Requirements)'
             
@@ -41,7 +43,7 @@ const CreateTransactionValidityChecks = (req, res, next) => {
 
     if(!(inputValidator.isValidString(usernamePerformer))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Performer Username does not meet length Requirements)'
             
@@ -52,7 +54,7 @@ const CreateTransactionValidityChecks = (req, res, next) => {
     //Number Type check
     if(!(inputValidator.isValidNumber(amount, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -60,7 +62,7 @@ const CreateTransactionValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Booking Creation attempt met the input requirements');
+    logger.log('Booking Creation attempt met the input requirements');
     next();
 
 };
@@ -72,7 +74,7 @@ const FindTransactionValidityChecks = (req, res, next) => {
     //(w3 Schools, s.a.)
     if ((transactionID !== undefined) && !(inputValidator.CommonInputValidation(transactionID))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
 
@@ -82,7 +84,7 @@ const FindTransactionValidityChecks = (req, res, next) => {
 
     if ((bookingID !== undefined) && !(inputValidator.CommonInputValidation(bookingID))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
 
@@ -92,7 +94,7 @@ const FindTransactionValidityChecks = (req, res, next) => {
 
     if ((gigID !== undefined) && !(inputValidator.CommonInputValidation(gigID))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
 
@@ -102,7 +104,7 @@ const FindTransactionValidityChecks = (req, res, next) => {
 
     if ((usernameClient !== undefined) && !(inputValidator.CommonInputValidation(usernameClient))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
 
@@ -112,7 +114,7 @@ const FindTransactionValidityChecks = (req, res, next) => {
 
     if ((usernamePerformer !== undefined) && !(inputValidator.CommonInputValidation(usernamePerformer))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
 
@@ -123,7 +125,7 @@ const FindTransactionValidityChecks = (req, res, next) => {
     //Length Check
     if ((transactionID !== undefined) && !(inputValidator.isValidString(transactionID))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Transaction ID does not meet length Requirements)'
 
@@ -133,7 +135,7 @@ const FindTransactionValidityChecks = (req, res, next) => {
 
     if ((bookingID !== undefined) && !(inputValidator.isValidString(bookingID))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Booking ID does not meet length Requirements)'
 
@@ -143,7 +145,7 @@ const FindTransactionValidityChecks = (req, res, next) => {
 
     if ((gigID !== undefined) && !(inputValidator.isValidString(gigID))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Gig ID does not meet length Requirements)'
 
@@ -153,7 +155,7 @@ const FindTransactionValidityChecks = (req, res, next) => {
 
     if ((usernameClient !== undefined) && !(inputValidator.isValidString(usernameClient))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Client Username does not meet length Requirements)'
 
@@ -163,7 +165,7 @@ const FindTransactionValidityChecks = (req, res, next) => {
 
     if ((usernamePerformer !== undefined) && !(inputValidator.isValidString(usernamePerformer))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Performer Username does not meet length Requirements)'
 
@@ -171,7 +173,7 @@ const FindTransactionValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Transaction Viewing attempt met the input requirements');
+    logger.log('Transaction Viewing attempt met the input requirements');
     next();
 
 };

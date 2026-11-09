@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 const crypto = require('crypto');
 
 const User = require('./../../models/users');
@@ -93,7 +95,7 @@ const ForgotPassword = async (req, res) => {
 
     } 
     catch (error) {
-        console.error('Forgot password error:', error);
+        logger.error('Forgot password error:', error);
 
         return res.status(500).json({
             error: 'Unable to process password reset request' //(The IIE, 2026) (W3 Schools, s.a.)

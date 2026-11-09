@@ -1,3 +1,5 @@
+const logger = require("./../utils/inputs/Logger");
+
 const CommonInputValidator = require('./../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
@@ -10,7 +12,7 @@ const CreateTaxBracketValidityChecks = (req, res, next) => {
     //(w3 Schools, s.a.)
     if((taxYear !== undefined) && !(inputValidator.CommonInputValidation(taxYear))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
             
@@ -21,7 +23,7 @@ const CreateTaxBracketValidityChecks = (req, res, next) => {
     //Length Check
     if((taxYear !== undefined) && !(inputValidator.isValidString(taxYear))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Tax Year does not meet length Requirements)'
             
@@ -31,7 +33,7 @@ const CreateTaxBracketValidityChecks = (req, res, next) => {
     //Number Type check
     if((minimumIncome !== undefined) && !(inputValidator.isValidNumber(minimumIncome, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -42,7 +44,7 @@ const CreateTaxBracketValidityChecks = (req, res, next) => {
     //Null check since it cmay be null if the user is creating a tax bracket that has no upper limit
     if((maximumIncome !== undefined) && (maximumIncome !== null) && !(inputValidator.isValidNumber(maximumIncome, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -52,7 +54,7 @@ const CreateTaxBracketValidityChecks = (req, res, next) => {
 
     if((taxRate !== undefined) && !(inputValidator.isValidNumber(taxRate, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -62,7 +64,7 @@ const CreateTaxBracketValidityChecks = (req, res, next) => {
 
     if((baseTax !== undefined) && !(inputValidator.isValidNumber(baseTax, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -70,7 +72,7 @@ const CreateTaxBracketValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Tax Bracket Creation attempt met the input requirements');
+    logger.log('Tax Bracket Creation attempt met the input requirements');
     next();
 
 };
@@ -82,7 +84,7 @@ const FindTaxBracketValidityChecks = (req, res, next) => {
     //(w3 Schools, s.a.)
     if((taxYear !== undefined) && !(inputValidator.CommonInputValidation(taxYear))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
             
@@ -93,7 +95,7 @@ const FindTaxBracketValidityChecks = (req, res, next) => {
     //Length Check
     if((taxYear !== undefined) && !(inputValidator.isValidString(taxYear))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Tax Year does not meet length Requirements)'
             
@@ -103,7 +105,7 @@ const FindTaxBracketValidityChecks = (req, res, next) => {
     //Number Type check
     if((minimumIncome !== undefined) && !(inputValidator.isValidNumber(minimumIncome, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -113,7 +115,7 @@ const FindTaxBracketValidityChecks = (req, res, next) => {
 
     if((maximumIncome !== undefined) && (maximumIncome !== null) && !(inputValidator.isValidNumber(maximumIncome, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -123,7 +125,7 @@ const FindTaxBracketValidityChecks = (req, res, next) => {
 
     if((taxRate !== undefined) && !(inputValidator.isValidNumber(taxRate, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -133,7 +135,7 @@ const FindTaxBracketValidityChecks = (req, res, next) => {
 
     if((baseTax !== undefined) && !(inputValidator.isValidNumber(baseTax, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -141,7 +143,7 @@ const FindTaxBracketValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Tax Bracket Viewing attempt met the input requirements');
+    logger.log('Tax Bracket Viewing attempt met the input requirements');
     next();
 
 };
@@ -161,7 +163,7 @@ const UpdateTaxBracketChecks = (req, res, next) => {
     //(w3 Schools, s.a.)
     if((taxYear !== undefined) && !(inputValidator.CommonInputValidation(taxYear))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
             
@@ -172,7 +174,7 @@ const UpdateTaxBracketChecks = (req, res, next) => {
     //Length Check
     if((taxYear !== undefined) && !(inputValidator.isValidString(taxYear))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Tax Year does not meet length Requirements)'
             
@@ -182,7 +184,7 @@ const UpdateTaxBracketChecks = (req, res, next) => {
     //Number Type check
     if((minimumIncome !== undefined) && !(inputValidator.isValidNumber(minimumIncome, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -192,7 +194,7 @@ const UpdateTaxBracketChecks = (req, res, next) => {
 
     if((maximumIncome !== undefined) && (maximumIncome !== null) && !(inputValidator.isValidNumber(maximumIncome, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -202,7 +204,7 @@ const UpdateTaxBracketChecks = (req, res, next) => {
 
     if((taxRate !== undefined) && !(inputValidator.isValidNumber(taxRate, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -212,7 +214,7 @@ const UpdateTaxBracketChecks = (req, res, next) => {
 
     if((baseTax !== undefined) && !(inputValidator.isValidNumber(baseTax, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Amount Input (Not a Number)'
             
@@ -220,7 +222,7 @@ const UpdateTaxBracketChecks = (req, res, next) => {
 
     }
 
-    console.log('Tax Bracket Update attempt met the input requirements');
+    logger.log('Tax Bracket Update attempt met the input requirements');
     next();
 
 };

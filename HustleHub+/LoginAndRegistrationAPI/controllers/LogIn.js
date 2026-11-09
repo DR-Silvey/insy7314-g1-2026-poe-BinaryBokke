@@ -1,3 +1,5 @@
+const logger = require("./../utils/Logger");
+
 //Loading required utils
 //(The IIE, 2026)
 const EncryptionHandler = require('./../utils/passwords/EncryptionHandler');
@@ -33,7 +35,7 @@ const logUserIn =  async (req, res) => {
 
         //User doesn't exist
         if(!foundUser){
-            console.error(`Invalid Usernamr or password`);
+            logger.error(`Invalid Usernamr or password`);
             return res.status(401).json({
                 error: 'Invalid Username or Password'
         
@@ -47,7 +49,7 @@ const logUserIn =  async (req, res) => {
 
         //Passwords don't match
         if(!passwordMatches){
-            console.error(`The Password does not match the correlating user's (${username})`);
+            logger.error(`The Password does not match the correlating user's (${username})`);
             return res.status(401).json({
                 error: 'Invalid Username or Password'
         
@@ -132,7 +134,7 @@ const logUserIn =  async (req, res) => {
 
             const token = TokenCreation(foundUser.username, foundUser.role);
 
-            console.log(`Trusted-device login successful for ${username}`);
+            logger.log(`Trusted-device login successful for ${username}`);
             return res.status(200).json({
                 message: 'Login successful.',
                 token,
@@ -218,7 +220,7 @@ const logUserIn =  async (req, res) => {
 
         );
 
-        console.log(`Login OTP sent to ${username}`);
+        logger.log(`Login OTP sent to ${username}`);
 
         return res.status(200).json({
             message: 'Please verify your login using the OTP sent to your email.',
@@ -229,7 +231,7 @@ const logUserIn =  async (req, res) => {
 
     } 
     catch (error) {
-        console.error('Login Error:', error);
+        logger.error('Login Error:', error);
         return res.status(500).json({
             error: 'Something went wrong'
 

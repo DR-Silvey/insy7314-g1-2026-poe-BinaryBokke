@@ -1,3 +1,5 @@
+const logger = require("./../utils/Logger");
+
 const CommonInputValidator = require('./../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
@@ -12,7 +14,7 @@ const LogInValidityChecks = (req, res, next) => {
     //Ensuring that all the user input is valid in terms of data type and is non malicious
     //(w3 Schools, s.a.)
         if(!(inputValidator.IsValidUsername(username))){
-            console.error('User attempted to enter a username that does not meet the predefined citeria');
+            logger.error('User attempted to enter a username that does not meet the predefined citeria');
             return res.status(400).json({
                 error: 'Username is incorrect (has to be string and atleast 3 characters long)'
             
@@ -21,7 +23,7 @@ const LogInValidityChecks = (req, res, next) => {
         }
 
         if(!(inputValidator.IsValidPassword(password))){
-            console.error('User attempted to enter a password that does not meet the predefined citeria');
+            logger.error('User attempted to enter a password that does not meet the predefined citeria');
             return res.status(400).json({
                 error: 'Password is incorrect (has to be string)'
             
@@ -29,7 +31,7 @@ const LogInValidityChecks = (req, res, next) => {
 
         }
 
-    console.log('LogIn attempt met the input requirements');
+    logger.log('LogIn attempt met the input requirements');
     next();
 
 };
@@ -40,7 +42,7 @@ const ForgotPasswordValidityChecks = (req, res, next) => {
     //Ensuring that all the user input is valid in terms of data type and is non malicious
     //(w3 Schools, s.a.)
     if(!(inputValidator.IsValidEmail(email))){
-        console.error('User attempted to enter an email that does not meet the predefined citeria');
+        logger.error('User attempted to enter an email that does not meet the predefined citeria');
         return res.status(400).json({
             error: 'Email is incorrect (has to be string and include an @ symbol)'
             
@@ -48,7 +50,7 @@ const ForgotPasswordValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Forgot Password met the input requirements');
+    logger.log('Forgot Password met the input requirements');
     next();
 
 };
@@ -68,7 +70,7 @@ const ResetPasswordValidityChecks = (req, res, next) => {
     }
 
     if(!(inputValidator.IsValidPassword(newPassword))){
-        console.error('User attempted to enter a password that does not meet the predefined citeria');
+        logger.error('User attempted to enter a password that does not meet the predefined citeria');
         return res.status(400).json({
             error: 'Username is incorrect (has to be string and atleast 3 characters long)'
             
@@ -78,7 +80,7 @@ const ResetPasswordValidityChecks = (req, res, next) => {
 
     //Ensuring that all the chosen password meets all criteria (length, complexity, commonality)
     if(!(passwordHandler.ValidPassword(newPassword))){
-        console.error('User attempted to enter a password that does not meet the predefined complexity citeria');
+        logger.error('User attempted to enter a password that does not meet the predefined complexity citeria');
         return res.status(400).json({
             error: 'Password does not meet the complexity requirements (length, complexity, commonality).'
         
@@ -87,7 +89,7 @@ const ResetPasswordValidityChecks = (req, res, next) => {
     }
 
     if(!(inputValidator.IsValidPassword(confirmPassword))){
-        console.error('User attempted to enter a password that does not meet the predefined citeria');
+        logger.error('User attempted to enter a password that does not meet the predefined citeria');
         return res.status(400).json({
             error: 'Password is incorrect (has to be string)'
             
@@ -97,7 +99,7 @@ const ResetPasswordValidityChecks = (req, res, next) => {
 
     //Ensuring that all the chosen password meets all criteria (length, complexity, commonality)
     if(!(passwordHandler.ValidPassword(confirmPassword))){
-        console.error('User attempted to enter a password that does not meet the predefined complexity citeria');
+        logger.error('User attempted to enter a password that does not meet the predefined complexity citeria');
         return res.status(400).json({
             error: 'Password does not meet the complexity requirements (length, complexity, commonality).'
         
@@ -105,7 +107,7 @@ const ResetPasswordValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Password Reset attempt met the input requirements');
+    logger.log('Password Reset attempt met the input requirements');
     next();
 
 };

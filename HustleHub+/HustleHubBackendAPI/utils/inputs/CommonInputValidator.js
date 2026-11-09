@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 //This class is responsible for validating common input fields (username, password, email, fullname, age) before they are processed further in the application. 
 //checks for
     //Input can't be undefined, null, empty, have to be string (except for age which has to be number)
@@ -11,7 +13,7 @@ class CommonInputValidator {
         //Input can't be undefined, null, empty
         //(w3 Schools, s.a.)
         if((input === undefined || input === null || input === '')) {
-            console.error('An invalid input was entered (undefined, null or empty)');
+            logger.error('An invalid input was entered (undefined, null or empty)');
             return false;
         }
 
@@ -19,7 +21,7 @@ class CommonInputValidator {
         //(w3 Schools, s.a.)
         if(typeof input === 'string'){
             if((input.includes("'") || input.includes("--"))){
-                console.error('An invalid input was entered (possible sql injection attempt)');
+                logger.error('An invalid input was entered (possible sql injection attempt)');
                 return false;
 
             }

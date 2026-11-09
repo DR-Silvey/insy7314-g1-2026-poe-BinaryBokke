@@ -1,3 +1,5 @@
+const logger = require("./../utils/inputs/Logger");
+
 const CommonInputValidator = require('./../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
@@ -10,7 +12,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
     //(w3 Schools, s.a.)
    if ((taxID !== undefined) && !(inputValidator.CommonInputValidation(taxID))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
 
@@ -20,7 +22,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
 
     if ((taxYearStart !== undefined) && !(inputValidator.CommonInputValidation(taxYearStart))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
 
@@ -30,7 +32,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
 
     if ((taxYearEnd !== undefined) && !(inputValidator.CommonInputValidation(taxYearEnd))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
 
@@ -40,7 +42,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
 
     if ((calculationDateStart !== undefined) && !(inputValidator.CommonInputValidation(calculationDateStart))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'  
         
@@ -50,7 +52,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
 
     if ((calculationDateEnd !== undefined) && !(inputValidator.CommonInputValidation(calculationDateEnd))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
                 
@@ -60,7 +62,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
 
     if ((taxID !== undefined) && !(inputValidator.isValidString(taxID))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Tax ID does not meet length Requirements)'
 
@@ -70,7 +72,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
 
     if ((taxYearStart !== undefined) && !(inputValidator.isValidString(taxYearStart))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Tax Year Start does not meet length Requirements)'
 
@@ -80,7 +82,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
 
     if ((taxYearEnd !== undefined) && !(inputValidator.isValidString(taxYearEnd))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Tax Year End does not meet length Requirements)'
 
@@ -90,7 +92,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
 
     if ((calculationDateStart !== undefined) && !(inputValidator.isDate(calculationDateStart))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Date Input (Calculation Date Start is not a valid date)'
                 
@@ -100,7 +102,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
 
     if ((calculationDateEnd !== undefined) && !(inputValidator.isDate(calculationDateEnd))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Date Input (Calculation Date End is not a valid date)'
 
@@ -108,7 +110,7 @@ const FindTaxRecordValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Tax Record Viewing attempt met the input requirements');
+    logger.log('Tax Record Viewing attempt met the input requirements');
     next();
 
 };

@@ -20,6 +20,8 @@ const LogInRoutes = require('./routes/LogInRoutes');
 
 const ErrorHandler = require('./middleware/ErrorHandler');
 
+const logger = require("./utils/Logger");
+
 const app = express();
 
 //(The IIE, 2026)
@@ -73,7 +75,7 @@ app.use(cookieParser());
     //ROOT route
     //(The IIE, 2026)
     app.get('/', (req, res) => {
-        console.log('ROOT request occured');
+        logger.log('ROOT request occured');
         res.send(process.env.APP_NAME);
 
     });
@@ -81,7 +83,7 @@ app.use(cookieParser());
     //Health route
     //(The IIE, 2026)
     app.get('/health', (req, res) => {
-        console.log('HEALTH request occured');
+        logger.log('HEALTH request occured');
         res.json({ status: 'OK' });
 
     });
@@ -91,7 +93,7 @@ app.use(cookieParser());
     app.post('/message', (req, res) => {
         const { message } = req.body;
 
-        console.log('MESSAGE request occured');
+        logger.log('MESSAGE request occured');
         res.json({ 
             received: message 
         
@@ -108,7 +110,7 @@ app.use('/',RegistrationRoutes);
 app.use('/',LogInRoutes);
 
 app.use((req, res) => {
-    console.error("API route not found");
+    logger.error("API route not found");
     res.status(404).json({
         error: 'Route not found'
     
@@ -131,14 +133,14 @@ if(USE_HTTPS){
     };
 
     https.createServer(httpsOptions, app).listen(PORT, () => {
-        console.log(`HTTPS sever running on port ${PORT}`);
+        logger.log(`HTTPS sever running on port ${PORT}`);
 
     });
 
 }
 else{
     app.listen(PORT, () => {
-        console.log(`HTTP sever running on port ${PORT}`)
+        logger.log(`HTTP sever running on port ${PORT}`)
 
     });
 

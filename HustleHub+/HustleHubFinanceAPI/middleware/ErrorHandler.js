@@ -1,7 +1,9 @@
+const logger = require("./../utils/inputs/Logger");
+
 //Genric error handler
 //(The IIE, 2026)
 const ErrorHandler = (err, req, res) => {
-    console.error('Internal Server Error', err.message);
+    logger.error('Internal Server Error', err.message);
     res.status(500).json({
         error: 'Something went wrong'
 

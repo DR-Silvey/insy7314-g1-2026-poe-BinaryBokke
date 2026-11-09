@@ -1,3 +1,5 @@
+const logger = require("./../utils/Logger");
+
 const mongoose = require('mongoose');
 
 //Atempting a connection the db instance on failure close application
@@ -5,11 +7,11 @@ const mongoose = require('mongoose');
 const ConnectDB = async () => {
     try{
         await mongoose.connect(process.env.MONGODB_URI);
-        console.log("DB connection attempt successfull");
+        logger.log("DB connection attempt successfull");
 
     }
     catch(error){
-        console.error('DB connection attempt failure', error);
+        logger.error('DB connection attempt failure', error);
         process.exit(1);
 
     }

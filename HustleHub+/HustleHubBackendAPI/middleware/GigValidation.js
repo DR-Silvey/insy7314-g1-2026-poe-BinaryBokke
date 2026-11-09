@@ -1,3 +1,5 @@
+const logger = require("./../utils/Logger");
+
 const CommonInputValidator = require('./../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
@@ -11,7 +13,7 @@ const CreateGigValidityChecks = (req, res, next) => {
 
     if(!(inputValidator.CommonInputValidation(gigType) && inputValidator.CommonInputValidation(description) && inputValidator.CommonInputValidation(stageName))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
             
@@ -22,7 +24,7 @@ const CreateGigValidityChecks = (req, res, next) => {
     //Length Checks
     if(!(inputValidator.isValidString(gigType))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Gig Type does not length Requirements)'
             
@@ -32,7 +34,7 @@ const CreateGigValidityChecks = (req, res, next) => {
 
     if(!(inputValidator.isValidString(stageName))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Stage Name does not length Requirements)'
             
@@ -42,7 +44,7 @@ const CreateGigValidityChecks = (req, res, next) => {
 
     if(!(inputValidator.isValidString(description))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Description does not length Requirements)'
             
@@ -53,7 +55,7 @@ const CreateGigValidityChecks = (req, res, next) => {
     //Number Type check
     if(!(inputValidator.isValidNumber(costPerHour, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Cost Per Hour Input (Not a Number)'
             
@@ -64,7 +66,7 @@ const CreateGigValidityChecks = (req, res, next) => {
     //Bool Type check
     if(!(inputValidator.isValidBool(isAvailable))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Availability Input (Not a True/False)'
             
@@ -72,7 +74,7 @@ const CreateGigValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Gig Creation attempt met the input requirements');
+    logger.log('Gig Creation attempt met the input requirements');
     next();
 
 };
@@ -84,7 +86,7 @@ const FindGigValidityChecks = (req, res, next) => {
     //Validation should occur only on supplied filters
     if ((gigID !== undefined) && !(inputValidator.CommonInputValidation(gigID))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
 
@@ -94,7 +96,7 @@ const FindGigValidityChecks = (req, res, next) => {
 
     if ((usernamePerformer !== undefined) && !(inputValidator.CommonInputValidation(usernamePerformer))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
 
@@ -104,7 +106,7 @@ const FindGigValidityChecks = (req, res, next) => {
 
     if ((gigID !== undefined) && !(inputValidator.isValidString(gigID))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Gig ID does not meet length Requirements)'
 
@@ -114,7 +116,7 @@ const FindGigValidityChecks = (req, res, next) => {
 
     if ((usernamePerformer !== undefined) && !(inputValidator.isValidString(usernamePerformer))) 
     {
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Performer Username does not meet length Requirements)'
 
@@ -122,7 +124,7 @@ const FindGigValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Gig Viewing attempt met the input requirements');
+    logger.log('Gig Viewing attempt met the input requirements');
     next();
 
 };
@@ -136,7 +138,7 @@ const UpdateGigValidityChecks = (req, res, next) => {
 
     if(!(inputValidator.CommonInputValidation(gigID) && inputValidator.CommonInputValidation(usernamePerformer) && inputValidator.CommonInputValidation(gigType) && inputValidator.CommonInputValidation(description) && inputValidator.CommonInputValidation(stageName))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
             
@@ -147,7 +149,7 @@ const UpdateGigValidityChecks = (req, res, next) => {
     //Length Checks
     if(!(inputValidator.isValidString(gigID))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Gig ID not meet length requirements)'
             
@@ -157,7 +159,7 @@ const UpdateGigValidityChecks = (req, res, next) => {
 
     if(!(inputValidator.isValidString(usernamePerformer))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Username of Performer does not meet length requirements)'
             
@@ -167,7 +169,7 @@ const UpdateGigValidityChecks = (req, res, next) => {
 
     if(!(inputValidator.isValidString(gigType))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Gig Type does not length Requirements)'
             
@@ -177,7 +179,7 @@ const UpdateGigValidityChecks = (req, res, next) => {
 
     if(!(inputValidator.isValidString(stageName))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Stage Name does not length Requirements)'
             
@@ -187,7 +189,7 @@ const UpdateGigValidityChecks = (req, res, next) => {
 
     if(!(inputValidator.isValidString(description))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Description does not length Requirements)'
             
@@ -198,7 +200,7 @@ const UpdateGigValidityChecks = (req, res, next) => {
     //Number Type check
     if(!(inputValidator.isValidNumber(costPerHour, 0))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Cost Per Hour Input (Not a Number)'
             
@@ -209,7 +211,7 @@ const UpdateGigValidityChecks = (req, res, next) => {
     //Bool Type check
     if(!(inputValidator.isValidBool(isAvailable))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Availability Input (Not a True/False)'
             
@@ -217,7 +219,7 @@ const UpdateGigValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Gig Update attempt met the input requirements');
+    logger.log('Gig Update attempt met the input requirements');
     next();
 
 };
@@ -231,7 +233,7 @@ const RemoveGigValidityChecks = (req, res, next) => {
 
     if(!(inputValidator.CommonInputValidation(gigID))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid Input (Does not meet common criteria)'
             
@@ -242,7 +244,7 @@ const RemoveGigValidityChecks = (req, res, next) => {
     //Input length check
     if(!(inputValidator.isValidString(gigID))){
         //(w3 Schools, s.a.)
-        console.error('User attempted an input that does not meet common criteria');
+        logger.error('User attempted an input that does not meet common criteria');
             return res.status(400).json({
                 error: 'Invalid String Input (Gig ID does not meet length Requirements)'
             
@@ -250,7 +252,7 @@ const RemoveGigValidityChecks = (req, res, next) => {
 
     }
 
-    console.log('Gig Removal attempt met the input requirements');
+    logger.log('Gig Removal attempt met the input requirements');
     next();
 
 };

@@ -1,3 +1,5 @@
+const logger = require("./../../utils/Logger");
+
 const bcrypt = require('bcrypt'); //(The IIE, 2026) (Bcrypt, s.a.)
 const crypto = require('crypto'); 
 
