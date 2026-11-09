@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const RegistrationValidityChecks = require('../middleware/RegistrationValidation');
+const { RegistrationValidityChecks, VerifyEmailValidityChecks } = require('../middleware/RegistrationValidation');
 const RegisterUser = require('../controllers/Registration');
 const UpdateUserInfo = require('../controllers/userInfo/UpdateUserInfo');
 const UpdateUserRole = require('../controllers/userInfo/UpdateUserRole');
+const VerifyEmail = require('../controllers/userVerification/VerifyEmail');
 
 //RBAC enforcement
 const AuthMiddleware = require('../middleware/tokens/AuthMiddleware');
@@ -21,6 +22,9 @@ router.patch('/register/:username', RegistrationLimiter, AuthMiddleware.protect,
 
 //verb to patch the user's stored info to change their role
 router.patch('/register/:username/role', RegistrationLimiter, AuthMiddleware.protect, AuthMiddleware.authorizeRoles('admin'), RegistrationValidityChecks, UpdateUserRole);
+
+//used to veridy an account based on an OTP sent to the user's email address
+router.post('/register/verify-email', RegistrationLimiter, VerifyEmailValidityChecks, VerifyEmail);
 
 module.exports = router;
 

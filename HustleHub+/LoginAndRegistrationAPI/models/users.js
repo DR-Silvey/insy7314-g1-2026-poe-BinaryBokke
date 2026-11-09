@@ -64,7 +64,7 @@ const UserSchema = new mongoose.Schema(
 
 );
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.models.User || mongoose.model('User', UserSchema);
 
 /*
 The Independent Institute of Education, 2026. INOFRMATION SYSTEM 3D [INSY7314/w]. nt. [online 

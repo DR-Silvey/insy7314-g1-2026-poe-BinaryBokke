@@ -82,7 +82,35 @@ const RegistrationValidityChecks = (req, res, next) => {
 
 };
 
-module.exports = RegistrationValidityChecks;
+const VerifyEmailValidityChecks = (req, res, next) => {
+    const { username, otp } = req.body;
+    
+    //Ensuring that all the user input is valid in terms of data type and is non malicious
+    if(!(inputValidator.IsValidUsername(username))){
+        //(w3 Schools, s.a.)
+        console.error('User attempted to enter a username that does not meet the predefined citeria');
+            return res.status(400).json({
+                error: 'Username is incorrect (has to be string and atleast 3 characters long)'
+            
+            });
+
+    }
+
+    if(!(inputValidator.CommonInputValidation(otp) && (otp.length === 6 && /^\d+$/.test(otp)))){
+        console.error('User attempted to enter an OTP that does not meet the predefined citeria');
+            return res.status(400).json({
+                error: 'OTP is incorrect (has to be a 6-digit number)'
+            
+            });
+
+    }
+
+    console.log('Verification attempt met the input requirements');
+    next();
+
+};
+
+module.exports = { RegistrationValidityChecks, VerifyEmailValidityChecks };
 
 /*
 W3 Schools, s.a. JavaScript Tutorial.
