@@ -1,10 +1,14 @@
 import { roleLabel } from '../services/roles';
 
-const PAGES = [
-  { id: 'gigs', label: 'Gigs' },
-  { id: 'bookings', label: 'Bookings' },
-  { id: 'account', label: 'My account' },
-];
+const ROLE_PAGES = {
+  freelancer: [{ id: 'finance', label: 'Finance' }],
+  client: [{ id: 'finance', label: 'Finance' }],
+  admin: [{ id: 'tax-brackets', label: 'Tax brackets' }],
+};
+
+function pagesFor(role) {
+  return [{ id: 'gigs', label: 'Gigs' }, { id: 'bookings', label: 'Bookings' }, ...(ROLE_PAGES[role] ?? []), { id: 'account', label: 'My account' }];
+}
 
 export default function NavBar({ page, onPageChange, session, onSignOut }) {
   return (
@@ -14,7 +18,7 @@ export default function NavBar({ page, onPageChange, session, onSignOut }) {
       </div>
 
       <nav aria-label="Main navigation">
-        {PAGES.map((item) => (
+        {pagesFor(session.role).map((item) => (
           <button key={item.id} type="button" className={page === item.id ? 'active' : ''} aria-current={page === item.id ? 'page' : undefined} onClick={() => onPageChange(item.id)}>{item.label}</button>
         ))}
       </nav>

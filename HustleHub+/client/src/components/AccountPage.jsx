@@ -11,13 +11,13 @@ const emptyAccount = { gigs: [], bookings: [], transactions: [] };
 async function loadAccount(session) {
   if (session.role === 'freelancer') {
     const filter = { usernamePerformer: session.username };
-    const [gigs, bookings, transactions] = await Promise.all([getGigs(filter), getBookings(filter), getTransactions(filter)]);
+    const [gigs, bookings, transactions] = await Promise.all([getGigs(filter), getBookings(filter), getTransactions(session.token, filter)]);
     return { gigs, bookings, transactions };
   }
 
   if (session.role === 'client') {
     const filter = { usernameClient: session.username };
-    const [gigs, bookings, transactions] = await Promise.all([getGigs(), getBookings(filter), getTransactions(filter)]);
+    const [gigs, bookings, transactions] = await Promise.all([getGigs(), getBookings(filter), getTransactions(session.token, filter)]);
     return { gigs, bookings, transactions };
   }
 

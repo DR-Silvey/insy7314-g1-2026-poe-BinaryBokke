@@ -49,7 +49,7 @@ describe('AccountPage', () => {
 
     expect(getGigs).toHaveBeenCalledWith({ usernamePerformer: 'djsunset' });
     expect(getBookings).toHaveBeenCalledWith({ usernamePerformer: 'djsunset' });
-    expect(getTransactions).toHaveBeenCalledWith({ usernamePerformer: 'djsunset' });
+    expect(getTransactions).toHaveBeenCalledWith('token-123', { usernamePerformer: 'djsunset' });
   });
 
   it('shows income received from transactions and pending income from unpaid bookings', async () => {
@@ -104,7 +104,7 @@ describe('AccountPage', () => {
     await screen.findByText('Total paid');
 
     expect(getBookings).toHaveBeenCalledWith({ usernameClient: 'eventco' });
-    expect(getTransactions).toHaveBeenCalledWith({ usernameClient: 'eventco' });
+    expect(getTransactions).toHaveBeenCalledWith('token-456', { usernameClient: 'eventco' });
     expect(summaryValue('Total paid')).toMatch(/750/);
     expect(summaryValue('Outstanding')).toMatch(/400/);
     expect(screen.queryByRole('region', { name: 'Income by gig' })).not.toBeInTheDocument();

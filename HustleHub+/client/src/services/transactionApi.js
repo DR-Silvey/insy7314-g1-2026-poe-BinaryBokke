@@ -1,5 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL ?? 'https://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_FINANCE_API_BASE_URL ?? 'https://localhost:6000';
 
+//(MDN Web Docs, 2026a)
 async function send(path, { method = 'GET', token, body } = {}) {
   let response;
 
@@ -27,11 +28,12 @@ async function send(path, { method = 'GET', token, body } = {}) {
   return data;
 }
 
-export async function getTransactions(filters = {}) {
+export async function getTransactions(token, filters = {}) {
+  //(MDN Web Docs, 2026b)
   const query = new URLSearchParams(Object.entries(filters).filter(([, value]) => value)).toString();
 
   try {
-    const data = await send(`/transaction${query ? `?${query}` : ''}`);
+    const data = await send(`/transaction${query ? `?${query}` : ''}`, { token });
     return data.transactions ?? [];
   } catch (error) {
     if (error.status === 404) return [];
@@ -43,3 +45,13 @@ export async function createTransaction(token, { bookingID, gigID, usernamePerfo
   const data = await send('/transaction', { method: 'POST', token, body: { bookingID, gigID, usernamePerformer, amount } });
   return data.transaction;
 }
+
+/*
+MDN Web Docs, 2026a. Using the Fetch API. [online] Available at:
+<https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch>
+[Accessed 9 November 2026]
+
+MDN Web Docs, 2026b. URLSearchParams. [online] Available at:
+<https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams>
+[Accessed 9 November 2026]
+*/
