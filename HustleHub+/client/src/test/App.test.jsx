@@ -11,6 +11,7 @@ vi.mock('../services/authApi');
 vi.mock('../services/bookingApi');
 vi.mock('../services/gigApi');
 vi.mock('../services/transactionApi');
+vi.mock('../services/taxApi');
 
 async function openRegistration(user) {
   await user.click(screen.getByRole('tab', { name: 'Create account' }));
@@ -214,6 +215,24 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'My bookings' })).toBeInTheDocument();
     expect(await screen.findByText('You have not made any bookings yet. Book a gig from the Gigs page.')).toBeInTheDocument();
     expect(getBookings).toHaveBeenCalledWith({ usernameClient: 'eventco' });
+    expect(screen.queryByRole('button', { name: 'Finance' })).not.toBeInTheDocument();
+  });
+
+  it('shows the finance dashboard to freelancers and the tax brackets screen to admins', async () => {
+    sessionStorage.setItem('hustlehub_token', createToken({ username: 'djsunset', role: 'freelancer' }));
+    const { unmount } = render(<App />);
+    await screen.findByText('No gigs are available yet.');
+
+    expect(screen.getByRole('button', { name: 'Finance' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Tax brackets' })).not.toBeInTheDocument();
+    unmount();
+
+    sessionStorage.setItem('hustlehub_token', createToken({ username: 'admin', role: 'admin' }));
+    render(<App />);
+    await screen.findByText('No gigs are available yet.');
+
+    expect(screen.getByRole('button', { name: 'Tax brackets' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Finance' })).not.toBeInTheDocument();
   });
 
   it('keeps the user signed in after a page refresh while the token is valid', async () => {

@@ -16,21 +16,22 @@ describe('transactionApi', () => {
     vi.unstubAllGlobals();
   });
 
-  it('loads the transactions for a freelancer', async () => {
+  it('loads the transactions for a freelancer from the finance API with the login token', async () => {
     const fetchMock = mockFetch(200, { message: 'Transactions retrieved successfully', count: 1, transactions: [{ transactionID: 't-1' }] });
 
-    const transactions = await getTransactions({ usernamePerformer: 'djsunset' });
+    const transactions = await getTransactions('token-123', { usernamePerformer: 'djsunset' });
 
     expect(transactions).toEqual([{ transactionID: 't-1' }]);
     const [url, options] = fetchMock.mock.calls[0];
     expect(url).toMatch(/\/transaction\?usernamePerformer=djsunset$/);
     expect(options.method).toBe('GET');
+    expect(options.headers.Authorization).toBe('Bearer token-123');
   });
 
   it('treats "no transactions found" as an empty list', async () => {
     mockFetch(404, { message: 'No Transactions found' });
 
-    await expect(getTransactions({ usernameClient: 'eventco' })).resolves.toEqual([]);
+    await expect(getTransactions('token-456', { usernameClient: 'eventco' })).resolves.toEqual([]);
   });
 
   it('records a payment with the login token and only the fields the API expects', async () => {

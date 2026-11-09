@@ -94,7 +94,7 @@ const logUserIn =  async (req, res) => {
         }
 
         //Read recognised-device cookie
-        const deviceToken = req.cookies?.[DEVICE_COOKIE];
+        const deviceToken = req.cookies?.[`${DEVICE_COOKIE}_${foundUser._id}`];
 
         //Hash the browser's device token
         let deviceTokenHash = null;
@@ -161,7 +161,7 @@ const logUserIn =  async (req, res) => {
 
             //Store the cookie as HttpOnly so frontend JavaScript
             //cannot read the device token.
-            res.cookie(DEVICE_COOKIE, pendingDeviceToken, {
+            res.cookie(`${DEVICE_COOKIE}_${foundUser._id}`, pendingDeviceToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'lax',

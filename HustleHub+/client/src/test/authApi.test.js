@@ -25,6 +25,7 @@ describe('authApi', () => {
     const [url, options] = fetchMock.mock.calls[0];
     expect(url).toMatch(/\/login$/);
     expect(options.method).toBe('POST');
+    expect(options.credentials).toBe('include');
     expect(JSON.parse(options.body)).toEqual({ username: 'johndoe', password: 'Secret#Pass123' });
   });
 
