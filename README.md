@@ -1,7 +1,6 @@
 Youtube Links:
  - Back-End:
  - Front-End: https://youtu.be/HGuoOD86-Jk
- - Other:
 
 **System Overview:**
 HusstleHub+ is a web based service that allows users to discover, interact, and manage services and opportunities in one place.
