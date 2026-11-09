@@ -1,6 +1,6 @@
 import { formatCurrency } from '../services/pricing';
 
-//(MDN Web Docs, 2026e)
+//(MDN Web Docs, s.a.e)
 const compact = new Intl.NumberFormat('en-ZA', { style: 'currency', currency: 'ZAR', notation: 'compact', maximumFractionDigits: 1 });
 
 function niceMaximum(value) {
@@ -10,10 +10,10 @@ function niceMaximum(value) {
   return step * magnitude;
 }
 
-//(W3C Web Accessibility Initiative, 2026)
+//(W3C Web Accessibility Initiative, s.a.)
 export default function IncomeChart({ months, label }) {
   const scaleMaximum = niceMaximum(Math.max(...months.map((month) => month.total)));
-  //(MDN Web Docs, 2026d)
+  //(MDN Web Docs, s.a.d)
   const peak = months.reduce((best, month) => (month.total > best.total ? month : best), months[0]);
   const ticks = [scaleMaximum, scaleMaximum / 2, 0];
 
@@ -46,15 +46,15 @@ export default function IncomeChart({ months, label }) {
 }
 
 /*
-MDN Web Docs, 2026d. Array.prototype.reduce(). [online] Available at:
+MDN Web Docs, s.a.d. Array.prototype.reduce(). [online] Available at:
 <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce>
 [Accessed 9 November 2026]
 
-MDN Web Docs, 2026e. Intl.NumberFormat() constructor. [online] Available at:
+MDN Web Docs, s.a.e. Intl.NumberFormat() constructor. [online] Available at:
 <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat>
 [Accessed 9 November 2026]
 
-W3C Web Accessibility Initiative, 2026. Tooltip Pattern. [online] Available at:
+W3C Web Accessibility Initiative, s.a. Tooltip Pattern. [online] Available at:
 <https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/>
 [Accessed 9 November 2026]
 */

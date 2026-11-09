@@ -215,6 +215,7 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'My bookings' })).toBeInTheDocument();
     expect(await screen.findByText('You have not made any bookings yet. Book a gig from the Gigs page.')).toBeInTheDocument();
     expect(getBookings).toHaveBeenCalledWith({ usernameClient: 'eventco' });
+    expect(screen.queryByRole('button', { name: 'Finance' })).not.toBeInTheDocument();
   });
 
   it('shows the finance dashboard to freelancers and the tax brackets screen to admins', async () => {

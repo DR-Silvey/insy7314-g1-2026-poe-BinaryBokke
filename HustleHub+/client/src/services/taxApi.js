@@ -1,6 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_FINANCE_API_BASE_URL ?? 'https://localhost:6000';
+const API_BASE_URL = import.meta.env.VITE_FINANCE_API_BASE_URL ?? 'https://localhost:6100';
 
-//(MDN Web Docs, 2026a)
+//(MDN Web Docs, s.a.a)
 async function send(path, { method = 'GET', token, body } = {}) {
   let response;
 
@@ -28,7 +28,7 @@ async function send(path, { method = 'GET', token, body } = {}) {
   return data;
 }
 
-//(MDN Web Docs, 2026b)
+//(MDN Web Docs, s.a.b)
 function toQuery(filters) {
   const query = new URLSearchParams(Object.entries(filters).filter(([, value]) => value !== undefined && value !== null && value !== '')).toString();
   return query ? `?${query}` : '';
@@ -64,12 +64,21 @@ export async function createTaxBracket(token, { taxYear, minimumIncome, maximumI
   return data.taxBracket;
 }
 
+export async function updateTaxBracket(token, id, { minimumIncome, maximumIncome, taxRate, baseTax }) {
+  const data = await send(`/tax-brackets/${encodeURIComponent(id)}`, { method: 'PUT', token, body: { minimumIncome, maximumIncome, taxRate, baseTax } });
+  return data.taxBracket;
+}
+
+export async function deleteTaxBracket(token, id) {
+  await send(`/tax-brackets/${encodeURIComponent(id)}`, { method: 'DELETE', token });
+}
+
 /*
-MDN Web Docs, 2026a. Using the Fetch API. [online] Available at:
+MDN Web Docs, s.a.a. Using the Fetch API. [online] Available at:
 <https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch>
 [Accessed 9 November 2026]
 
-MDN Web Docs, 2026b. URLSearchParams. [online] Available at:
+MDN Web Docs, s.a.b. URLSearchParams. [online] Available at:
 <https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams>
 [Accessed 9 November 2026]
 */

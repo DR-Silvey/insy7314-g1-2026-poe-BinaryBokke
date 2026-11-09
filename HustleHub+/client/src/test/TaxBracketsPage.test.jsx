@@ -2,9 +2,9 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import TaxBracketsPage from '../components/TaxBracketsPage';
-import { createTaxBracket, getTaxBrackets } from '../services/taxApi';
+import { createTaxBracket, deleteTaxBracket, getTaxBrackets, updateTaxBracket } from '../services/taxApi';
 
-//(Vitest, 2026)
+//(Vitest, s.a.)
 vi.mock('../services/taxApi');
 
 const expiresAt = Date.now() + 3600000;
@@ -20,7 +20,7 @@ function findFirstBracket() {
   return bracketsTable().findByRole('rowheader', { name: /^R\s?0[,.]00/ });
 }
 
-//(Testing Library, 2026)
+//(Testing Library, s.a.)
 describe('TaxBracketsPage', () => {
   beforeEach(() => {
     vi.resetAllMocks();
@@ -111,6 +111,36 @@ describe('TaxBracketsPage', () => {
     expect(await screen.findByText('Too many Tax Bracket Creation attempts. Please try again later.')).toBeInTheDocument();
   });
 
+  it('edits a bracket and saves the change by its id', async () => {
+    const user = userEvent.setup();
+    updateTaxBracket.mockResolvedValue({ ...firstBracket, taxRate: 19 });
+    render(<TaxBracketsPage session={admin} onSessionExpired={vi.fn()} />);
+
+    await findFirstBracket();
+    await user.click(bracketsTable().getByRole('button', { name: /^Edit R/ }));
+    await user.clear(screen.getByLabelText('Tax rate (%)'));
+    await user.type(screen.getByLabelText('Tax rate (%)'), '19');
+    await user.click(screen.getByRole('button', { name: 'Save changes' }));
+
+    expect(updateTaxBracket).toHaveBeenCalledWith('token-admin', firstBracket._id, { minimumIncome: 0, maximumIncome: 245100, taxRate: 19, baseTax: 0 });
+    expect(await screen.findByText(/Updated the .* bracket for 2027/)).toBeInTheDocument();
+    expect(bracketsTable().getByRole('cell', { name: '19%' })).toBeInTheDocument();
+  });
+
+  it('asks for confirmation before deleting a bracket', async () => {
+    const user = userEvent.setup();
+    deleteTaxBracket.mockResolvedValue(undefined);
+    render(<TaxBracketsPage session={admin} onSessionExpired={vi.fn()} />);
+
+    await findFirstBracket();
+    await user.click(bracketsTable().getByRole('button', { name: /^Delete R/ }));
+    expect(deleteTaxBracket).not.toHaveBeenCalled();
+    await user.click(bracketsTable().getByRole('button', { name: /^Confirm delete R/ }));
+
+    expect(deleteTaxBracket).toHaveBeenCalledWith('token-admin', firstBracket._id);
+    expect(await screen.findByText(/Deleted the .* bracket for 2027/)).toBeInTheDocument();
+  });
+
   it('loads another tax year when it is chosen', async () => {
     const user = userEvent.setup();
     render(<TaxBracketsPage session={admin} onSessionExpired={vi.fn()} />);
@@ -132,11 +162,11 @@ describe('TaxBracketsPage', () => {
 });
 
 /*
-Vitest, 2026. Mocking. [online] Available at:
+Vitest, s.a. Mocking. [online] Available at:
 <https://vitest.dev/guide/mocking>
 [Accessed 9 November 2026]
 
-Testing Library, 2026. React Testing Library. [online] Available at:
+Testing Library, s.a. React Testing Library. [online] Available at:
 <https://testing-library.com/docs/react-testing-library/intro/>
 [Accessed 9 November 2026]
 */

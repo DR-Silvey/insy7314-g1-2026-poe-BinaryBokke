@@ -2,7 +2,6 @@ import { roleLabel } from '../services/roles';
 
 const ROLE_PAGES = {
   freelancer: [{ id: 'finance', label: 'Finance' }],
-  client: [{ id: 'finance', label: 'Finance' }],
   admin: [{ id: 'tax-brackets', label: 'Tax brackets' }],
 };
 

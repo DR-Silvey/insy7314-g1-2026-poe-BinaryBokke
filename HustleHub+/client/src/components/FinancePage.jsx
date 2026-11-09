@@ -6,28 +6,21 @@ import { estimateTax, getTaxRecords } from '../services/taxApi';
 import { currentTaxYear, isInTaxYear, monthlyTotals, taxYearLabel } from '../services/taxYear';
 import { getTransactions } from '../services/transactionApi';
 
-const FINANCE_ROLES = ['freelancer', 'client'];
-
-function transactionFilters(session) {
-  return session.role === 'freelancer' ? { usernamePerformer: session.username } : { usernameClient: session.username };
-}
-
 function newestFirst(field) {
   return (first, second) => new Date(second[field]) - new Date(first[field]);
 }
 
 export default function FinancePage({ session, onSessionExpired }) {
   const taxYear = currentTaxYear();
-  //(React, 2026a)
+  //(React, s.a.a)
   const [transactions, setTransactions] = useState([]);
   const [taxRecords, setTaxRecords] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEstimating, setIsEstimating] = useState(false);
   const [notice, setNotice] = useState(null);
-  const canUseFinance = FINANCE_ROLES.includes(session.role);
-  const isFreelancer = session.role === 'freelancer';
+  const canUseFinance = session.role === 'freelancer';
 
-  //(React, 2026b)
+  //(React, s.a.b)
   useEffect(() => {
     if (!canUseFinance) {
       setIsLoading(false);
@@ -36,7 +29,7 @@ export default function FinancePage({ session, onSessionExpired }) {
 
     let isCurrent = true;
 
-    Promise.all([getTransactions(session.token, transactionFilters(session)), getTaxRecords(session.token)])
+    Promise.all([getTransactions(session.token, { usernamePerformer: session.username }), getTaxRecords(session.token)])
       .then(([transactionResults, taxRecordResults]) => {
         if (!isCurrent) return;
         setTransactions(transactionResults);
@@ -81,11 +74,10 @@ export default function FinancePage({ session, onSessionExpired }) {
   const sortedRecords = [...taxRecords].sort(newestFirst('calculationDate'));
   const latestRecord = sortedRecords.find((record) => record.taxYear === taxYear) ?? null;
   const yearTransactions = transactions.filter((transaction) => isInTaxYear(transaction.createdAt, taxYear)).sort(newestFirst('createdAt'));
-  //(MDN Web Docs, 2026d)
+  //(MDN Web Docs, s.a.d)
   const yearTotal = yearTransactions.reduce((total, transaction) => total + transaction.amount, 0);
   const months = monthlyTotals(yearTransactions, taxYear, (transaction) => transaction.amount);
-  const totalLabel = isFreelancer ? 'Income this tax year' : 'Paid this tax year';
-  const chartHeading = isFreelancer ? 'Income by month' : 'Payments by month';
+  const chartHeading = 'Income by month';
 
   return (
     <main className="page">
@@ -93,7 +85,7 @@ export default function FinancePage({ session, onSessionExpired }) {
         <div>
           <p className="eyebrow">FINANCE</p>
           <h1>Finance dashboard</h1>
-          <p>Tax year {taxYear} ({taxYearLabel(taxYear)}). {isFreelancer ? 'Your income from paid bookings and your tax estimates.' : 'Your booking payments and your tax estimates.'}</p>
+          <p>Tax year {taxYear} ({taxYearLabel(taxYear)}). Your income from paid bookings and your tax estimates.</p>
         </div>
         {canUseFinance && (
           <button type="button" className="primary-button" onClick={handleEstimate} disabled={isEstimating || isLoading}>
@@ -105,13 +97,13 @@ export default function FinancePage({ session, onSessionExpired }) {
       {notice && <div className={`notice ${notice.type}`} role="status">{notice.text}</div>}
 
       {!canUseFinance ? (
-        <p className="empty-state">The finance dashboard is available to freelancer and client accounts.</p>
+        <p className="empty-state">The finance dashboard is available to freelancer accounts.</p>
       ) : isLoading ? (
         <p className="empty-state" role="status">Loading your finances…</p>
       ) : (
         <>
           <dl className="summary-grid">
-            <div><dt>{totalLabel}</dt><dd>{formatCurrency(yearTotal)}</dd></div>
+            <div><dt>Income this tax year</dt><dd>{formatCurrency(yearTotal)}</dd></div>
             <div><dt>Payments</dt><dd>{yearTransactions.length}</dd></div>
             <div><dt>Latest tax estimate</dt><dd>{latestRecord ? formatCurrency(latestRecord.taxAmount) : 'Not estimated'}</dd></div>
           </dl>
@@ -158,13 +150,13 @@ export default function FinancePage({ session, onSessionExpired }) {
               <div className="table-scroll">
                 <table className="data-table">
                   <thead>
-                    <tr><th scope="col">Date</th><th scope="col">{isFreelancer ? 'From' : 'To'}</th><th scope="col">Amount</th></tr>
+                    <tr><th scope="col">Date</th><th scope="col">From</th><th scope="col">Amount</th></tr>
                   </thead>
                   <tbody>
                     {yearTransactions.map((transaction) => (
                       <tr key={transaction.transactionID}>
                         <th scope="row">{formatDateTime(transaction.createdAt)}</th>
-                        <td>{isFreelancer ? transaction.usernameClient : transaction.usernamePerformer}</td>
+                        <td>{transaction.usernameClient}</td>
                         <td>{formatCurrency(transaction.amount)}</td>
                       </tr>
                     ))}
@@ -180,15 +172,15 @@ export default function FinancePage({ session, onSessionExpired }) {
 }
 
 /*
-React, 2026a. useState. [online] Available at:
+React, s.a.a. useState. [online] Available at:
 <https://react.dev/reference/react/useState>
 [Accessed 9 November 2026]
 
-React, 2026b. useEffect. [online] Available at:
+React, s.a.b. useEffect. [online] Available at:
 <https://react.dev/reference/react/useEffect>
 [Accessed 9 November 2026]
 
-MDN Web Docs, 2026d. Array.prototype.reduce(). [online] Available at:
+MDN Web Docs, s.a.d. Array.prototype.reduce(). [online] Available at:
 <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce>
 [Accessed 9 November 2026]
 */

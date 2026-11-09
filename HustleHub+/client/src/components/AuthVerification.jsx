@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { classifyDevice, verifyEmail, verifyLoginOtp } from '../services/authApi';
+import { classifyDevice, resendEmailCode, resendLoginCode, verifyEmail, verifyLoginOtp } from '../services/authApi';
 import FieldError from './FieldError';
 
 const CODE_PATTERN = /^\d{6}$/;
@@ -27,8 +27,28 @@ export default function AuthVerification({ step, onResult, onEmailVerified, onRe
   const [error, setError] = useState('');
   const [notice, setNotice] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const text = STEP_TEXT[step.type];
   const isDevice = step.type === 'device';
+
+  async function handleResend() {
+    setNotice(null);
+    setIsResending(true);
+
+    try {
+      const result = step.type === 'email' ? await resendEmailCode({ username: step.username }) : await resendLoginCode({ temporaryToken: step.temporaryToken });
+      setNotice({ type: 'success', text: result.message ?? 'A new code has been sent to your email.' });
+      setCode('');
+    } catch (failure) {
+      if (failure.status === 401) {
+        onRestart(failure.message);
+        return;
+      }
+      setNotice({ type: 'error', text: failure.message });
+    } finally {
+      setIsResending(false);
+    }
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -93,6 +113,7 @@ export default function AuthVerification({ step, onResult, onEmailVerified, onRe
         <button className="primary-button" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Please wait…' : text.button}</button>
       </form>
 
+      {!isDevice && <p className="switch-copy">Did not get the code? <button type="button" onClick={handleResend} disabled={isResending}>{isResending ? 'Sending…' : 'Send a new code'}</button></p>}
       <p className="switch-copy">{step.type === 'email' ? 'Verified already?' : 'Something wrong?'} <button type="button" onClick={() => onRestart(null)}>Back to sign in</button></p>
     </>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useId, useState } from 'react';
 import FieldError from './FieldError';
 import { formatCurrency } from '../services/pricing';
-import { createTaxBracket, getTaxBrackets } from '../services/taxApi';
+import { createTaxBracket, deleteTaxBracket, getTaxBrackets, updateTaxBracket } from '../services/taxApi';
 import { currentTaxYear, taxYearLabel } from '../services/taxYear';
 
 //(National Treasury, 2026)
@@ -53,21 +53,23 @@ function toFormValues(bracket) {
 }
 
 export default function TaxBracketsPage({ session, onSessionExpired }) {
-  //(React, 2026c)
+  //(React, s.a.c)
   const formId = useId();
   const thisTaxYear = currentTaxYear();
   const yearOptions = [String(Number(thisTaxYear) - 1), thisTaxYear, String(Number(thisTaxYear) + 1)];
-  //(React, 2026a)
+  //(React, s.a.a)
   const [taxYear, setTaxYear] = useState(thisTaxYear);
   const [brackets, setBrackets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [values, setValues] = useState(emptyForm);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingID, setEditingID] = useState(null);
+  const [pendingDeleteID, setPendingDeleteID] = useState(null);
   const [notice, setNotice] = useState(null);
   const isAdmin = session.role === 'admin';
 
-  //(React, 2026b)
+  //(React, s.a.b)
   useEffect(() => {
     if (!isAdmin) {
       setIsLoading(false);
@@ -111,6 +113,8 @@ export default function TaxBracketsPage({ session, onSessionExpired }) {
     setBrackets([]);
     setValues(emptyForm);
     setErrors({});
+    setEditingID(null);
+    setPendingDeleteID(null);
     setNotice(null);
   }
 
@@ -133,7 +137,7 @@ export default function TaxBracketsPage({ session, onSessionExpired }) {
     if (Number.isNaN(bracket.maximumIncome) || (bracket.maximumIncome !== null && !nextErrors.minimumIncome && bracket.maximumIncome <= bracket.minimumIncome)) nextErrors.maximumIncome = 'Enter an amount above the minimum, or leave it blank for the top bracket.';
     if (bracket.taxRate === null || Number.isNaN(bracket.taxRate) || bracket.taxRate < 0 || bracket.taxRate > 100) nextErrors.taxRate = 'Enter a tax rate between 0 and 100.';
     if (Number.isNaN(bracket.baseTax) || bracket.baseTax < 0) nextErrors.baseTax = 'Enter a base tax of 0 or more.';
-    if (Object.keys(nextErrors).length === 0 && overlapsAny(bracket, brackets)) nextErrors.maximumIncome = `This range overlaps a bracket already set for ${taxYear}.`;
+    if (Object.keys(nextErrors).length === 0 && overlapsAny(bracket, brackets.filter((other) => other._id !== editingID))) nextErrors.maximumIncome = `This range overlaps a bracket already set for ${taxYear}.`;
 
     return { nextErrors, bracket };
   }
@@ -148,14 +152,55 @@ export default function TaxBracketsPage({ session, onSessionExpired }) {
 
     setIsSubmitting(true);
     try {
-      const created = await createTaxBracket(session.token, { taxYear, ...bracket });
-      setBrackets((current) => sortBrackets([...current, created]));
-      setValues({ ...emptyForm, minimumIncome: bracket.maximumIncome === null ? '' : String(bracket.maximumIncome) });
-      setNotice({ type: 'success', text: `Added the ${incomeRange(created)} bracket at ${created.taxRate}% for ${taxYear}.` });
+      if (editingID) {
+        const updated = await updateTaxBracket(session.token, editingID, bracket);
+        setBrackets((current) => sortBrackets(current.map((item) => (item._id === editingID ? updated : item))));
+        setEditingID(null);
+        setValues(emptyForm);
+        setNotice({ type: 'success', text: `Updated the ${incomeRange(updated)} bracket for ${taxYear}.` });
+      } else {
+        const created = await createTaxBracket(session.token, { taxYear, ...bracket });
+        setBrackets((current) => sortBrackets([...current, created]));
+        setValues({ ...emptyForm, minimumIncome: bracket.maximumIncome === null ? '' : String(bracket.maximumIncome) });
+        setNotice({ type: 'success', text: `Added the ${incomeRange(created)} bracket at ${created.taxRate}% for ${taxYear}.` });
+      }
     } catch (error) {
       handleFailure(error);
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  function startEdit(bracket) {
+    setEditingID(bracket._id);
+    setPendingDeleteID(null);
+    setValues(toFormValues(bracket));
+    setErrors({});
+    setNotice(null);
+  }
+
+  function cancelEdit() {
+    setEditingID(null);
+    setValues(emptyForm);
+    setErrors({});
+  }
+
+  async function handleDelete(bracket) {
+    if (pendingDeleteID !== bracket._id) {
+      setPendingDeleteID(bracket._id);
+      return;
+    }
+
+    setNotice(null);
+    try {
+      await deleteTaxBracket(session.token, bracket._id);
+      setBrackets((current) => current.filter((item) => item._id !== bracket._id));
+      if (editingID === bracket._id) cancelEdit();
+      setNotice({ type: 'success', text: `Deleted the ${incomeRange(bracket)} bracket for ${taxYear}.` });
+    } catch (error) {
+      handleFailure(error);
+    } finally {
+      setPendingDeleteID(null);
     }
   }
 
@@ -206,7 +251,7 @@ export default function TaxBracketsPage({ session, onSessionExpired }) {
               <div className="table-scroll">
                 <table className="data-table">
                   <thead>
-                    <tr><th scope="col">Taxable income</th><th scope="col">Rate</th><th scope="col">Base tax</th></tr>
+                    <tr><th scope="col">Taxable income</th><th scope="col">Rate</th><th scope="col">Base tax</th><th scope="col"><span className="visually-hidden">Actions</span></th></tr>
                   </thead>
                   <tbody>
                     {brackets.map((bracket) => (
@@ -214,6 +259,21 @@ export default function TaxBracketsPage({ session, onSessionExpired }) {
                         <th scope="row">{incomeRange(bracket)}</th>
                         <td>{bracket.taxRate}%</td>
                         <td>{formatCurrency(bracket.baseTax ?? 0)}</td>
+                        <td>
+                          <div className="table-actions">
+                            {pendingDeleteID === bracket._id ? (
+                              <>
+                                <button type="button" className="secondary-button" onClick={() => setPendingDeleteID(null)}>Keep</button>
+                                <button type="button" className="danger-button" onClick={() => handleDelete(bracket)} aria-label={`Confirm delete ${incomeRange(bracket)}`}>Confirm delete</button>
+                              </>
+                            ) : (
+                              <>
+                                <button type="button" className="secondary-button" onClick={() => startEdit(bracket)} aria-label={`Edit ${incomeRange(bracket)}`}>Edit</button>
+                                <button type="button" className="secondary-button" onClick={() => handleDelete(bracket)} aria-label={`Delete ${incomeRange(bracket)}`}>Delete</button>
+                              </>
+                            )}
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -223,7 +283,7 @@ export default function TaxBracketsPage({ session, onSessionExpired }) {
           </section>
 
           <section className="panel" aria-labelledby="add-bracket-heading">
-            <h2 id="add-bracket-heading">Add a bracket</h2>
+            <h2 id="add-bracket-heading">{editingID ? 'Edit bracket' : 'Add a bracket'}</h2>
             <form className="bracket-form" onSubmit={handleSubmit} noValidate>
               <div className="bracket-fields">
                 {fields.map((field) => (
@@ -236,8 +296,12 @@ export default function TaxBracketsPage({ session, onSessionExpired }) {
                 ))}
               </div>
               <div className="form-actions">
-                <button type="submit" className="primary-button" disabled={isSubmitting || isLoading}>{isSubmitting ? 'Adding…' : `Add bracket to ${taxYear}`}</button>
-                <button type="button" className="secondary-button" onClick={() => { setValues(emptyForm); setErrors({}); }}>Clear</button>
+                <button type="submit" className="primary-button" disabled={isSubmitting || isLoading}>{isSubmitting ? 'Saving…' : editingID ? 'Save changes' : `Add bracket to ${taxYear}`}</button>
+                {editingID ? (
+                  <button type="button" className="secondary-button" onClick={cancelEdit}>Cancel</button>
+                ) : (
+                  <button type="button" className="secondary-button" onClick={() => { setValues(emptyForm); setErrors({}); }}>Clear</button>
+                )}
               </div>
             </form>
           </section>
@@ -283,15 +347,15 @@ National Treasury, 2026. Budget 2026 Tax Guide. [online] Available at:
 <https://www.treasury.gov.za/documents/national%20budget/2026/sars/Budget%202026%20Tax%20guide.pdf>
 [Accessed 9 November 2026]
 
-React, 2026a. useState. [online] Available at:
+React, s.a.a. useState. [online] Available at:
 <https://react.dev/reference/react/useState>
 [Accessed 9 November 2026]
 
-React, 2026b. useEffect. [online] Available at:
+React, s.a.b. useEffect. [online] Available at:
 <https://react.dev/reference/react/useEffect>
 [Accessed 9 November 2026]
 
-React, 2026c. useId. [online] Available at:
+React, s.a.c. useId. [online] Available at:
 <https://react.dev/reference/react/useId>
 [Accessed 9 November 2026]
 */

@@ -51,6 +51,7 @@ input.code-input { font-size: 1.25rem; font-weight: 700; letter-spacing: .3em; }
 .session-details dt { color: #68758b; font-size: .86rem; }
 .session-details dd { margin: 0; color: #15233b; font-weight: 700; overflow-wrap: anywhere; }
 .switch-copy { margin: 26px 0 0; color: #68758b; text-align: center; font-size: .86rem; }
+.switch-copy + .switch-copy { margin-top: 10px; }
 .switch-copy button { padding: 0; border: 0; color: #3157bb; background: transparent; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .app-shell { min-height: 100vh; background: #f4f6fb; }
 .top-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; padding: 14px 28px; border-bottom: 1px solid #dfe4ee; background: #fff; }

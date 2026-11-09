@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createTaxBracket, estimateTax, getTaxBrackets, getTaxRecords } from '../services/taxApi';
+import { createTaxBracket, deleteTaxBracket, estimateTax, getTaxBrackets, getTaxRecords, updateTaxBracket } from '../services/taxApi';
 
-//(Vitest, 2026)
+//(Vitest, s.a.)
 function mockFetch(status, body) {
   const fetchMock = vi.fn().mockResolvedValue({
     ok: status >= 200 && status < 300,
@@ -53,6 +53,21 @@ describe('taxApi', () => {
     expect(fetchMock.mock.calls[0][0]).toMatch(/\/tax-brackets\?taxYear=2027$/);
   });
 
+  it('edits and deletes a bracket by its id', async () => {
+    const fetchMock = mockFetch(200, { message: 'Tax Bracket updated successfully', taxBracket: { _id: 'a1', taxRate: 19 } });
+
+    await expect(updateTaxBracket('token-admin', 'a1', { minimumIncome: 0, maximumIncome: null, taxRate: 19, baseTax: 0, taxYear: 'ignored' })).resolves.toEqual({ _id: 'a1', taxRate: 19 });
+    await deleteTaxBracket('token-admin', 'a1');
+
+    const [updateUrl, updateOptions] = fetchMock.mock.calls[0];
+    expect(updateUrl).toMatch(/\/tax-brackets\/a1$/);
+    expect(updateOptions.method).toBe('PUT');
+    expect(JSON.parse(updateOptions.body)).toEqual({ minimumIncome: 0, maximumIncome: null, taxRate: 19, baseTax: 0 });
+    const [deleteUrl, deleteOptions] = fetchMock.mock.calls[1];
+    expect(deleteUrl).toMatch(/\/tax-brackets\/a1$/);
+    expect(deleteOptions.method).toBe('DELETE');
+  });
+
   it('sends only the bracket fields the API expects', async () => {
     const fetchMock = mockFetch(201, { taxBracket: { _id: 'a1', taxRate: 18 } });
 
@@ -66,7 +81,7 @@ describe('taxApi', () => {
 });
 
 /*
-Vitest, 2026. Mocking. [online] Available at:
+Vitest, s.a. Mocking. [online] Available at:
 <https://vitest.dev/guide/mocking>
 [Accessed 9 November 2026]
 */

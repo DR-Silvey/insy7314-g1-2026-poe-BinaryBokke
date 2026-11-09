@@ -5,7 +5,7 @@ import FinancePage from '../components/FinancePage';
 import { estimateTax, getTaxRecords } from '../services/taxApi';
 import { getTransactions } from '../services/transactionApi';
 
-//(Vitest, 2026)
+//(Vitest, s.a.)
 vi.mock('../services/taxApi');
 vi.mock('../services/transactionApi');
 
@@ -22,7 +22,7 @@ function summaryValue(label) {
   return within(screen.getByText(label, { selector: 'dt' }).parentElement).getByRole('definition').textContent;
 }
 
-//(Testing Library, 2026)
+//(Testing Library, s.a.)
 describe('FinancePage', () => {
   beforeEach(() => {
     vi.resetAllMocks();
@@ -56,13 +56,13 @@ describe('FinancePage', () => {
     expect(screen.getByRole('figure', { name: 'Income by month, tax year 2027' })).toBeInTheDocument();
   });
 
-  it('shows client totals as payments made', async () => {
+  it('does not load finances for clients', () => {
     render(<FinancePage session={client} onSessionExpired={vi.fn()} />);
 
-    await screen.findByText('Paid this tax year');
-
-    expect(getTransactions).toHaveBeenCalledWith('token-456', { usernameClient: 'eventco' });
-    expect(screen.getByRole('heading', { name: 'Payments by month' })).toBeInTheDocument();
+    expect(screen.getByText('The finance dashboard is available to freelancer accounts.')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Estimate my tax' })).not.toBeInTheDocument();
+    expect(getTransactions).not.toHaveBeenCalled();
+    expect(getTaxRecords).not.toHaveBeenCalled();
   });
 
   it('estimates tax and adds the new record to the history', async () => {
@@ -83,9 +83,9 @@ describe('FinancePage', () => {
   it('shows the API error when the estimate fails', async () => {
     const user = userEvent.setup();
     estimateTax.mockRejectedValue(Object.assign(new Error('Something went wrong (Tax Estimation)'), { status: 500 }));
-    render(<FinancePage session={client} onSessionExpired={vi.fn()} />);
+    render(<FinancePage session={freelancer} onSessionExpired={vi.fn()} />);
 
-    await screen.findByText('Paid this tax year');
+    await screen.findByText('Income this tax year');
     await user.click(screen.getByRole('button', { name: 'Estimate my tax' }));
 
     expect(await screen.findByText('Something went wrong (Tax Estimation)')).toBeInTheDocument();
@@ -103,18 +103,17 @@ describe('FinancePage', () => {
   it('does not load finances for other roles', () => {
     render(<FinancePage session={admin} onSessionExpired={vi.fn()} />);
 
-    expect(screen.getByText('The finance dashboard is available to freelancer and client accounts.')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Estimate my tax' })).not.toBeInTheDocument();
+    expect(screen.getByText('The finance dashboard is available to freelancer accounts.')).toBeInTheDocument();
     expect(getTransactions).not.toHaveBeenCalled();
   });
 });
 
 /*
-Vitest, 2026. Mocking. [online] Available at:
+Vitest, s.a. Mocking. [online] Available at:
 <https://vitest.dev/guide/mocking>
 [Accessed 9 November 2026]
 
-Testing Library, 2026. React Testing Library. [online] Available at:
+Testing Library, s.a. React Testing Library. [online] Available at:
 <https://testing-library.com/docs/react-testing-library/intro/>
 [Accessed 9 November 2026]
 */

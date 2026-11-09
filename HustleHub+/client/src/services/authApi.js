@@ -53,3 +53,11 @@ export function forgotPassword({ email }) {
 export function resetPassword({ token, newPassword, confirmPassword }) {
   return send('/reset-password', { token, newPassword, confirmPassword });
 }
+
+export function resendEmailCode({ username }) {
+  return send('/register/resend-otp', { username });
+}
+
+export function resendLoginCode({ temporaryToken }) {
+  return send('/resend-login-otp', { temporaryToken });
+}

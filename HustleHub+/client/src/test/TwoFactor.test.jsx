@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../App';
-import { classifyDevice, loginUser, registerUser, verifyEmail, verifyLoginOtp } from '../services/authApi';
+import { classifyDevice, loginUser, registerUser, resendLoginCode, verifyEmail, verifyLoginOtp } from '../services/authApi';
 import { getGigs } from '../services/gigApi';
 import createToken from './createToken';
 
@@ -98,6 +98,18 @@ describe('Two-step sign in', () => {
     expect(await screen.findByText('Incorrect OTP. 4 attempts left.')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Enter your sign-in code' })).toBeInTheDocument();
     expect(sessionStorage.getItem('hustlehub_token')).toBeNull();
+  });
+
+  it('sends a new login code when asked', async () => {
+    resendLoginCode.mockResolvedValue({ message: 'A new login verification code has been sent to your email.' });
+    const user = userEvent.setup();
+    render(<App />);
+
+    await signIn(user);
+    await user.click(await screen.findByRole('button', { name: 'Send a new code' }));
+
+    expect(resendLoginCode).toHaveBeenCalledWith({ temporaryToken: 'temporary-token' });
+    expect(await screen.findByText('A new login verification code has been sent to your email.')).toBeInTheDocument();
   });
 
   it('explains when the chosen browser slot is already used', async () => {

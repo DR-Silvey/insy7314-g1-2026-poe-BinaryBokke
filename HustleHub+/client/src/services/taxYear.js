@@ -5,7 +5,7 @@ export function currentTaxYear(today = new Date()) {
   return String(today.getMonth() >= 2 ? today.getFullYear() + 1 : today.getFullYear());
 }
 
-//(MDN Web Docs, 2026c)
+//(MDN Web Docs, s.a.c)
 export function taxYearRange(taxYear) {
   const endYear = Number(taxYear);
   return { start: new Date(endYear - 1, 2, 1), end: new Date(endYear, 2, 1) };
@@ -41,7 +41,7 @@ National Treasury, 2026. Budget 2026 Tax Guide. [online] Available at:
 <https://www.treasury.gov.za/documents/national%20budget/2026/sars/Budget%202026%20Tax%20guide.pdf>
 [Accessed 9 November 2026]
 
-MDN Web Docs, 2026c. Date. [online] Available at:
+MDN Web Docs, s.a.c. Date. [online] Available at:
 <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date>
 [Accessed 9 November 2026]
 */
