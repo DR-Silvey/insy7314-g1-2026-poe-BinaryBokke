@@ -4,20 +4,151 @@ on:
   push:
     branches:
       - master
-      
+
   pull_request:
     branches:
       - master
+
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  placeholder:
+  docker-compose:
+    name: Build and Test Docker Compose
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-    
-    - name: Run Placeholder Action
-      run: echo "HustleHub+ Actions workflow completed successfully."
+      # 1. Get repository source code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
+      # 2. Generate all three API environment files
+      - name: Create Environment Files
+        env:
+          # Backend
+          BACKEND_JWT_SECRET: ${{ secrets.BACKEND_JWT_SECRET }}
+          BACKEND_MONGODB_USERNAME: ${{ secrets.BACKEND_MONGODB_USERNAME }}
+          BACKEND_MONGODB_PASSWORD: ${{ secrets.BACKEND_MONGODB_PASSWORD }}
+          BACKEND_MONGODB_URI: ${{ secrets.BACKEND_MONGODB_URI }}
 
+          # Finance
+          FINANCE_JWT_SECRET: ${{ secrets.FINANCE_JWT_SECRET }}
+          FINANCE_MONGODB_USERNAME: ${{ secrets.FINANCE_MONGODB_USERNAME }}
+          FINANCE_MONGODB_PASSWORD: ${{ secrets.FINANCE_MONGODB_PASSWORD }}
+          FINANCE_MONGODB_URI: ${{ secrets.FINANCE_MONGODB_URI }}
+
+          # Login and Registration
+          LOGIN_JWT_SECRET: ${{ secrets.LOGIN_JWT_SECRET }}
+          LOGIN_MONGODB_USERNAME: ${{ secrets.LOGIN_MONGODB_USERNAME }}
+          LOGIN_MONGODB_PASSWORD: ${{ secrets.LOGIN_MONGODB_PASSWORD }}
+          LOGIN_MONGODB_URI: ${{ secrets.LOGIN_MONGODB_URI }}
+          LOGIN_EMAIL_USER: ${{ secrets.LOGIN_EMAIL_USER }}
+          LOGIN_EMAIL_APP_PASSWORD: ${{ secrets.LOGIN_EMAIL_APP_PASSWORD }}
+          LOGIN_OTP_SECRET: ${{ secrets.LOGIN_OTP_SECRET }}
+          LOGIN_TWO_FACTOR_JWT_SECRET: ${{ secrets.LOGIN_TWO_FACTOR_JWT_SECRET }}
+
+        run: |
+          set -e
+          umask 077
+
+          # Backend environment
+          cat > HustleHubBackendAPI/.env <<EOF
+          PORT=5000
+          APP_NAME=HustleHUB_Backend_API
+          NODE_ENV=development
+          CLIENT_ORIGIN=http://localhost:5173
+          USE_HTTPS=false
+          SSL_KEY_PATH=./certs/localhost-key.pem
+          SSL_CERT_PATH=./certs/localhost-cert.pem
+          JWT_SECRET=${BACKEND_JWT_SECRET}
+          JWT_EXPIRES_IN=1h
+          MONGODB_USERNAME=${BACKEND_MONGODB_USERNAME}
+          MONGODB_PASSWORD=${BACKEND_MONGODB_PASSWORD}
+          MONGODB_URI=${BACKEND_MONGODB_URI}
+          EOF
+
+          # Finance environment
+          cat > HustleHubFinanceAPI/.env <<EOF
+          PORT=6100
+          APP_NAME=HustleHUB_Finance_API
+          NODE_ENV=development
+          CLIENT_ORIGIN=http://localhost:5173
+          USE_HTTPS=false
+          SSL_KEY_PATH=./certs/localhost-key.pem
+          SSL_CERT_PATH=./certs/localhost-cert.pem
+          JWT_SECRET=${FINANCE_JWT_SECRET}
+          JWT_EXPIRES_IN=1h
+          MONGODB_USERNAME=${FINANCE_MONGODB_USERNAME}
+          MONGODB_PASSWORD=${FINANCE_MONGODB_PASSWORD}
+          MONGODB_URI=${FINANCE_MONGODB_URI}
+          EOF
+
+          # Login and Registration environment
+          cat > LoginAndRegistrationAPI/.env <<EOF
+          PORT=4000
+          APP_NAME=L_and_R API
+          NODE_ENV=development
+          CLIENT_ORIGIN=http://localhost:5173
+          USE_HTTPS=false
+          SSL_KEY_PATH=./certs/localhost-key.pem
+          SSL_CERT_PATH=./certs/localhost-cert.pem
+          JWT_SECRET=${LOGIN_JWT_SECRET}
+          JWT_EXPIRES_IN=1h
+          MONGODB_USERNAME=${LOGIN_MONGODB_USERNAME}
+          MONGODB_PASSWORD=${LOGIN_MONGODB_PASSWORD}
+          MONGODB_URI=${LOGIN_MONGODB_URI}
+          EMAIL_USER=${LOGIN_EMAIL_USER}
+          EMAIL_APP_PASSWORD=${LOGIN_EMAIL_APP_PASSWORD}
+          OTP_SECRET=${LOGIN_OTP_SECRET}
+          TWO_FACTOR_JWT_SECRET=${LOGIN_TWO_FACTOR_JWT_SECRET}
+          FRONTEND_URL=http://localhost:5173
+          EOF
+
+      # 3. Validate Compose configuration
+      - name: Validate Docker Compose
+        run: docker compose -f compose.yml config --quiet
+
+      # 4. Build all four Docker images
+      - name: Build Docker Images
+        run: docker compose -f compose.yml build
+
+      # 5. Start all services
+      - name: Start Docker Compose
+        run: docker compose -f compose.yml up -d
+
+      # 6. Wait for all four services
+      - name: Verify Containers
+        run: |
+          for i in {1..12}; do
+            RUNNING=$(docker compose -f compose.yml ps --status running --services | wc -l)
+
+            echo "Running containers: $RUNNING/4"
+
+            if [ "$RUNNING" -eq 4 ]; then
+              echo "All four services are running."
+              exit 0
+            fi
+
+            sleep 5
+          done
+
+          echo "One or more services failed to start."
+          docker compose -f compose.yml ps
+          exit 1
+
+      # 7. Show container status
+      - name: Display Container Status
+        run: docker compose -f compose.yml ps
+
+      # 8. Display logs if anything fails
+      - name: Display Logs on Failure
+        if: failure()
+        run: docker compose -f compose.yml logs --no-color
+
+      # 9. Always clean up
+      - name: Stop Docker Compose
+        if: always()
+        run: docker compose -f compose.yml down --remove-orphans
