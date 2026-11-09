@@ -196,3 +196,10 @@ jobs:
       - name: Stop Docker Compose
         if: always()
         run: docker compose -f compose.yml down --remove-orphans
+
+# REFERENCES
+# The Independent Institute of Education, 2026. INFORMATION SYSTEM 3D [INSY7314/w].
+# [Online via internal VLE]. The Independent Institute of Education.
+# Available at:
+# https://advtechonline.sharepoint.com/:w:/r/sites/TertiaryStudents/_layouts/15/Doc.aspx?sourcedoc=%7B58B815C8-D592-4D47-BDA0-4F6761924E1B%7D&file=INSY7314MM.docx&action=default&mobileredirect=true
+# [Accessed 9 November 2026].
