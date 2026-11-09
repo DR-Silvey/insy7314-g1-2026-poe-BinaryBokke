@@ -1,0 +1,46 @@
+services:
+  # Main Backend API
+  backend-api:
+    build:
+      context: ./HustleHubBackendAPI
+      dockerfile: Dockerfile
+    container_name: hustlehub-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./HustleHubBackendAPI/.env
+    restart: unless-stopped
+
+  #Finance API
+  finance-api:
+    build:
+      context: ./HustleHubFinanceAPI
+      dockerfile: Dockerfile
+    container_name: hustlehub-finance
+    ports:
+      - "6100:6100"
+    env_file:
+      - ./HustleHubFinanceAPI/.env
+    restart: unless-stopped
+
+  # Third Backend API
+  third-api:
+    build:
+      context: ./LoginAndRegistrationAPI
+      dockerfile: Dockerfile
+    container_name: login-and-registration
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./LoginAndRegistrationAPI/.env
+    restart: unless-stopped
+
+  #React + Vite Frontend
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: hustlehub-client
+    ports:
+      - "7000:80"
+    restart: unless-stopped
