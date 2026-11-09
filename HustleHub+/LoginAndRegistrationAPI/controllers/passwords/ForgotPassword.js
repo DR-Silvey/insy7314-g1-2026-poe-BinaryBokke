@@ -1,8 +1,8 @@
 const crypto = require('crypto');
 
-const User = require('../../models/users');
-const PasswordReset = require('../../models/auth/passwordReset');
-const SendEmail = require('../../utils/email/EmailHandler');
+const User = require('./../../models/users');
+const PasswordReset = require('./../../models/auth/passwordReset');
+const SendEmail = require('./../../utils/email/EmailHandler');
 
 //(The IIE, 2026) (W3 Schools, s.a.)
 const ForgotPassword = async (req, res) => {

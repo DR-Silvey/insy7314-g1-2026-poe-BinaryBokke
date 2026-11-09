@@ -1,5 +1,8 @@
-const CommonInputValidator = require('../utils/inputs/CommonInputValidator');
+const CommonInputValidator = require('./../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
+
+const PasswordHandler = require('./../utils/passwords/PasswordHandler');
+const passwordHandler = new PasswordHandler();
 
 //Ensures that all inputs relating to a LogIn attempt are valid
 //(The IIE, 2026)
@@ -65,10 +68,20 @@ const ResetPasswordValidityChecks = (req, res, next) => {
     }
 
     if(!(inputValidator.IsValidPassword(newPassword))){
-        console.error('User attempted to enter a username that does not meet the predefined citeria');
+        console.error('User attempted to enter a password that does not meet the predefined citeria');
         return res.status(400).json({
             error: 'Username is incorrect (has to be string and atleast 3 characters long)'
             
+        });
+
+    }
+
+    //Ensuring that all the chosen password meets all criteria (length, complexity, commonality)
+    if(!(passwordHandler.ValidPassword(newPassword))){
+        console.error('User attempted to enter a password that does not meet the predefined complexity citeria');
+        return res.status(400).json({
+            error: 'Password does not meet the complexity requirements (length, complexity, commonality).'
+        
         });
 
     }
@@ -78,6 +91,16 @@ const ResetPasswordValidityChecks = (req, res, next) => {
         return res.status(400).json({
             error: 'Password is incorrect (has to be string)'
             
+        });
+
+    }
+
+    //Ensuring that all the chosen password meets all criteria (length, complexity, commonality)
+    if(!(passwordHandler.ValidPassword(confirmPassword))){
+        console.error('User attempted to enter a password that does not meet the predefined complexity citeria');
+        return res.status(400).json({
+            error: 'Password does not meet the complexity requirements (length, complexity, commonality).'
+        
         });
 
     }

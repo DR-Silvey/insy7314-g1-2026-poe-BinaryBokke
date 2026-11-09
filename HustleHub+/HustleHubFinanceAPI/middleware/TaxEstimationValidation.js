@@ -1,4 +1,4 @@
-const CommonInputValidator = require('../utils/inputs/CommonInputValidator');
+const CommonInputValidator = require('./../utils/inputs/CommonInputValidator');
 const inputValidator = new CommonInputValidator();
 
 //No Inputs required for tax estimation

@@ -11,14 +11,14 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 
 //Attempting connection to db
-const connectDb = require('../LoginAndRegistrationAPI/config/db');
+const connectDb = require('./config/db');
 connectDb();
 
 //Importing routes for LogIn, Registration, ErrorHandling
-const RegistrationRoutes = require('../LoginAndRegistrationAPI/routes/RegistrationRoutes');
-const LogInRoutes = require('../LoginAndRegistrationAPI/routes/LogInRoutes');
+const RegistrationRoutes = require('./routes/RegistrationRoutes');
+const LogInRoutes = require('./routes/LogInRoutes');
 
-const ErrorHandler = require('../LoginAndRegistrationAPI/middleware/ErrorHandler');
+const ErrorHandler = require('./middleware/ErrorHandler');
 
 const app = express();
 
@@ -43,10 +43,9 @@ app.use(
                 objectSrc: ["'none'"],
                 baseUri: ["'self'"],
                 frameAncestors: ["'none'"]
-
             }
-
         },
+
         crossOriginResourcePolicy: { policy: 'same-site' }
 
     })
@@ -58,11 +57,12 @@ app.use(
 app.use(
     cors({
         origin: CLIENT_ORIGIN,
-        methods: ['GET', 'POST', 'PUT', 'PATCH'],
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization']
 
     })
-
+    
 );
 
 app.use(express.json({limit: '10kb'}));

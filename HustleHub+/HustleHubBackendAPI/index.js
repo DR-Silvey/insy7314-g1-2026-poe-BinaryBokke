@@ -10,14 +10,14 @@ const fs = require('fs');
 const path = require('path');
 
 //Attempting connection to db
-const connectDb = require('../HustleHubBackendAPI/config/db');
+const connectDb = require('./config/db');
 connectDb();
 
 //Importing routes for Gig, Booking, ErrorHandling
-const GigRoutes = require('../HustleHubBackendAPI/routes/GigRoutes');
-const BookingRoutes = require('../HustleHubBackendAPI/routes/BookingRoutes');
+const GigRoutes = require('./routes/GigRoutes');
+const BookingRoutes = require('./routes/BookingRoutes');
 
-const ErrorHandler = require('../HustleHubBackendAPI/middleware/ErrorHandler');
+const ErrorHandler = require('./middleware/ErrorHandler');
 
 const app = express();
 
@@ -57,11 +57,12 @@ app.use(
 app.use(
     cors({
         origin: CLIENT_ORIGIN,
+        credentials: true,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization']
 
     })
-
+    
 );
 
 app.use(express.json({limit: '10kb'}));

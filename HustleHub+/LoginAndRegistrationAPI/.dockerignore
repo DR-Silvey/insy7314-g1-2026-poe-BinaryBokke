@@ -1,0 +1,7 @@
+node_modules
+npm-deub.log
+.env
+certs
+__tests__
+coverage
+.git

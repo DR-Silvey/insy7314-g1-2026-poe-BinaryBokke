@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 //RBAC enforcement
-const { protect, authorizeRoles } = require('../middleware/auth/AuthMiddleware');
+const { protect, authorizeRoles } = require('./../middleware/auth/AuthMiddleware');
 
 //Rate Limiting
-const { CreateGigLimiter, ViewGigLimiter, UpdateGigLimiter, RemoveGigLimiter } = require('../middleware/rateLimiting/GigRateLimiter')
+const { CreateGigLimiter, ViewGigLimiter, UpdateGigLimiter, RemoveGigLimiter } = require('./../middleware/rateLimiting/GigRateLimiter')
 
-const GigValidityChecks = require('../middleware/GigValidation');
-const Gig = require('../controllers/GigController');
+const GigValidityChecks = require('./../middleware/GigValidation');
+const Gig = require('./../controllers/GigController');
 
 //Declared /gig as the endpoint to access gig functionalities
 //(The IIE, 2026)

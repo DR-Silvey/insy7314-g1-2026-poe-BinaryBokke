@@ -1,6 +1,6 @@
-const user = require('../../models/users');
+const user = require('./../../models/users');
 
-const EncryptionHandler = require('../../utils/passwords/EncryptionHandler');
+const EncryptionHandler = require('./../../utils/passwords/EncryptionHandler');
 
 const encryptionHandler = new EncryptionHandler();
 

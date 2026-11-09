@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const User = require('../../models/users');
-const TwoFactor = require('../../models/twoFactorAuth/twoFactorAuth');
-const TokenCreation = require('../../utils/tokens/TokenCreation');
-const SendEmail = require('../../utils/email/EmailHandler');
-const { CompareOtp } = require('../../utils/email/OtpHandler');
+const User = require('./../../models/users');
+const TwoFactor = require('./../../models/twoFactorAuth/twoFactorAuth');
+const TokenCreation = require('./../../utils/tokens/TokenCreation');
+const SendEmail = require('./../../utils/email/EmailHandler');
+const { CompareOtp } = require('./../../utils/email/OtpHandler');
 
 //(The IIE, 2026)(W3 Schools, s.a.)
 const VerifyLoginOtp = async (req, res) => {
@@ -77,6 +77,7 @@ const VerifyLoginOtp = async (req, res) => {
             twoFactor.otpExpiresAt = null;
             twoFactor.otpAttempts = 0;
             twoFactor.otpPurpose = null;
+            twoFactor.otpLastSentAt = null;
             await twoFactor.save();
 
             return res.status(400).json({ 
@@ -104,6 +105,7 @@ const VerifyLoginOtp = async (req, res) => {
                 twoFactor.otpHash = null;
                 twoFactor.otpExpiresAt = null;
                 twoFactor.otpPurpose = null;
+                twoFactor.otpLastSentAt = null;
 
             }
 
@@ -122,6 +124,7 @@ const VerifyLoginOtp = async (req, res) => {
         twoFactor.otpExpiresAt = null;
         twoFactor.otpAttempts = 0;
         twoFactor.otpPurpose = null;
+        twoFactor.otpLastSentAt = null;
         twoFactor.lastVerifiedAt = new Date();
 
         const recognisedDevice = decoded.existingDeviceId ? twoFactor.devices.id(decoded.existingDeviceId) : null;

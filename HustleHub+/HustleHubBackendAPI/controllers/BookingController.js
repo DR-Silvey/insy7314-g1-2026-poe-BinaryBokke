@@ -1,5 +1,5 @@
 //Temp to store and retreive data relating to booking
-const Booking = require('../models/booking');
+const Booking = require('./../models/booking');
 
 //Using the Username attached to the JWT to retrieve the current user's username
 const getUserName = (req) => {

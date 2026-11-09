@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 //RBAC enforcement
-const { protect, authorizeRoles } = require('../middleware/auth/AuthMiddleware');
+const { protect, authorizeRoles } = require('./../middleware/auth/AuthMiddleware');
 
 //Rate Limiting
-const { CreateTaxBracketLimiter, ViewTaxBracketLimiter, UpdateTaxBracketLimiter } = require('../middleware/rateLimiting/TaxBracketRateLimiter')
+const { CreateTaxBracketLimiter, ViewTaxBracketLimiter, UpdateTaxBracketLimiter, DeleteTaxBracketLimiter } = require('./../middleware/rateLimiting/TaxBracketRateLimiter')
 
-const TaxBracketValidityChecks = require('../middleware/TaxBracketValidation');
-const TaxBracket = require('../controllers/TaxBracketController');
+const TaxBracketValidityChecks = require('./../middleware/TaxBracketValidation');
+const TaxBracket = require('./../controllers/TaxBracketController');
 
 //Declared /tax-brackets as the endpoint to access tax bracket functionalities
 //(The IIE, 2026)
@@ -21,6 +21,9 @@ router.get('/tax-brackets', ViewTaxBracketLimiter, protect, authorizeRoles('admi
 
 //Route used to update a tax bracket within the db
 router.put('/tax-brackets/:id', UpdateTaxBracketLimiter, protect, authorizeRoles('admin'), TaxBracketValidityChecks.UpdateTaxBracketChecks, TaxBracket.UpdateTaxBracket);
+
+//Route used to delete a tax bracket from the db
+router.delete('/tax-brackets/:id', DeleteTaxBracketLimiter, protect, authorizeRoles('admin'), TaxBracket.DeleteTaxBracket );
 
 module.exports = router;
 

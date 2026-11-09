@@ -10,20 +10,20 @@ const fs = require('fs');
 const path = require('path');
 
 //Attempting connection to db
-const connectDb = require('../HustleHubFinanceAPI/config/db');
+const connectDb = require('./config/db');
 connectDb();
 
 //Importing routes for transaction, tax estimation, and tax bracket functionalities
-const TransactionRoutes = require('../HustleHubFinanceAPI/routes/TransactionRoutes');
-const TaxEstimationRoutes = require('../HustleHubFinanceAPI/routes/TaxEstimationRoutes');
-const TaxBracketRoutes = require('../HustleHubFinanceAPI/routes/TaxBracketRoutes');
+const TransactionRoutes = require('./routes/TransactionRoutes');
+const TaxEstimationRoutes = require('./routes/TaxEstimationRoutes');
+const TaxBracketRoutes = require('./routes/TaxBracketRoutes');
 
-const ErrorHandler = require('../HustleHubFinanceAPI/middleware/ErrorHandler');
+const ErrorHandler = require('./middleware/ErrorHandler');
 
 const app = express();
 
 //(The IIE, 2026)
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 6100;
 const USE_HTTPS = process.env.USE_HTTPS === 'true';
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:5373';
 
@@ -58,11 +58,12 @@ app.use(
 app.use(
     cors({
         origin: CLIENT_ORIGIN,
-        methods: ['GET', 'POST', 'PUT'],
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
         allowedHeaders: ['Content-Type', 'Authorization']
 
     })
-
+    
 );
 
 app.use(express.json({limit: '10kb'}));

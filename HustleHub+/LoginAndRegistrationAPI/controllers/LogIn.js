@@ -1,16 +1,16 @@
 //Loading required utils
 //(The IIE, 2026)
-const EncryptionHandler = require('../utils/passwords/EncryptionHandler');
+const EncryptionHandler = require('./../utils/passwords/EncryptionHandler');
 const encryptionHandler = new EncryptionHandler();
 
-const TokenCreation = require('../utils/tokens/TokenCreation');
+const TokenCreation = require('./../utils/tokens/TokenCreation');
 
 //Temp to store and retreive data relating to user
-const user = require('../models/users');
-const EmailVerification = require('../models/userVerificiation/emailVerification');
-const TwoFactor = require('../models/twoFactorAuth/twoFactorAuth');
-const SendEmail = require('../utils/email/EmailHandler');
-const { GenerateOtp, HashOtp } = require('../utils/email/OtpHandler');
+const user = require('./../models/users');
+const EmailVerification = require('./../models/userVerificiation/emailVerification');
+const TwoFactor = require('./../models/twoFactorAuth/twoFactorAuth');
+const SendEmail = require('./../utils/email/EmailHandler');
+const { GenerateOtp, HashOtp } = require('./../utils/email/OtpHandler');
 
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
@@ -179,6 +179,7 @@ const logUserIn =  async (req, res) => {
         twoFactor.otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000);
         twoFactor.otpAttempts = 0;
         twoFactor.otpPurpose = 'LOGIN';
+        twoFactor.otpLastSentAt = new Date();
 
         await twoFactor.save();
 
@@ -194,7 +195,7 @@ const logUserIn =  async (req, res) => {
                     ? recognisedDevice._id.toString()
                     : null
             },
-            process.env.TWO_FACTOR_JWT_SECRET, { expiresIn: '5m' }
+            process.env.TWO_FACTOR_JWT_SECRET, { expiresIn: '15m' }
 
         );
 

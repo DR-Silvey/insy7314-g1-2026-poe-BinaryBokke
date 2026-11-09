@@ -1,8 +1,8 @@
 const crypto = require('crypto');
 
-const user = require('../../models/users');
-const PasswordReset = require('../../models/auth/passwordReset');
-const EncryptionHandler = require('../../utils/passwords/EncryptionHandler');
+const user = require('./../../models/users');
+const PasswordReset = require('./../../models/auth/passwordReset');
+const EncryptionHandler = require('./../../utils/passwords/EncryptionHandler');
 
 const encryptionHandler = new EncryptionHandler();
 

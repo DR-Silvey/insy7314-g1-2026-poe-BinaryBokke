@@ -1,19 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
-const { LogInValidityChecks, ResetPasswordValidityChecks, ForgotPasswordValidityChecks } = require('../middleware/LogInValidation');
-const LogIn = require('../controllers/LogIn');
-const GetProfile = require('../controllers/userInfo/GetProfile')
-const VerifyLoginOtp = require('../controllers/userVerification/VerifyLoginOtp');
-const ClassifyDevice = require('../controllers/userVerification/ClassifyDevice');
-const ForgotPassword = require('../controllers/passwords/ForgotPassword');
-const ResetPassword = require('../controllers/passwords/ResetPassword');
+const { LogInValidityChecks, ResetPasswordValidityChecks, ForgotPasswordValidityChecks } = require('./../middleware/LogInValidation');
+const LogIn = require('./../controllers/LogIn');
+const GetProfile = require('./../controllers/userInfo/GetProfile')
+const VerifyLoginOtp = require('./../controllers/userVerification/VerifyLoginOtp');
+const ClassifyDevice = require('./../controllers/userVerification/ClassifyDevice');
+const ForgotPassword = require('./../controllers/passwords/ForgotPassword');
+const ResetPassword = require('./../controllers/passwords/ResetPassword');
+const ResendLoginOtp = require('./../controllers/userVerification/ResendLoginOtp');
 
 //Rate Limiting
-const { LogInLimiter, ProfileInfoLimiter, OtpLimiter, ClassifyDeviceLimiter, ForgotPasswordLimiter, ResetPasswordLimiter } = require('../middleware/rateLimiting/AuthRateLimiter');
+const { LogInLimiter, ProfileInfoLimiter, OtpLimiter, ClassifyDeviceLimiter, ForgotPasswordLimiter, ResetPasswordLimiter } = require('./../middleware/rateLimiting/AuthRateLimiter');
 
 //RBAC enforcement
-const { protect } = require('../middleware/tokens/AuthMiddleware');
+const { protect } = require('./../middleware/tokens/AuthMiddleware');
 
 //Declared /login as the endpoint to access login fucntionalities
 //(The IIE, 2026)
@@ -35,6 +36,9 @@ router.post('/forgot-password', ForgotPasswordLimiter, ForgotPasswordValidityChe
 
 //Used to reset a user's password after they have forgotten it.
 router.post('/reset-password', ResetPasswordLimiter, ResetPasswordValidityChecks, ResetPassword)
+
+//Route to resend the LogIn OTP
+router.post('/resend-login-otp', OtpLimiter, ResendLoginOtp);
 
 module.exports = router;
 

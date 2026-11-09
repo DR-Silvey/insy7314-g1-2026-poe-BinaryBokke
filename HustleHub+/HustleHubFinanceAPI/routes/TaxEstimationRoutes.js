@@ -2,22 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 //RBAC enforcement
-const { protect, authorizeRoles } = require('../middleware/auth/AuthMiddleware');
+const { protect, authorizeRoles } = require('./../middleware/auth/AuthMiddleware');
 
 //Rate Limiting
-const { EstimateTaxLimiter, ViewTaxRecordLimiter } = require('../middleware/rateLimiting/TaxEstimationLimiter')
+const { EstimateTaxLimiter, ViewTaxRecordLimiter } = require('./../middleware/rateLimiting/TaxEstimationLimiter')
 
-const TaxEstimationValidityChecks = require('../middleware/TaxEstimationValidation');
-const TaxEstimation = require('../controllers/TaxEstimationController');
+const TaxEstimationValidityChecks = require('./../middleware/TaxEstimationValidation');
+const TaxEstimation = require('./../controllers/TaxEstimationController');
 
 //Declared /tax as the endpoint to access tax estimation functionalities
 //(The IIE, 2026)
 
 //Route used to view a tax record(s) within the db, only clients and admin can access this route
-router.get('/tax-records', ViewTaxRecordLimiter, protect, authorizeRoles('freelancer', 'client', 'admin'), TaxEstimationValidityChecks.FindTaxRecordValidityChecks, TaxEstimation.FindTaxRecord);
+router.get('/tax-records', ViewTaxRecordLimiter, protect, authorizeRoles('freelancer'), TaxEstimationValidityChecks.FindTaxRecordValidityChecks, TaxEstimation.FindTaxRecord);
 
 //Route used to estimate tax based on transaction amount
-router.post('/tax-estimation', EstimateTaxLimiter, protect, authorizeRoles('freelancer', 'client'), TaxEstimation.EstimateTax);
+router.post('/tax-estimation', EstimateTaxLimiter, protect, authorizeRoles('freelancer'), TaxEstimation.EstimateTax);
 
 module.exports = router;
 

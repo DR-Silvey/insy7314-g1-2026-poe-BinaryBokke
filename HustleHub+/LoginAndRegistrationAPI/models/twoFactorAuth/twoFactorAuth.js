@@ -27,6 +27,12 @@ const TwoFactorSchema = new mongoose.Schema({
 
     },
 
+    otpLastSentAt: {
+        type: Date,
+        default: null
+        
+    },
+
     //Temporary email OTP information
     otpHash: {
         type: String,

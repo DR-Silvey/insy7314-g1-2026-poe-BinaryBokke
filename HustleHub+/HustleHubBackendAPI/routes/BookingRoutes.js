@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 //RBAC enforcement
-const { protect, authorizeRoles } = require('../middleware/auth/AuthMiddleware');
+const { protect, authorizeRoles } = require('./../middleware/auth/AuthMiddleware');
 
 //Rate Limiting
-const { CreateBookingLimiter, ViewBookingLimiter, UpdateBookingLimiter, RemoveBookingLimiter } = require('../middleware/rateLimiting/BookingRateLimiter')
+const { CreateBookingLimiter, ViewBookingLimiter, UpdateBookingLimiter, RemoveBookingLimiter } = require('./../middleware/rateLimiting/BookingRateLimiter')
 
-const BookingValidityChecks = require('../middleware/BookingValidation');
-const Booking = require('../controllers/BookingController');
+const BookingValidityChecks = require('./../middleware/BookingValidation');
+const Booking = require('./../controllers/BookingController');
 
 //Declared /booking as the endpoint to access booking functionalities
 //(The IIE, 2026)
