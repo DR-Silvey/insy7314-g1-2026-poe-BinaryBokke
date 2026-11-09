@@ -1,5 +1,9 @@
 **HustleHub+ – Final Submission (Part 3)**
 
+Youtube Links:
+ - FrontEnd: https://youtu.be/HGuoOD86-Jk
+ - BackEnd: https://youtu.be/a8p_b7fveWg
+
 The sections at the top of this README covers the final POE submission and how to run and test the application. The original Part 1 and Part 2 documentation are further down.
 
 **How to Run HustleHub+:**
@@ -59,6 +63,23 @@ Where: LoginAndRegistrationAPI/controllers/passwords; client/src/components/Pass
 
  - Broken access control: the role in the signed token is checked on every protected route, and controllers check ownership so users can only change their own gigs and bookings (OWASP Foundation, 2025).
 
+ - Rate Limiting Apllied to API routes where neccesarry to ensure that those routes cannot be abused, the Rate limiting differs per route higher importance routes in terms of security vulnerabilities get lower limits(The IIE, 2026).
+
+ - Size of JSOn that the API can accept is limited to disuade the use of malicious packets (The IIE, 2026)
+
+ - JWT Authentication Implemented to ensure that a logged in user is who they say they are, these tokens expire thus forcing the user to log-in again once an hour passes.
+ - User's have to verify their identity using the email linked to the account they gave.
+ - Two Factor Authentication added to add another level to the Identity check flow.
+ - Other Security features include (Explained within the document):
+   - SHA-256 used for token hashing.
+   - Cookies are http only.
+   - Samsesite Cookie policay enabled.
+   - & day verification period.
+   - Away Device Verification.
+   - Away Device notifications.
+   - Minimal Password Complexity Checks.
+   - COORS and Helemt, implemnented.
+     
 **CI/CD Pipeline:**
 
 HustleHub+ uses GitHub Actions to run the pipeline automatically on every push and pull request to master. The pipeline:
@@ -91,15 +112,6 @@ The APIs use Winston to log key system events, including login attempts, booking
  - Bookings and transactions: logging these creates a record of financial activity that can be traced if a payment or booking is disputed.
  - Errors: logging errors helps the team find and fix problems quickly, without showing internal details to users.
 
-
-**Part 1 and Part 2 Documentation:**
-
-Admin Login Credentials:
- - Username:
-    - admin
-
- - Password:
-    - TestPassword123!
 
 **System Overview:**
 HusstleHub+ is a web based service that allows users to discover, interact, and manage services and opportunities in one place.
