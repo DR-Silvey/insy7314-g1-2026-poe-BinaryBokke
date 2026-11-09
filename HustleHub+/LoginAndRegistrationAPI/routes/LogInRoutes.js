@@ -4,9 +4,10 @@ const router = express.Router();
 const LogInValidityChecks = require('../middleware/LogInValidation');
 const LogIn = require('../controllers/LogIn');
 const GetProfile = require('../controllers/userInfo/GetProfile')
+const VerifyLoginOtp = require('../controllers/userVerification/VerifyLoginOtp');
 
 //Rate Limiting
-const { LogInLimiter, ProfileInfoLimiter } = require('../middleware/rateLimiting/AuthRateLimiter');
+const { LogInLimiter, ProfileInfoLimiter, OtpLimiter } = require('../middleware/rateLimiting/AuthRateLimiter');
 
 //RBAC enforcement
 const { protect } = require('../middleware/tokens/AuthMiddleware');
@@ -20,6 +21,8 @@ router.post('/login', LogInLimiter, LogInValidityChecks, LogIn);
 //Used to retrieve the details of a profile
 router.get('/me', ProfileInfoLimiter, protect, GetProfile)
 
+//Used to verify an otp during Login
+router.post('/verify-login-otp', OtpLimiter, VerifyLoginOtp);
 
 module.exports = router;
 

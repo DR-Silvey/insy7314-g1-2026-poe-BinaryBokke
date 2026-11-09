@@ -8,6 +8,7 @@ const helmet = require('helmet');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 //Attempting connection to db
 const connectDb = require('../LoginAndRegistrationAPI/config/db');
@@ -65,6 +66,8 @@ app.use(
 );
 
 app.use(express.json({limit: '10kb'}));
+
+app.use(cookieParser());
 
 //General Routes
     //ROOT route
