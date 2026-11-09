@@ -1,6 +1,72 @@
-Youtube Links:
- - Back-End:
- - Front-End: https://youtu.be/HGuoOD86-Jk
+**HustleHub+ – Final Submission (Part 3)**
+
+The sections at the top of this README covers the final POE submission and how to run and test the application. The original Part 1 and Part 2 documentation are further down.
+
+**How to Run HustleHub+:**
+
+ - Requirements: Node.js 22, access to the team's MongoDB Atlas cluster, and a Gmail app password for sending verification emails.
+
+ - Each API and the client need a .env file in their folder. JWT_SECRET must be the same in all three APIs, CLIENT_ORIGIN must be http://localhost:5173, and the Login API also needs the email settings and FRONTEND_URL.
+
+ - Start each application in its own terminal:
+    - cd HustleHub+/LoginAndRegistrationAPI && npm install && node index.js (port 4000)
+    - cd HustleHub+/HustleHubBackendAPI && npm install && node index.js (port 5000)
+    - cd HustleHub+/HustleHubFinanceAPI && npm install && node index.js (port 6100)
+    - cd HustleHub+/client && npm install && npm run dev, then open http://localhost:5173
+
+ - The admin account details are supplied
+
+**How to Test HustleHub+:**
+
+ - Frontend: cd HustleHub+/client && npm test runs 116 Vitest and React Testing Library tests covering rendering and user interaction for sign in, two-factor authentication, password reset, gigs, bookings, payments, the Finance dashboard and the Tax brackets screen.
+
+ - APIs: with an API running, npm run test:api in its folder runs its Postman collection with Newman.
+
+**Tax Estimation and Income Dashboard:**
+
+Freelancers have a Finance page showing their income for the current tax year, a monthly income chart, and their tax estimates and theirr payments. The estimate is calculated as follows:
+
+ - The tax year runs from 1 March to the end of February and is named after the year it ends in (National Treasury, 2026).
+ - Taxable income is the total of the freelancer's transactions in that tax year.
+ - The income is split across the tax brackets set by the admin, and each portion is taxed at its bracket's rate.
+ - The primary rebate of R17 820 is subtracted, with a minimum of R0 (National Treasury, 2026).
+
+Example: R340 000 income = R44 118 (18% of the first R245 100) + R24 674 (26% of the next R94 900) = R68 792, less R17 820 = R50 972.
+
+Admins add, edit, and delete brackets per tax year on the Tax brackets page, so new budget rates do not need code changes.
+
+**Own Security Features:**
+
+ - Two-factor authentication with recognised browsers: a six-digit emailed code (stored hashed, valid for 5 minutes, and only 5 attempts) is required to sign in, and each browser is classified as Home, Work or Away. Home and Work skip the code for 7 days, while Away always needs a code and sends an email alert (OWASP Foundation, s.a.c).
+
+Where: LoginAndRegistrationAPI/controllers/LogIn.js and controllers/userVerification; client/src/components/AuthVerification.jsx.
+
+ - Email verification: new accounts must confirm their email address with a code before they can sign in.
+
+Where: LoginAndRegistrationAPI/controllers/Registration.js and controllers/userVerification/VerifyEmail.js; client/src/components/AuthVerification.jsx.
+
+ - Secure password reset: a single-use emailed link (stored as a SHA-256 hash, valid for 15 minutes), with the same response whether or not the email exists (OWASP Foundation, s.a.d).
+
+Where: LoginAndRegistrationAPI/controllers/passwords; client/src/components/PasswordReset.jsx.
+
+**Security Review:**
+
+ - Injection: validation middleware checks the type and content of every input, so MongoDB operators such as {"$ne": null} are rejected; Mongoose schemas enforce field types and request bodies are limited to 10 KB (OWASP Foundation, s.a.a).
+
+ - Cross-site scripting: React escapes all displayed text, the frontend never uses dangerouslySetInnerHTML or eval, and Helmet's Content Security Policy only allows scripts from the application itself (OWASP Foundation, s.a.b).
+
+ - Authentication weaknesses: passwords are hashed with bcrypt and must meet strength rules, tokens expire after one hour, login is rate limited, and two-factor authentication adds a second check (OWASP Foundation, s.a.c).
+
+ - Broken access control: the role in the signed token is checked on every protected route, and controllers check ownership so users can only change their own gigs and bookings (OWASP Foundation, 2025).
+
+**Part 1 and Part 2 Documentation:**
+
+Admin Login Credentials:
+ - Username:
+    - admin
+
+ - Password:
+    - TestPassword123!
 
 **System Overview:**
 HusstleHub+ is a web based service that allows users to discover, interact, and manage services and opportunities in one place.
@@ -199,5 +265,9 @@ OWASP Foundation (2025) Authorization Cheat Sheet. OWASP Cheat Sheet Series. OWA
 OWASP (2026) OWASP Top 10: The Ten Most Critical Web Application Security Risks. Available at: [OWASP Top 10](https://owasp.org/www-project-top-ten/?utm_source=chatgpt.com) (Accessed: 7 September 2026).
 The Indipendent Institute of Education (IIE), 2026. Information Systems 3D (INSY7314) Application Development Security (APDS7311) : Module Manual 2026. 1st ed. [online].
 Ciampa, M. 2018. CompTIA: SECURITY+ GUIDE TO NETWORK SECURITY FUNDAMENTALS. 5th ed. Massachusetts: Cengage.
-
-
+Anthropic (2026) Claude. Available at: https://claude.ai (Accessed: 9 November 2026).
+National Treasury (2026) Budget 2026 Tax Guide. Available at: https://www.treasury.gov.za/documents/national%20budget/2026/sars/Budget%202026%20Tax%20guide.pdf (Accessed: 9 November 2026).
+OWASP Foundation (s.a.a) Input Validation Cheat Sheet. OWASP Cheat Sheet Series. Available at: https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html (Accessed: 9 November 2026).
+OWASP Foundation (s.a.b) Cross Site Scripting Prevention Cheat Sheet. OWASP Cheat Sheet Series. Available at: https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html (Accessed: 9 November 2026).
+OWASP Foundation (s.a.c) Authentication Cheat Sheet. OWASP Cheat Sheet Series. Available at: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html (Accessed: 9 November 2026).
+OWASP Foundation (s.a.d) Forgot Password Cheat Sheet. OWASP Cheat Sheet Series. Available at: https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html (Accessed: 9 November 2026).
