@@ -1,5 +1,5 @@
 //Model used perform CRUD to Gig model
-const Gig = require('../models/Gig');
+const Gig = require('./../models/gig');
 
 //Using the Username attached to the JWT to retrieve the current user's username
 const getUserName = (req) => {
