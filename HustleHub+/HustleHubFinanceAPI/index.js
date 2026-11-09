@@ -10,15 +10,15 @@ const fs = require('fs');
 const path = require('path');
 
 //Attempting connection to db
-const connectDb = require('../HustleHubFinanceAPI/config/db');
+const connectDb = require('./config/db');
 connectDb();
 
 //Importing routes for transaction, tax estimation, and tax bracket functionalities
-const TransactionRoutes = require('../HustleHubFinanceAPI/routes/TransactionRoutes');
-const TaxEstimationRoutes = require('../HustleHubFinanceAPI/routes/TaxEstimationRoutes');
-const TaxBracketRoutes = require('../HustleHubFinanceAPI/routes/TaxBracketRoutes');
+const TransactionRoutes = require('./routes/TransactionRoutes');
+const TaxEstimationRoutes = require('./routes/TaxEstimationRoutes');
+const TaxBracketRoutes = require('./routes/TaxBracketRoutes');
 
-const ErrorHandler = require('../HustleHubFinanceAPI/middleware/ErrorHandler');
+const ErrorHandler = require('./middleware/ErrorHandler');
 
 const app = express();
 
