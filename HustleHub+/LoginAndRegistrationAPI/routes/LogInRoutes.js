@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-const LogInValidityChecks = require('../middleware/LogInValidation');
+const { LogInValidityChecks, ResetPasswordValidityChecks, ForgotPasswordValidityChecks } = require('../middleware/LogInValidation');
 const LogIn = require('../controllers/LogIn');
 const GetProfile = require('../controllers/userInfo/GetProfile')
 const VerifyLoginOtp = require('../controllers/userVerification/VerifyLoginOtp');
 const ClassifyDevice = require('../controllers/userVerification/ClassifyDevice');
+const ForgotPassword = require('../controllers/passwords/ForgotPassword');
+const ResetPassword = require('../controllers/passwords/ResetPassword');
 
 //Rate Limiting
-const { LogInLimiter, ProfileInfoLimiter, OtpLimiter, ClassifyDeviceLimiter } = require('../middleware/rateLimiting/AuthRateLimiter');
+const { LogInLimiter, ProfileInfoLimiter, OtpLimiter, ClassifyDeviceLimiter, ForgotPasswordLimiter, ResetPasswordLimiter } = require('../middleware/rateLimiting/AuthRateLimiter');
 
 //RBAC enforcement
 const { protect } = require('../middleware/tokens/AuthMiddleware');
@@ -27,6 +29,12 @@ router.post('/verify-login-otp', OtpLimiter, VerifyLoginOtp);
 
 //Used to classify a device after login
 router.post('/classify-device', ClassifyDeviceLimiter, ClassifyDevice);
+
+//Used by a user to request a password reset after they have forgotten it
+router.post('/forgot-password', ForgotPasswordLimiter, ForgotPasswordValidityChecks, ForgotPassword);
+
+//Used to reset a user's password after they have forgotten it.
+router.post('/reset-password', ResetPasswordLimiter, ResetPasswordValidityChecks, ResetPassword)
 
 module.exports = router;
 

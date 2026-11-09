@@ -7,8 +7,8 @@ const TokenCreation = require('../utils/tokens/TokenCreation');
 
 //Temp to store and retreive data relating to user
 const user = require('../models/users');
-const EmailVerification = require('../models/emailVerification');
-const TwoFactor = require('../models/twoFactor');
+const EmailVerification = require('../models/userVerificiation/emailVerification');
+const TwoFactor = require('../models/twoFactorAuth/twoFactorAuth');
 const SendEmail = require('../utils/email/EmailHandler');
 const { GenerateOtp, HashOtp } = require('../utils/email/OtpHandler');
 

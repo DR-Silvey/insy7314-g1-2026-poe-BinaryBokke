@@ -1,0 +1,23 @@
+name: HustleHub+ Actions
+
+on:
+  push:
+    branches:
+      - master
+      
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: Run Placeholder Action
+      run: echo "HustleHub+ Actions workflow completed successfully."
+
+
