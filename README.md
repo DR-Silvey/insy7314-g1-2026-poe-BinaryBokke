@@ -1,9 +1,7 @@
-Admin Login Credentials:
- - Username:
-    - admin
-
- - Password:
-    - TestPassword123!
+Youtube Links:
+ - Back-End:
+ - Front-End:
+ - Other:
 
 **System Overview:**
 HusstleHub+ is a web based service that allows users to discover, interact, and manage services and opportunities in one place.
