@@ -7,6 +7,7 @@ async function send(path, body) {
     response = await fetch(`${API_BASE_URL}${path}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(body),
     });
   } catch {
@@ -16,8 +17,10 @@ async function send(path, body) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-
-    throw new Error(data.error || data.message || 'Your request could not be completed. Please check your details and try again.');
+    const error = new Error(data.error || data.message || 'Your request could not be completed. Please check your details and try again.');
+    error.status = response.status;
+    error.data = data;
+    throw error;
   }
 
   return data;
@@ -29,4 +32,16 @@ export function registerUser({ username, password, fullname, email, age, role })
 
 export function loginUser({ username, password }) {
   return send('/login', { username, password });
+}
+
+export function verifyEmail({ username, otp }) {
+  return send('/register/verify-email', { username, otp });
+}
+
+export function verifyLoginOtp({ otp, temporaryToken }) {
+  return send('/verify-login-otp', { otp, temporaryToken });
+}
+
+export function classifyDevice({ classificationToken, location }) {
+  return send('/classify-device', { classificationToken, location });
 }

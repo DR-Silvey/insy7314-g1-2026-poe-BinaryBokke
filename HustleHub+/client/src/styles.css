@@ -37,6 +37,7 @@ input:not([type='radio']):not([type='checkbox'])[aria-invalid='true'] { border-c
 .role-option strong { color: #15233b; font-size: .88rem; }
 .checkbox-row { display: flex; gap: 8px; align-items: flex-start; margin: 5px 0 0; color: #637087; font-size: .79rem; font-weight: 500; line-height: 1.45; }
 .checkbox-row input { accent-color: #3157bb; margin: 3px 0 0; }
+input.code-input { font-size: 1.25rem; font-weight: 700; letter-spacing: .3em; }
 .primary-button { width: 100%; min-height: 50px; margin-top: 14px; border: 0; border-radius: 8px; color: #fff; background: #203b7d; box-shadow: 0 8px 15px rgba(32,59,125,.16); font-weight: 700; transition: transform .15s, background .15s; }
 .primary-button:hover:not(:disabled) { background: #172e65; transform: translateY(-1px); }
 .primary-button:disabled { cursor: wait; opacity: .7; }

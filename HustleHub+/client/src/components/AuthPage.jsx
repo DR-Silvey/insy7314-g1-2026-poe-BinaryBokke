@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import { loginUser, registerUser } from '../services/authApi';
+import AuthVerification from './AuthVerification';
 import FieldError from './FieldError';
 
 const initialRegistration = {
@@ -44,6 +45,7 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
   const [notice, setNotice] = useState(initialNotice);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [step, setStep] = useState(null);
   const isRegistration = mode === 'register';
 
   function switchMode(nextMode) {
@@ -83,6 +85,34 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
     return nextErrors;
   }
 
+  function continueSignIn(result) {
+    if (result.requiresDeviceClassification) return setStep({ type: 'device', classificationToken: result.classificationToken });
+    if (result.requiresTwoFactor) return setStep({ type: 'login', temporaryToken: result.temporaryToken });
+    if (!result.token || !onSignIn(result.token)) throw new Error('We could not start your session. Please try again.');
+    setLoginValues(initialLogin);
+    setStep(null);
+  }
+
+  function handleVerificationResult(result) {
+    try {
+      continueSignIn(result);
+    } catch (error) {
+      restartSignIn(error.message);
+    }
+  }
+
+  function handleEmailVerified() {
+    setStep(null);
+    setNotice({ type: 'success', text: 'Your email address is verified. You can now sign in.' });
+    onModeChange('login');
+  }
+
+  function restartSignIn(message) {
+    setStep(null);
+    setNotice(message ? { type: 'error', text: message } : null);
+    onModeChange('login');
+  }
+
   function validateLogin() {
     const nextErrors = {};
     if (!loginValues.username.trim()) nextErrors.username = 'Enter your username.';
@@ -100,7 +130,7 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
     setIsSubmitting(true);
     try {
       if (isRegistration) {
-        await registerUser({
+        const result = await registerUser({
           username: registerValues.username.trim(),
           fullname: registerValues.fullname.trim(),
           email: registerValues.email.trim(),
@@ -108,20 +138,28 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
           role: registerValues.role,
           password: registerValues.password,
         });
+        const username = registerValues.username.trim();
         setRegisterValues(initialRegistration);
         setShowPassword(false);
-        setNotice({ type: 'success', text: 'Your account has been created. You can now sign in.' });
-        onModeChange('login');
+        if (result.requiresEmailVerification) {
+          setStep({ type: 'email', username });
+        } else {
+          setNotice({ type: 'success', text: 'Your account has been created. You can now sign in.' });
+          onModeChange('login');
+        }
       } else {
         const result = await loginUser({
           username: loginValues.username.trim(),
           password: loginValues.password,
         });
 
-        if (!result.token || !onSignIn(result.token)) throw new Error('We could not start your session. Please try again.');
-        setLoginValues(initialLogin);
+        continueSignIn(result);
       }
     } catch (error) {
+      if (error.data?.requiresEmailVerification) {
+        setStep({ type: 'email', username: loginValues.username.trim() });
+        return;
+      }
       setNotice({ type: 'error', text: error.message });
     } finally {
       setIsSubmitting(false);
@@ -143,71 +181,73 @@ export default function AuthPage({ mode, onModeChange, onSignIn, initialNotice =
           <a className="simple-brand" href="#top" aria-label="HustleHub+ home">
             <span aria-hidden="true">H+</span> HustleHub<strong>+</strong>
           </a>
-          <div className="mode-switch" role="tablist" aria-label="Authentication options">
-            <button className={!isRegistration ? 'active' : ''} type="button" role="tab" aria-selected={!isRegistration} onClick={() => switchMode('login')}>Sign in</button>
-            <button className={isRegistration ? 'active' : ''} type="button" role="tab" aria-selected={isRegistration} onClick={() => switchMode('register')}>Create account</button>
-          </div>
-
-          <header>
-            <p className="eyebrow">{isRegistration ? 'GET STARTED' : 'WELCOME BACK'}</p>
-            <h2>{isRegistration ? 'Create your account' : 'Sign in to HustleHub+'}</h2>
-            <p>{isRegistration ? 'Join the marketplace and start your next chapter.' : 'Enter your details to continue to your workspace.'}</p>
-          </header>
-
-          {notice && <div className={`notice ${notice.type}`} role="status">{notice.text}</div>}
-
-          <form onSubmit={handleSubmit} noValidate>
-            {isRegistration && <>
-              <label htmlFor={`${registerFormId}-username`}>Username</label>
-              <input id={`${registerFormId}-username`} name="username" type="text" autoComplete="username" value={values.username} onChange={updateValue} aria-invalid={Boolean(errors.username)} aria-describedby={errors.username ? `${registerFormId}-username-error` : undefined} placeholder="e.g. johndoe" />
-              <div id={`${registerFormId}-username-error`}><FieldError>{errors.username}</FieldError></div>
-              <label htmlFor={`${registerFormId}-fullname`}>Full name</label>
-              <input id={`${registerFormId}-fullname`} name="fullname" type="text" autoComplete="name" value={values.fullname} onChange={updateValue} aria-invalid={Boolean(errors.fullname)} aria-describedby={errors.fullname ? `${registerFormId}-fullname-error` : undefined} placeholder="e.g. JohnDoe" />
-              <div id={`${registerFormId}-fullname-error`}><FieldError>{errors.fullname}</FieldError></div>
-            </>}
-
-            {isRegistration ? <>
-              <label htmlFor={`${registerFormId}-email`}>Email address</label>
-              <input id={`${registerFormId}-email`} name="email" type="email" autoComplete="email" value={values.email} onChange={updateValue} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'email-error' : undefined} placeholder="you@example.com" />
-              <div id="email-error"><FieldError>{errors.email}</FieldError></div>
-              <label htmlFor={`${registerFormId}-age`}>Age</label>
-              <input id={`${registerFormId}-age`} name="age" type="number" min={MIN_AGE} max={MAX_AGE} inputMode="numeric" value={values.age} onChange={updateValue} aria-invalid={Boolean(errors.age)} aria-describedby={errors.age ? 'age-error' : undefined} placeholder="18" />
-              <div id="age-error"><FieldError>{errors.age}</FieldError></div>
-              <fieldset className="role-options" aria-describedby={errors.role ? 'role-error' : undefined}>
-                <legend>Account type</legend>
-                {ROLE_OPTIONS.map((option) => (
-                  <label key={option.value} className={values.role === option.value ? 'role-option selected' : 'role-option'}>
-                    <input name="role" type="radio" value={option.value} checked={values.role === option.value} onChange={updateValue} />
-                    <span><strong>{option.label}</strong>{option.description}</span>
-                  </label>
-                ))}
-              </fieldset>
-              <div id="role-error"><FieldError>{errors.role}</FieldError></div>
-            </> : <>
-              <label htmlFor={`${loginFormId}-username`}>Username</label>
-              <input id={`${loginFormId}-username`} name="username" type="text" autoComplete="username" value={values.username} onChange={updateValue} aria-invalid={Boolean(errors.username)} aria-describedby={errors.username ? 'username-error' : undefined} placeholder="Enter your username" />
-              <div id="username-error"><FieldError>{errors.username}</FieldError></div>
-            </>}
-
-            <label htmlFor={`${isRegistration ? registerFormId : loginFormId}-password`}>Password</label>
-            <div className="password-control">
-              <input id={`${isRegistration ? registerFormId : loginFormId}-password`} name="password" type={showPassword ? 'text' : 'password'} autoComplete={isRegistration ? 'new-password' : 'current-password'} value={values.password} onChange={updateValue} aria-invalid={Boolean(errors.password)} aria-describedby={errors.password ? 'password-error' : undefined} placeholder={isRegistration ? `At least ${MIN_PASSWORD_LENGTH} characters` : 'Enter your password'} />
-              <button type="button" onClick={() => setShowPassword((current) => !current)} aria-label={`${showPassword ? 'Hide' : 'Show'} password`}><EyeIcon visible={showPassword} /></button>
+          {step ? <AuthVerification key={step.type} step={step} onResult={handleVerificationResult} onEmailVerified={handleEmailVerified} onRestart={restartSignIn} /> : <>
+            <div className="mode-switch" role="tablist" aria-label="Authentication options">
+              <button className={!isRegistration ? 'active' : ''} type="button" role="tab" aria-selected={!isRegistration} onClick={() => switchMode('login')}>Sign in</button>
+              <button className={isRegistration ? 'active' : ''} type="button" role="tab" aria-selected={isRegistration} onClick={() => switchMode('register')}>Create account</button>
             </div>
-            <div id="password-error"><FieldError>{errors.password}</FieldError></div>
 
-            {isRegistration && <>
-              <label htmlFor={`${registerFormId}-confirm-password`}>Confirm password</label>
-              <input id={`${registerFormId}-confirm-password`} name="confirmPassword" type={showPassword ? 'text' : 'password'} autoComplete="new-password" value={values.confirmPassword} onChange={updateValue} aria-invalid={Boolean(errors.confirmPassword)} aria-describedby={errors.confirmPassword ? 'confirm-password-error' : undefined} placeholder="Re-enter your password" />
-              <div id="confirm-password-error"><FieldError>{errors.confirmPassword}</FieldError></div>
-              <label className="checkbox-row"><input name="acceptedTerms" type="checkbox" checked={values.acceptedTerms} onChange={updateValue} /> <span>I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a>.</span></label>
-              <FieldError>{errors.acceptedTerms}</FieldError>
-            </>}
+            <header>
+              <p className="eyebrow">{isRegistration ? 'GET STARTED' : 'WELCOME BACK'}</p>
+              <h2>{isRegistration ? 'Create your account' : 'Sign in to HustleHub+'}</h2>
+              <p>{isRegistration ? 'Join the marketplace and start your next chapter.' : 'Enter your details to continue to your workspace.'}</p>
+            </header>
 
-            <button className="primary-button" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Please wait…' : isRegistration ? 'Create account' : 'Sign in'}</button>
-          </form>
+            {notice && <div className={`notice ${notice.type}`} role="status">{notice.text}</div>}
 
-          <p className="switch-copy">{isRegistration ? 'Already have an account?' : 'New to HustleHub+'} <button type="button" onClick={() => switchMode(isRegistration ? 'login' : 'register')}>{isRegistration ? 'Sign in' : 'Create an account'}</button></p>
+            <form onSubmit={handleSubmit} noValidate>
+              {isRegistration && <>
+                <label htmlFor={`${registerFormId}-username`}>Username</label>
+                <input id={`${registerFormId}-username`} name="username" type="text" autoComplete="username" value={values.username} onChange={updateValue} aria-invalid={Boolean(errors.username)} aria-describedby={errors.username ? `${registerFormId}-username-error` : undefined} placeholder="e.g. johndoe" />
+                <div id={`${registerFormId}-username-error`}><FieldError>{errors.username}</FieldError></div>
+                <label htmlFor={`${registerFormId}-fullname`}>Full name</label>
+                <input id={`${registerFormId}-fullname`} name="fullname" type="text" autoComplete="name" value={values.fullname} onChange={updateValue} aria-invalid={Boolean(errors.fullname)} aria-describedby={errors.fullname ? `${registerFormId}-fullname-error` : undefined} placeholder="e.g. JohnDoe" />
+                <div id={`${registerFormId}-fullname-error`}><FieldError>{errors.fullname}</FieldError></div>
+              </>}
+
+              {isRegistration ? <>
+                <label htmlFor={`${registerFormId}-email`}>Email address</label>
+                <input id={`${registerFormId}-email`} name="email" type="email" autoComplete="email" value={values.email} onChange={updateValue} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'email-error' : undefined} placeholder="you@example.com" />
+                <div id="email-error"><FieldError>{errors.email}</FieldError></div>
+                <label htmlFor={`${registerFormId}-age`}>Age</label>
+                <input id={`${registerFormId}-age`} name="age" type="number" min={MIN_AGE} max={MAX_AGE} inputMode="numeric" value={values.age} onChange={updateValue} aria-invalid={Boolean(errors.age)} aria-describedby={errors.age ? 'age-error' : undefined} placeholder="18" />
+                <div id="age-error"><FieldError>{errors.age}</FieldError></div>
+                <fieldset className="role-options" aria-describedby={errors.role ? 'role-error' : undefined}>
+                  <legend>Account type</legend>
+                  {ROLE_OPTIONS.map((option) => (
+                    <label key={option.value} className={values.role === option.value ? 'role-option selected' : 'role-option'}>
+                      <input name="role" type="radio" value={option.value} checked={values.role === option.value} onChange={updateValue} />
+                      <span><strong>{option.label}</strong>{option.description}</span>
+                    </label>
+                  ))}
+                </fieldset>
+                <div id="role-error"><FieldError>{errors.role}</FieldError></div>
+              </> : <>
+                <label htmlFor={`${loginFormId}-username`}>Username</label>
+                <input id={`${loginFormId}-username`} name="username" type="text" autoComplete="username" value={values.username} onChange={updateValue} aria-invalid={Boolean(errors.username)} aria-describedby={errors.username ? 'username-error' : undefined} placeholder="Enter your username" />
+                <div id="username-error"><FieldError>{errors.username}</FieldError></div>
+              </>}
+
+              <label htmlFor={`${isRegistration ? registerFormId : loginFormId}-password`}>Password</label>
+              <div className="password-control">
+                <input id={`${isRegistration ? registerFormId : loginFormId}-password`} name="password" type={showPassword ? 'text' : 'password'} autoComplete={isRegistration ? 'new-password' : 'current-password'} value={values.password} onChange={updateValue} aria-invalid={Boolean(errors.password)} aria-describedby={errors.password ? 'password-error' : undefined} placeholder={isRegistration ? `At least ${MIN_PASSWORD_LENGTH} characters` : 'Enter your password'} />
+                <button type="button" onClick={() => setShowPassword((current) => !current)} aria-label={`${showPassword ? 'Hide' : 'Show'} password`}><EyeIcon visible={showPassword} /></button>
+              </div>
+              <div id="password-error"><FieldError>{errors.password}</FieldError></div>
+
+              {isRegistration && <>
+                <label htmlFor={`${registerFormId}-confirm-password`}>Confirm password</label>
+                <input id={`${registerFormId}-confirm-password`} name="confirmPassword" type={showPassword ? 'text' : 'password'} autoComplete="new-password" value={values.confirmPassword} onChange={updateValue} aria-invalid={Boolean(errors.confirmPassword)} aria-describedby={errors.confirmPassword ? 'confirm-password-error' : undefined} placeholder="Re-enter your password" />
+                <div id="confirm-password-error"><FieldError>{errors.confirmPassword}</FieldError></div>
+                <label className="checkbox-row"><input name="acceptedTerms" type="checkbox" checked={values.acceptedTerms} onChange={updateValue} /> <span>I agree to the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a>.</span></label>
+                <FieldError>{errors.acceptedTerms}</FieldError>
+              </>}
+
+              <button className="primary-button" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Please wait…' : isRegistration ? 'Create account' : 'Sign in'}</button>
+            </form>
+
+            <p className="switch-copy">{isRegistration ? 'Already have an account?' : 'New to HustleHub+'} <button type="button" onClick={() => switchMode(isRegistration ? 'login' : 'register')}>{isRegistration ? 'Sign in' : 'Create an account'}</button></p>
+          </>}
         </div>
       </section>
     </main>
